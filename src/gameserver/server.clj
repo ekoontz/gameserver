@@ -4,13 +4,13 @@
   (:gen-class))
 
 (defn start [system]
-  (println "Starting server...")
+  (println "GS server start..")
   (let [server (jetty/run-jetty (var app/site-handler)
                                 {:host (:host system) 
                                  :port (:port system) 
                                  :join? false})]
-    (println "Server started")
-    (println (str "You can view the site at http://" (:host system) ":" (:port system)))
+    (println "GS started.")
+    (println (str "GS listening at http://" (:host system) ":" (:port system)))
     server))
 
 (defn stop [instance]

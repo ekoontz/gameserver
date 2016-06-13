@@ -14,7 +14,7 @@
    {}))
 
 (defn- render-page [request]
-  (wrap-layout "Home"
+  (wrap-layout "Gameserver"
                (if (authenticated?)
                  (render-home request)
                  (render-index request))))
