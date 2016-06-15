@@ -1,5 +1,6 @@
 (ns gameserver.view.auth
-    (:require [ring.util.response :as response]
+    (:require [clojure.tools.logging :as log]
+              [ring.util.response :as response]
               [compojure.core :refer [defroutes GET POST]]
               [stencil.core :as stencil]
               [gameserver.util.session :as session]
@@ -58,6 +59,8 @@
    if success : retuns 'ok'
    if error : returns a message to be displayed to the user"
   [request]
+  (if-let [username (-> request :params :username)]
+    (log/info (str "processing login attempt with username: " username)))
   (if (auth request)
     "ok"
     "Authentication failed. Please check your username and password."))
