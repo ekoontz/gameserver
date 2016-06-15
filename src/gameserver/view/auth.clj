@@ -19,7 +19,7 @@
 
 (defn- signup
   "Process account creation.
-   if success : retuns 'ok'
+   if success : returns 'ok'
    if error : returns a message to be displayed to the user"
   [request]
   ;; TODO : process sign up and return "ok" if success
@@ -56,14 +56,21 @@
 
 (defn- login
   "Process user login with username/password.
-   if success : retuns 'ok'
+   if success : returns 'ok'
    if error : returns a message to be displayed to the user"
   [request]
-  (if-let [username (-> request :params :username)]
-    (log/info (str "processing login attempt with username: " username)))
-  (if (auth request)
-    "ok"
-    "Authentication failed. Please check your username and password."))
+  (let [username (-> request :params :username)
+        password (-> request :params :password)]
+    (do
+      (log/info (str "processing login attempt with username: " username))
+      (if-let [auth (auth request)]
+        (do
+          (log/info (str "user with username: " username " sucessfully authenticated."))
+          "ok"
+          )
+        (do
+          (log/warn (str "user with username: " username " failed to authenticate."))
+          "Sorry: failed to authenticate you.")))))
 
 (defn- reset-pass-page
   "Render the reset password page."
@@ -76,7 +83,7 @@
 
 (defn- reset-pass
   "Reset the user password.
-   if success : retuns 'ok'
+   if success : returns 'ok'
    if error : returns a message to be displayed to the user"
   [request]
   "ok")
