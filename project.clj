@@ -13,6 +13,7 @@
                  [log4j/log4j "1.2.17"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.4"]]
                    :source-paths ["dev"]}}
-  :plugins [[lein-ring "0.8.5"]]
+  :plugins [[cider/cider-nrepl "0.11.0"]
+            [lein-ring "0.9.3"]]
   :ring {:handler gameserver.app/site-handler}
   :main gameserver)
