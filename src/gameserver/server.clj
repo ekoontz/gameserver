@@ -11,7 +11,7 @@
                                  :port (:port system) 
                                  :join? false})]
     (println (str "The Gameserver has started and is "
-                  "listening at " (str "http://" (trim (:host system)) ":" (trim (:port system)))))
+                  "listening at " (str "http://" (:host system)) ":" (:port system)))
     server))
 
 (defn stop [instance]
