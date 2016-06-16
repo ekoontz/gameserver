@@ -1,15 +1,12 @@
 (ns gameserver.app
-  (:require [cemerick.friend.workflows :as workflows]
-            [clojure.core.cache :as cache]
+  (:require [clojure.core.cache :as cache]
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes routes]]
             [compojure.handler :as handler]
             [compojure.route :as route]
-            [friend-oauth2.workflow :as oauth2]
             [gameserver.middleware.session :as session-manager]
             [gameserver.middleware.context :as context-manager]
             [gameserver.util.session :as session]
-            [ring.util.response :as resp]
             [stencil.loader :as stencil]))
 
 ;;; Initialization
@@ -45,17 +42,7 @@
               (route/not-found "<h1>404 Page not found.</h1>"))
 
       (friend/authenticate
-
-       {:allow-anon? true
-        :unauthorized-handler #(->
-                                "unauthorized"
-                                resp/response
-                                (resp/status 401))
-
-        :workflows [(workflows/interactive-form)]
-
-        :credential-fn auth/validate-form-credentials
-        })
+       auth/config)
 
       (session-manager/wrap-session)
       (context-manager/wrap-context-root)

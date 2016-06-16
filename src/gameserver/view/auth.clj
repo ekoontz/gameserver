@@ -1,13 +1,33 @@
 (ns gameserver.view.auth
   (:require [cemerick.friend :as friend]
+            [cemerick.friend.workflows :as workflows]
             [clojure.tools.logging :as log]
-            [ring.util.response :as response]
             [compojure.core :refer [defroutes GET POST]]
-            [stencil.core :as stencil]
+            [friend-oauth2.workflow :as oauth2]
             [gameserver.util.session :as session]
             [gameserver.util.flash :as flash]
             [gameserver.service.db :as db]
-            [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]))
+            [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]
+            [ring.util.response :as response]
+            [ring.util.response :as resp]
+            [stencil.core :as stencil]))
+
+(defn validate-form-credentials [data]
+  (log/info (str "fun-credential-fn: input: " (dissoc data :password))) ;; remove sensitive password before logging.
+  (let [username (:username data)]
+    (session/set-user! {:username username})
+    {:identity data :roles #{::user}}))
+
+(def config
+  {:allow-anon? true
+   :unauthorized-handler #(->
+                           "unauthorized"
+                           resp/response
+                           (resp/status 401))
+   
+   :workflows [(workflows/interactive-form)]
+   
+   :credential-fn validate-form-credentials})
 
 (defn- signup-page
   "Render the signup page."
@@ -113,8 +133,3 @@
   (GET "/check-session" request (check-session request))
   (GET "/logout" request (logout request)))
 
-(defn validate-form-credentials [data]
-  (log/info (str "fun-credential-fn: input: " (dissoc data :password))) ;; remove sensitive password before logging.
-  (let [username (:username data)]
-    (session/set-user! {:username username})
-    {:identity data :roles #{::user}}))
