@@ -1,12 +1,13 @@
 (ns gameserver.view.auth
-    (:require [clojure.tools.logging :as log]
-              [ring.util.response :as response]
-              [compojure.core :refer [defroutes GET POST]]
-              [stencil.core :as stencil]
-              [gameserver.util.session :as session]
-              [gameserver.util.flash :as flash]
-              [gameserver.service.db :as db]
-              [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]))
+  (:require [cemerick.friend :as friend]
+            [clojure.tools.logging :as log]
+            [ring.util.response :as response]
+            [compojure.core :refer [defroutes GET POST]]
+            [stencil.core :as stencil]
+            [gameserver.util.session :as session]
+            [gameserver.util.flash :as flash]
+            [gameserver.service.db :as db]
+            [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]))
 
 (defn- signup-page
   "Render the signup page."
@@ -101,6 +102,8 @@
   (response/redirect (wrap-context-root "/")))
 
 (defroutes auth-routes
+  (GET "/authorized" request (friend/authorize #{::user} "Hello authorized"))
+  
   (GET "/signup" request (signup-page request))
   (POST "/signup" request (signup request))
   (GET "/login" request (login-page request))
