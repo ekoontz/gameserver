@@ -14,9 +14,14 @@
 
 (defn validate-form-credentials [data]
   (log/info (str "fun-credential-fn: input: " (dissoc data :password))) ;; remove sensitive password before logging.
-  (let [username (:username data)]
-    (session/set-user! {:username username})
-    {:identity data :roles #{::user}}))
+  (let [username (:username data)
+        user-data (db/get-user username)]
+    (if (nil? user-data)
+      (log/warn "validate-form-credentials: no such user.")
+      (do
+        (log/info (str "found user-data: " user-data))
+        (session/set-user! {:username username})
+        {:identity data :roles #{::user}}))))
 
 (def config
   {:allow-anon? true
