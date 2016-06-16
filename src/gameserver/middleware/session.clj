@@ -18,7 +18,7 @@
       (when-let [flash (get-in request [:session :app-flash])]
         (reset! *flash* flash))
       (let [response (handler request)]
-        (log/info (str "wrap-session: handler response: " response))
+        (log/info (str "wrap-session: handler response status: " (:status response)))
         (log/info (str "wrap-session: *session*:" @*session*))
         (let [retval
               (-> response
