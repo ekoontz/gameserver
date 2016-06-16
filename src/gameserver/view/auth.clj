@@ -16,7 +16,7 @@
   (log/info (str "fun-credential-fn: input: " (dissoc data :password))) ;; remove sensitive password before logging.
   (let [username (:username data)
         user-data (db/get-user username)]
-    (if (nil? user-data)
+    (if (or (nil? username) (nil? user-data))
       (log/warn "validate-form-credentials: no such user.")
       (do
         (log/info (str "found user-data: " user-data))
