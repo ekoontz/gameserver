@@ -1,13 +1,16 @@
 (ns gameserver.app
-  (:require [clojure.core.cache :as cache]
+  (:require [cemerick.friend.workflows :as workflows]
+            [clojure.core.cache :as cache]
+            [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes routes]]
             [compojure.handler :as handler]
             [compojure.route :as route]
-            [stencil.loader :as stencil]
             [friend-oauth2.workflow :as oauth2]
             [gameserver.middleware.session :as session-manager]
             [gameserver.middleware.context :as context-manager]
-            [ring.util.response :as resp]))
+            [gameserver.util.session :as session]
+            [ring.util.response :as resp]
+            [stencil.loader :as stencil]))
 
 ;;; Initialization
 ;; Add required code here (database, etc.)
@@ -29,10 +32,14 @@
          '[friend-oauth2.workflow :as oauth2]
          '[cemerick.friend :as friend])
 
+(defn fun-credential-fn [word]
+  (log/info (str "fun-credential-fn: input: " (dissoc word :password))) ;; remove sensitive password before logging.
+  (let [username (:username word)]
+    (session/set-user! {:username username})
+    {:identity word :roles #{::user}}))
+
 ;;; Load website routes
-;; Add your routes here
-
-
+;;; Load generic routes
 ;; Ring handler definition
 (defroutes site-handler
   (-> (routes home-routes
@@ -54,7 +61,9 @@
                                 resp/response
                                 (resp/status 401))
 
-        :workflows []})
+        :workflows [(workflows/interactive-form)]
+
+        :credential-fn fun-credential-fn})
 
       (session-manager/wrap-session)
       (context-manager/wrap-context-root)
