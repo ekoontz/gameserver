@@ -112,3 +112,9 @@
   (POST "/reset-pass" request (reset-pass request))
   (GET "/check-session" request (check-session request))
   (GET "/logout" request (logout request)))
+
+(defn validate-form-credentials [data]
+  (log/info (str "fun-credential-fn: input: " (dissoc data :password))) ;; remove sensitive password before logging.
+  (let [username (:username data)]
+    (session/set-user! {:username username})
+    {:identity data :roles #{::user}}))

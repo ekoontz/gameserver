@@ -17,13 +17,12 @@
 (stencil/set-cache (cache/ttl-cache-factory {}))
 ;;(stencil/set-cache (cache/lru-cache-factory {}))
 
-
 ;;; Load public routes
 (require '[gameserver.view.home :refer [home-routes]]
          '[gameserver.view.about :refer [about-routes]])
 
 ;;; Load registration and authentication routes
-(require '[gameserver.view.auth :refer [auth-routes]])
+(require '[gameserver.view.auth :as auth :refer [auth-routes]])
 
 ;;; Load generic routes
 (require '[gameserver.view.profile :refer [profile-routes]]
@@ -31,12 +30,6 @@
          '[gameserver.view.admin :refer [admin-routes]]
          '[friend-oauth2.workflow :as oauth2]
          '[cemerick.friend :as friend])
-
-(defn fun-credential-fn [word]
-  (log/info (str "fun-credential-fn: input: " (dissoc word :password))) ;; remove sensitive password before logging.
-  (let [username (:username word)]
-    (session/set-user! {:username username})
-    {:identity word :roles #{::user}}))
 
 ;;; Load website routes
 ;;; Load generic routes
@@ -61,7 +54,8 @@
 
         :workflows [(workflows/interactive-form)]
 
-        :credential-fn fun-credential-fn})
+        :credential-fn auth/validate-form-credentials
+        })
 
       (session-manager/wrap-session)
       (context-manager/wrap-context-root)
