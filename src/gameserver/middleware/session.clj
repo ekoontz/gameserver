@@ -10,7 +10,7 @@
   (fn [request]
     (log/info (str "wrap-session: request uri: " (-> request :uri)))
     (log/info (str "wrap-session: request cookies: " (-> request :cookies)))
-    (log/info (str "wrap-session: request app session: " (-> request :session :app-session)))
+    (log/info (str "wrap-session: app-session: " (-> request :session :app-session)))
     (binding [*session* (atom {})
               *flash* (atom {})]
       (when-let [session (get-in request [:session :app-session])]
@@ -18,7 +18,7 @@
       (when-let [flash (get-in request [:session :app-flash])]
         (reset! *flash* flash))
       (let [response (handler request)]
-        (log/info (str "wrap-session: handler response status: " (:status response)))
+        (log/info (str "wrap-session: handler response HTTP status: " (:status response)))
         (log/info (str "wrap-session: *session*:" @*session*))
         (let [retval
               (-> response
