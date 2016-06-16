@@ -1,4 +1,5 @@
-(ns gameserver.middleware.session)
+(ns gameserver.middleware.session
+    (:require [clojure.tools.logging :as log]))
 
 (declare ^:dynamic *session*)
 (declare ^:dynamic *flash*)
@@ -7,6 +8,9 @@
   "Store session into a Clojure map"
   [handler]
   (fn [request]
+    (log/info (str "wrap-session: request uri: " (-> request :uri)))
+    (log/info (str "wrap-session: request cookies: " (-> request :cookies)))
+    (log/info (str "wrap-session: request app session: " (-> request :session :app-session)))
     (binding [*session* (atom {})
               *flash* (atom {})]
       (when-let [session (get-in request [:session :app-session])]
@@ -14,9 +18,12 @@
       (when-let [flash (get-in request [:session :app-flash])]
         (reset! *flash* flash))
       (let [response (handler request)]
-        (-> response
-            (assoc-in [:session :app-session] @*session*)
-            (assoc-in [:session :app-flash] @*flash*))))))
+        (let [retval
+              (-> response
+                  (assoc-in [:session :app-session] @*session*)
+                  (assoc-in [:session :app-flash] @*flash*))]
+          (log/info (str "wrap-session: retval session: " (-> retval :session :app-session)))
+          retval)))))
 
 (defn- put!
   "Put key/value into target"
