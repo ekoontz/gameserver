@@ -31,15 +31,13 @@ function login() {
 	url : getContextRoot() + "/login",
 	data : requestData,
 	success : function(result) {
-	    if (result == "ok") {
-		redirect("/");
-	    } else {
-		$("#modal-message").html(result);
-		$("#popin-login").modal("show");
-	    }
+	    // Let clojure authentication handle error checking, etc: just display output.
+	    document.open();
+	    document.write(result);
+	    document.close();
 	},
 	error: function() {
-	    $("#modal-message").html("An error occurred. Please try again in a few moment.");
+	    $("#modal-message").html("An error occurred. Please try again in a few moments.");
 	    $("#modal-login").modal("show");
 	},
 	complete : function() {
