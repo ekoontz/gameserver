@@ -49,13 +49,11 @@
               settings-routes
               admin-routes
               (route/resources "/")
-              (route/not-found "<h1>Page not found.</h1>"))
+              (route/not-found "<h1>404 Page not found.</h1>"))
 
       (friend/authenticate
 
        {:allow-anon? true
-        :login-uri "/login"
-        :default-landing-uri "/"
         :unauthorized-handler #(->
                                 "unauthorized"
                                 resp/response
