@@ -136,8 +136,11 @@
   (response/redirect (wrap-context-root "/")))
 
 (defroutes auth-routes
-  (GET "/authorized" request (friend/authorize #{::user} "Hello authorized"))
-  
+  (GET "/authorized" request
+       (do
+         (log/info (str "GOT HERE!! request=" request))
+         (friend/authenticated "HELLO")))
+  (GET "/auth/google/login" request (google-auth/auth request))
   (GET "/signup" request (signup-page request))
   (POST "/signup" request (signup request))
   (GET "/login" request (login-page request))
