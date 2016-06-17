@@ -7,13 +7,15 @@
             [gameserver.util.session :as session]
             [gameserver.util.flash :as flash]
             [gameserver.service.db :as db]
+            [gameserver.view.auth.google :as google-auth]
             [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]
             [ring.util.response :as response]
             [ring.util.response :as resp]
             [stencil.core :as stencil]))
 
 (defn validate-form-credentials [data]
-  (log/info (str "fun-credential-fn: input: " (dissoc data :password))) ;; remove sensitive password before logging.
+  (log/info (str "fun-credential-fn: input: "
+                 (dissoc data :password))) ;; remove sensitive password before logging.
   (let [username (:username data)
         user-data (db/get-user username)]
     (if (or (nil? username) (nil? user-data))
@@ -30,7 +32,10 @@
                            resp/response
                            (resp/status 401))
    
-   :workflows [(workflows/interactive-form)]
+   :workflows [
+               (workflows/interactive-form)
+               (oauth2/workflow google-auth/auth-config)
+               ]
    
    :credential-fn validate-form-credentials})
 
