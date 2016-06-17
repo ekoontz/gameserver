@@ -35,8 +35,8 @@
 ;; how do you handle this inconsistency?
 (defn credential-fn [token]
   ;;lookup token in DB or whatever to fetch appropriate :roles
-  (log/info (str "google/credential-fn token: " token))
-  (let [username (token2username token)]
+  (log/info (str "google/credential-fn token: " (:access-token token)))
+  (let [username (token2username (:access-token token))]
     (session/set-user! {:username username})
     {:identity token :roles #{::user}}))
   
@@ -160,7 +160,7 @@
      (throw (Exception. (str "token2user: supplied access-token was null."))))
 
    true
-   (let [debug (log/debug (str "token2username: access-token: " access-token))
+   (let [debug (log/info (str "token2username: access-token: " access-token))
          user-by-access-token
          (first (k/exec-raw [(str "SELECT email,session.user_id AS userid
                                     FROM vc_user 
