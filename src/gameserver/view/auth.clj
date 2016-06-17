@@ -31,7 +31,11 @@
                            "unauthorized"
                            resp/response
                            (resp/status 401))
-   
+
+   ;; this way we won't pre-empt the form-based authentication:
+   ;; /login-via-google as opposed to /login, which will always show the form-based authentication form.
+   :login-uri "/login"
+
    :workflows [
                (workflows/interactive-form)
                (oauth2/workflow google-auth/auth-config)
