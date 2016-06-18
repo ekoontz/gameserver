@@ -28,6 +28,8 @@
 
 (def config
   {:allow-anon? true
+   :login-uri "/login" ;; /login will show the login page with a form; /autologin will go to straight to
+   ;; google if there is no internal user credentials.
    :unauthorized-handler #(->
                            "unauthorized"
                            resp/response
