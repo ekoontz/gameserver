@@ -1,5 +1,6 @@
 (ns gameserver.view.auth
   (:require [cemerick.friend :as friend]
+            [cemerick.friend.credentials :as creds]
             [cemerick.friend.workflows :as workflows]
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes GET POST]]
@@ -14,7 +15,7 @@
             [stencil.core :as stencil]))
 
 (defn validate-form-credentials [data]
-  (log/info (str "fun-credential-fn: input: "
+  (log/info (str "validate-form-credentials: input: "
                  (dissoc data :password))) ;; remove sensitive password before logging.
   (let [username (:username data)
         user-data (db/get-user username)]
