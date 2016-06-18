@@ -28,16 +28,18 @@ function login() {
 
     $.ajax({
 	type : "POST",
-	url : getContextRoot() + "/login",
+	url : getContextRoot() + "/login/form",
 	data : requestData,
 	success : function(result) {
-	    // Let clojure authentication handle error checking, etc: just display output.
-	    document.open();
-	    document.write(result);
-	    document.close();
+	    if (result == "ok") {
+		redirect("/");
+	    } else {
+		$("#modal-message").html(result);
+		$("#popin-login").modal("show");
+	    }
 	},
 	error: function() {
-	    $("#modal-message").html("An error occurred. Please try again in a few moments.");
+	    $("#modal-message").html("An error occurred. Please try again in a few moment.");
 	    $("#modal-login").modal("show");
 	},
 	complete : function() {

@@ -147,6 +147,7 @@
   (GET "/login" request (login-page request))
   (GET "/login/form" request (login-page request))
   (POST "/login" request (login request))
+  (POST "/login/form" request (login request))
   (GET "/reset-pass" request (reset-pass-page request))
   (POST "/reset-pass" request (reset-pass request))
   (GET "/check-session" request (check-session request))
