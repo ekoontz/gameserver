@@ -5,8 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [cheshire "5.2.0"] ;; Clojure JSON and JSON SMILE (binary json format) encoding/decoding
-                 [clj-http "0.7.3"]
-                 [com.cemerick/friend "0.2.1"]
+                 [clj-http "2.2.0"]
+                 [com.cemerick/friend "0.2.3"]
                  [compojure "1.1.3"]
                  [environ "1.0.0"]
                  [friend-oauth2 "0.1.3"]
@@ -27,6 +27,6 @@
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.4"]]
                    :source-paths ["dev"]}}
   :plugins [[cider/cider-nrepl "0.11.0"]
-            [lein-ring "0.9.3"]]
+            [lein-ring "0.9.7"]]
   :ring {:handler gameserver.app/site-handler}
   :main gameserver)
