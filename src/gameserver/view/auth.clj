@@ -94,6 +94,7 @@
    if success : returns 'ok'
    if error : returns a message to be displayed to the user"
   [request]
+  (log/info (str "WTF GOT HERE!" request))
   (let [username (-> request :params :username)
         password (-> request :params :password)]
     (do
@@ -138,12 +139,13 @@
 (defroutes auth-routes
   (GET "/authorized" request
        (do
-         (log/info (str "GOT HERE!! request=" request))
+         (log/info (str "/authorized with request=" request))
          (friend/authenticated "HELLO")))
   (GET "/auth/google/login" request (google-auth/auth request))
   (GET "/signup" request (signup-page request))
   (POST "/signup" request (signup request))
   (GET "/login" request (login-page request))
+  (GET "/login/form" request (login-page request))
   (POST "/login" request (login request))
   (GET "/reset-pass" request (reset-pass-page request))
   (POST "/reset-pass" request (reset-pass request))
