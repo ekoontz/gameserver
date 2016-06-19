@@ -28,7 +28,7 @@ function login() {
 
     $.ajax({
 	type : "POST",
-	url : getContextRoot() + "/login/form",
+	url : getContextRoot() + "/login",
 	data : requestData,
 	success : function(result) {
 	    if (result == "ok") {
