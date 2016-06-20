@@ -28,8 +28,7 @@
 
 (def config
   {:allow-anon? true
-   :login-uri "/login" ;; /login will show the login page with a form; /autologin will go to straight to
-   ;; google if there is no internal user credentials.
+
    :unauthorized-handler #(->
                            "unauthorized"
                            resp/response
@@ -147,6 +146,7 @@
   (GET "/signup" request (signup-page request))
   (POST "/signup" request (signup request))
   (GET "/login" request (login-page request))
+  (GET "/login/form" request (login-page request))
   (POST "/login" request (login request))
   (GET "/reset-pass" request (reset-pass-page request))
   (POST "/reset-pass" request (reset-pass request))
