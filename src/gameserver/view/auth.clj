@@ -151,7 +151,7 @@
   (GET "/authorized" request
        (do
          (log/info (str "GOT HERE!! request=" request))
-         (friend/authenticated "HELLO")))
+         (friend/authenticated (str "HELLO: " request))))
   (GET "/auth/google/login" request (google-auth/auth request))
   (GET "/signup" request (signup-page request))
   (POST "/signup" request (signup request))
