@@ -1,7 +1,8 @@
 (ns gameserver.view.auth
   (:require [cemerick.friend :as friend]
             [cemerick.friend.credentials :as creds]
-            [cemerick.friend.workflows :as workflows]
+            (cemerick.friend [workflows :as workflows]
+                             [credentials :as creds])
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes GET POST]]
             [friend-oauth2.workflow :as oauth2]
@@ -26,6 +27,15 @@
         (session/set-user! {:username username})
         {:identity data :roles #{::user}}))))
 
+(def users {"admin" {:username "admin"
+                    :password (creds/hash-bcrypt "password")
+                    :roles #{::admin}}
+            "dave" {:username "dave"
+                    :password (creds/hash-bcrypt "password")
+                    :roles #{::user}}})
+
+(derive ::admin ::user)
+
 (def config
   {:allow-anon? true
 
@@ -40,10 +50,10 @@
 
    :workflows [
                (workflows/interactive-form)
-               (oauth2/workflow google-auth/auth-config)
+;;               (oauth2/workflow google-auth/auth-config)
                ]
    
-   :credential-fn validate-form-credentials})
+   :credential-fn (partial creds/bcrypt-credential-fn users)})
 
 (defn- signup-page
   "Render the signup page."
