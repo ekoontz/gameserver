@@ -32,12 +32,13 @@
 ;;; Load generic routes
 ;; Ring handler definition
 (defroutes site-handler
-  (-> (routes home-routes
-              about-routes
+  (-> (routes
+       home-routes
+;              about-routes
               auth-routes
-              profile-routes
-              settings-routes
-              admin-routes
+;              profile-routes
+;              settings-routes
+;              admin-routes
               (route/resources "/")
               (route/not-found "<h1>404 Page not found.</h1>"))
 
