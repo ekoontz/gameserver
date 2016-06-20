@@ -34,17 +34,17 @@
 (defroutes site-handler
   (-> (routes
        home-routes
-;              about-routes
+              about-routes
               auth-routes
-;              profile-routes
-;              settings-routes
-;              admin-routes
+              profile-routes
+              settings-routes
+              admin-routes
               (route/resources "/")
               (route/not-found "<h1>404 Page not found.</h1>"))
 
       (friend/authenticate
        auth/config)
 
-      (session-manager/wrap-session)
+;      (session-manager/wrap-session)
       (context-manager/wrap-context-root)
       (handler/site)))

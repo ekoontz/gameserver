@@ -26,7 +26,7 @@
 (defn authenticated?
   "Sample authentication function. Test if current user is not null."
   []
-  (not (nil? (session/current-user))))
+  false)
 
 (defn admin?
   "Sample authorization function. Test if current user it admin."
@@ -51,11 +51,5 @@
   [title body]
   (stencil/render-file
    "gameserver/view/templates/layout"
-   (let [content (base-content title body)
-         user (session/current-user)]
-     (if (authenticated?)
-       (assoc content 
-         :authenticated? 
-         {:user (:username user)
-          :nav-links (user-nav-links)})
-       content))))
+   (let [content (base-content title body)]
+     content)))
