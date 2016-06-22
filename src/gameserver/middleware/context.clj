@@ -1,4 +1,5 @@
-(ns gameserver.middleware.context)
+(ns gameserver.middleware.context
+  (:require [clojure.tools.logging :as log]))
 
 (def ^{:dynamic true :private true} *context-root*)
 
@@ -6,7 +7,9 @@
   "Wrap application root context"
   [handler]
   (fn [request]
-    (binding [*context-root* (or (:context request) "")]
+    (log/info (str "wrap-context-root: request:" request))
+    (binding [*context-root*
+              (or (:context request) "")]
       (handler request))))
 
 (defn get-context-root []
