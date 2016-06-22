@@ -25,7 +25,12 @@
           (log/info (str "wrap-session: resetting *flash* to: " flash)))
         (reset! *flash* flash))
       (let [response (handler request)]
-        response))))
+        (let [retval (-> response
+;                         (assoc-in [:session :app-session] @*session*)
+;                         (assoc-in [:session :app-flash] @*flash*)
+                         )]
+          (log/info (str "response: " response))
+          retval)))))
 
 (defn- put!
   "Put key/value into target"
