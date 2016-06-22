@@ -5,9 +5,10 @@
 (declare ^:dynamic *flash*)
 
 (defn log-session-info [request]
-  (log/info (str "wrap-session: request uri: " (-> request :uri)))
-  (log/info (str "wrap-session: request session: " (-> request :session)))
-  (log/info (str "wrap-session: request app session: " (-> request :session :app-session))))
+  (when (= "/" (-> request :uri))
+    (log/info (str "wrap-session: request uri: " (-> request :uri)))
+    (log/info (str "wrap-session: request session: " (-> request :session)))
+    (log/info (str "wrap-session: request app-session: " (-> request :session :app-session)))))
 
 (defn wrap-session
   "Store session into a Clojure map"
@@ -16,22 +17,8 @@
     (log-session-info request)
     (binding [*session* (atom {})
               *flash* (atom {})]
-      (when-let [session (get-in request [:session :app-session])]
-        (log/info (str "session: resetting *session* to: " session))
-        (reset! *session* session))
-      (when-let [flash (get-in request [:session :app-flash])]
-        (if (not (nil? flash))
-          (log/info (str "wrap-session: resetting *flash* to: " flash)))
-        (reset! *flash* flash))
       (let [response (handler request)]
-        (log/info (str "wrap-session: handler response keys: " (keys response)))
-        (log/info (str "wrap-session: *session*:" @*session*))
-        (let [retval
-              (-> response
-                  (assoc-in [:session :app-session] @*session*)
-                  (assoc-in [:session :app-flash] @*flash*))]
-          (log/info (str "returning response with session: " (-> response :session)))
-          retval)))))
+        response))))
 
 (defn- put!
   "Put key/value into target"
