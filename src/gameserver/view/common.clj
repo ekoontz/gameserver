@@ -32,6 +32,7 @@
 
 ;;; Layout
 (defn- base-content
+  "create a map of the title and body together with the context root"
   [title body]
   {:context-root (context/get-context-root)
    :title title
