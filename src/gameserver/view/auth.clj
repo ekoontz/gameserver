@@ -51,6 +51,8 @@
                               :params
                               :username))]
     (when user
+      (log/info (str "logging in user: " (-> request :params :username)
+                     " (TODO: no password-checking yet)"))
       (session/set-user! (select-keys user [:username :type]))
       user)))
 
