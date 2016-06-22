@@ -96,7 +96,7 @@
 
 (defn- logout
   "Process user logout."
-  [request]
+  []
   (session/logout)
   (response/redirect (wrap-context-root "/")))
 
@@ -108,4 +108,4 @@
   (GET "/reset-pass" request (reset-pass-page request))
   (POST "/reset-pass" request (reset-pass request))
   (GET "/check-session" request (check-session request))
-  (GET "/logout" request (logout request)))
+  (GET "/logout" request (logout)))
