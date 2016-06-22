@@ -20,7 +20,8 @@
         (log/info (str "session: resetting *session* to: " session))
         (reset! *session* session))
       (when-let [flash (get-in request [:session :app-flash])]
-        (log/info (str "session: resetting *flash* to: " flash))
+        (if (not (nil? flash))
+          (log/info (str "wrap-session: resetting *flash* to: " flash)))
         (reset! *flash* flash))
       (let [response (handler request)]
         (log/info (str "wrap-session: handler response keys: " (keys response)))
