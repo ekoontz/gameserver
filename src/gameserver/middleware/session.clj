@@ -17,6 +17,9 @@
     (log-session-info request)
     (binding [*session* (atom {})
               *flash* (atom {})]
+      (when-let [session (get-in request [:session :app-session])]
+        (log/info (str "session: resetting *session* to: " session))
+        (reset! *session* session))
       (let [response (handler request)]
         response))))
 
