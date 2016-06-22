@@ -7,11 +7,10 @@
   "Wrap application root context"
   [handler]
   (fn [request]
-    (log/info (str "wrap-context-root: request:" request))
+    (log/info (str "wrap-context-root-with-handler: request:" request))
     (binding [*context-root*
               (or (:context-root request) "")]
       (handler request))))
 
 (defn get-context-root []
   *context-root*)
-

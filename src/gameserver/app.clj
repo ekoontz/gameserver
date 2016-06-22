@@ -45,7 +45,6 @@
               (route/not-found "<h1>Page not found.</h1>"))
 
       (friend/authenticate
-
        {:allow-anon? true
         :login-uri "/login"
         :default-landing-uri "/"
@@ -53,9 +52,7 @@
                                 "unauthorized"
                                 resp/response
                                 (resp/status 401))
-
         :workflows []})
-
       (session-manager/wrap-session)
       (context-manager/wrap-context-root-with-handler)
       (handler/site)))
