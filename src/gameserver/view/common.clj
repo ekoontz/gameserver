@@ -5,14 +5,10 @@
             [gameserver.util.session :as session]))
 
 ;;; Context utils
-(defn get-context-root
-  []
-  (context/get-context-root))
-
 (defn wrap-context-root
   "Add web context to the path of URI"
   [path]
-  (str (get-context-root) path))
+  (str (context/get-context-root) path))
 
 ;;; User utils
 (defn restricted
