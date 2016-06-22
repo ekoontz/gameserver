@@ -46,13 +46,16 @@
 
       (friend/authenticate
        {:allow-anon? true
-        :login-uri "/login"
+        :login-uri "/flogin"
         :default-landing-uri "/"
         :unauthorized-handler #(->
                                 "unauthorized"
                                 resp/response
                                 (resp/status 401))
-        :workflows []})
+        :workflows [
+
+
+                    ]})
       (session-manager/wrap-session)
       (context-manager/wrap-context-root-with-handler)
       (handler/site)))
