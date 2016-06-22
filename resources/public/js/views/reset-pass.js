@@ -15,7 +15,7 @@ function reset() {
 	data : requestData,
 	success : function(result) {
 	    if (result == "ok") {
-		$("#modal-message").html("Password reseted.");
+		$("#modal-message").html("Password reset.");
 		$("#modal-message").removeClass("alert alert-danger");
 	    } else {
 		$("#modal-message").html("An error occurred. Please try again in a few moment.");
