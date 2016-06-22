@@ -9,7 +9,7 @@
   (fn [request]
     (log/info (str "wrap-context-root: request:" request))
     (binding [*context-root*
-              (or (:context request) "")]
+              (or (:context-root request) "")]
       (handler request))))
 
 (defn get-context-root []
