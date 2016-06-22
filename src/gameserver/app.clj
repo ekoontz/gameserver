@@ -4,6 +4,9 @@
             [compojure.handler :as handler]
             [compojure.route :as route]
             [stencil.loader :as stencil]
+            [cemerick.friend
+             [workflows :as workflows]
+             [credentials :as creds]]
             [friend-oauth2.workflow :as oauth2]
             [gameserver.middleware.session :as session-manager]
             [gameserver.middleware.context :as context-manager]
@@ -32,6 +35,14 @@
 ;;; Load website routes
 ;; Add your routes here
 
+(def users {"admin" {:username "admin"
+                    :password (creds/hash-bcrypt "password")
+                    :roles #{::admin}}
+            "dave" {:username "dave"
+                    :password (creds/hash-bcrypt "password")
+                    :roles #{::user}}})
+
+(derive ::admin ::user)
 
 ;; Ring handler definition
 (defroutes site-handler
@@ -53,9 +64,10 @@
                                 resp/response
                                 (resp/status 401))
         :workflows [
-
-
-                    ]})
+                    (workflows/interactive-form)
+                    ]
+        :credential-fn (partial creds/bcrypt-credential-fn users)
+        })
       (session-manager/wrap-session)
       (context-manager/wrap-context-root-with-handler)
       (handler/site)))

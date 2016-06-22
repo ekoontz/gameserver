@@ -1,6 +1,7 @@
 (ns gameserver.view.auth
     (:require [clojure.tools.logging :as log]
               [ring.util.response :as response]
+              [cemerick.friend :as friend]
               [compojure.core :refer [defroutes GET POST]]
               [stencil.core :as stencil]
               [gameserver.util.session :as session]
@@ -42,6 +43,14 @@
    (stencil/render-file
     "gameserver/view/templates/login"
     {})))
+
+(defn- flogin-page [request]
+  "Render the login page."
+(str "<form action='/flogin' method='POST'>
+Username: <input type='text' name='username' value='' /><br />
+Password: <input type='password' name='password' value='' /><br />
+<input type='submit' name='submit' value='submit' /><br />
+</form>"))
 
 (defn- auth
   "Initialise session with dummy data."
@@ -106,8 +115,18 @@
   (GET "/signup" request (signup-page request))
   (POST "/signup" request (signup request))
   (GET "/login" request (login-page request))
+  (GET "/flogin" request (flogin-page request))
   (POST "/login" request (login request))
   (GET "/reset-pass" request (reset-pass-page request))
   (POST "/reset-pass" request (reset-pass request))
   (GET "/check-session" request (check-session request))
-  (GET "/logout" request (logout)))
+  (GET "/logout" request (logout))
+
+  (GET "/authorized" request
+       (do
+         (friend/authenticated
+          (do
+            (log/info (str "You are authenticated: request keys: " (keys request)))
+            (str "HELLO: " (-> request :session :cemerick.friend/identity)))))))
+
+
