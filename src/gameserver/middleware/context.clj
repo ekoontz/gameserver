@@ -2,7 +2,7 @@
 
 (def ^{:dynamic true :private true} *context-root*)
 
-(defn wrap-context-root
+(defn wrap-context-root-with-handler
   "Wrap application root context"
   [handler]
   (fn [request]

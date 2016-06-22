@@ -57,5 +57,5 @@
         :workflows []})
 
       (session-manager/wrap-session)
-      (context-manager/wrap-context-root)
+      (context-manager/wrap-context-root-with-handler)
       (handler/site)))
