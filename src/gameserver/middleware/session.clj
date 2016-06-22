@@ -4,14 +4,16 @@
 (declare ^:dynamic *session*)
 (declare ^:dynamic *flash*)
 
+(defn log-session-info [request]
+  (log/info (str "wrap-session: request uri: " (-> request :uri)))
+  (log/info (str "wrap-session: request session: " (-> request :session)))
+  (log/info (str "wrap-session: request app session: " (-> request :session :app-session))))
+
 (defn wrap-session
   "Store session into a Clojure map"
   [handler]
   (fn [request]
-    (log/info (str "wrap-session: request uri: " (-> request :uri)))
-    (log/info (str "wrap-session: request cookies: " (-> request :cookies)))
-    (log/info (str "wrap-session: request session: " (-> request :session)))
-    (log/info (str "wrap-session: request app session: " (-> request :session :app-session)))
+    (log-session-info request)
     (binding [*session* (atom {})
               *flash* (atom {})]
       (when-let [session (get-in request [:session :app-session])]
