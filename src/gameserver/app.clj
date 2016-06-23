@@ -57,7 +57,7 @@
 
       (friend/authenticate
        {:allow-anon? true
-        :login-uri "/flogin"
+        :login-uri "/login"
         :default-landing-uri "/"
         :unauthorized-handler #(->
                                 "unauthorized"
