@@ -1,5 +1,6 @@
 (ns gameserver.view.common
-  (:require [ring.util.response :as response]
+  (:require [clojure.tools.logging :as log]
+            [ring.util.response :as response]
             [stencil.core :as stencil]
             [gameserver.middleware.context :as context]
             [gameserver.util.session :as session]))
@@ -27,8 +28,10 @@
 (defn admin?
   "Sample authorization function. Test if current user it admin."
   []
-  (if-let [user (session/current-user)]
-    (= :admin (keyword (:type user)))))
+  (when-let [user (session/current-user)]
+    (log/info (str "checking (2) admin properties of user: " user))
+    (log/info (str "roles of user: " (:roles user)))
+    (contains? (:roles user) :gameserver.app/admin)))
 
 ;;; Layout
 (defn- base-content
