@@ -5,10 +5,9 @@
 (declare ^:dynamic *flash*)
 
 (defn log-session-info [request]
-  (when (= "/" (-> request :uri))
+  (when (= (-> request :uri) "/")
     (log/info (str "wrap-session: request uri: " (-> request :uri)))
-    (log/info (str "wrap-session: request session: " (-> request :session)))
-    (log/info (str "wrap-session: request app-session: " (-> request :session :app-session)))))
+    (log/info (str "wrap-session: request friend: " (-> request :session :cemerick.friend/identity)))))
 
 (defn wrap-session
   "Store session into a Clojure map"
@@ -17,19 +16,24 @@
     (log-session-info request)
     (binding [*session* (atom {})
               *flash* (atom {})]
-      (when-let [session (get-in request [:session :app-session])]
-        (log/info (str "session: resetting *session* to: " session))
-        (reset! *session* session))
+      (log/info (str "response session(1): " (-> request :session)))
+      (log/info (str "response session(1.5): " (-> request :session :cemerick.friend/identity)))
+      (when-let [session (get-in request [:session :cemerick.friend/identity])]
+        (when (not (empty? session))
+          (log/info (str "session: resetting *session* to: " session))
+          (reset! *session* session)))
       (when-let [flash (get-in request [:session :app-flash])]
         (if (not (nil? flash))
           (log/info (str "wrap-session: resetting *flash* to: " flash)))
         (reset! *flash* flash))
       (let [response (handler request)]
+        (log/info (str "*session* is now: " @*session*))
         (let [retval (-> response
+;                         (assoc-in [:session :cemerick.friend/identity] @*session*)
 ;                         (assoc-in [:session :app-session] @*session*)
 ;                         (assoc-in [:session :app-flash] @*flash*)
                          )]
-          (log/info (str "response: " response))
+          (log/info (str "retval session(3): " (-> retval :session)))
           retval)))))
 
 (defn- put!
