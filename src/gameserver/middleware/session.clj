@@ -28,11 +28,13 @@
         (reset! *flash* flash))
       (let [response (handler request)]
         (log/info (str "*session* is now: " @*session*))
-        (let [retval (-> response
-;                         (assoc-in [:session :cemerick.friend/identity] @*session*)
-;                         (assoc-in [:session :app-session] @*session*)
-;                         (assoc-in [:session :app-flash] @*flash*)
-                         )]
+        (let [retval
+              (if (not (empty? @*session*))
+                (assoc-in response
+                          [:session :cemerick.friend/identity] @*session*)
+                (do
+                  (log/info (str "it's strange that @*session* is empty???"))
+                  response))]
           (log/info (str "retval session(3): " (-> retval :session)))
           retval)))))
 
