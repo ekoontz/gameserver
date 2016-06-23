@@ -17,7 +17,7 @@
 (defn current-user
   "Retrieve current user"
   []
-  (session-manager/session-get :user))
+  (session-manager/session-get :current))
 
 (defn logout
   "Reset session"

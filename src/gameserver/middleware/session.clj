@@ -55,7 +55,9 @@
 (defn session-get
   "Get the value associated to a key for the current session"
   [k]
-  (@*session* k))
+  (let [current (get @*session* k)]
+    (if current
+      (get-in @*session* [:authentications current]))))
 
 (defn session-clear
   "Clear the current session"
