@@ -44,14 +44,6 @@
     "gameserver/view/templates/login"
     {})))
 
-(defn- flogin-page [request]
-  "Render the login page."
-(str "<form action='/flogin' method='POST'>
-Username: <input type='text' name='username' value='' /><br />
-Password: <input type='password' name='password' value='' /><br />
-<input type='submit' name='submit' value='submit' /><br />
-</form>"))
-
 (defn- auth
   "Initialise session with dummy data."
   [request]
@@ -115,8 +107,6 @@ Password: <input type='password' name='password' value='' /><br />
   (GET "/signup" request (signup-page request))
   (POST "/signup" request (signup request))
   (GET "/login" request (login-page request))
-  (GET "/flogin" request (flogin-page request))
-  (POST "/login" request (login request))
   (GET "/reset-pass" request (reset-pass-page request))
   (POST "/reset-pass" request (reset-pass request))
   (GET "/check-session" request (check-session request))
