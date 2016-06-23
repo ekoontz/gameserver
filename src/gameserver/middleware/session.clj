@@ -33,8 +33,11 @@
                 (assoc-in response
                           [:session :cemerick.friend/identity] @*session*)
                 (do
-                  (log/info (str "it's strange that @*session* is empty???"))
-                  response))]
+                  (log/info (str "it is odd, but @*session* is empty, so not messing with the :session."))
+                  response))
+              retval
+              (assoc-in retval
+                        [:session :app-flash] @*flash*)]
           (log/info (str "retval session(3): " (-> retval :session)))
           retval)))))
 
