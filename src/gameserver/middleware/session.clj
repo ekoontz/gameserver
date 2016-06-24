@@ -33,7 +33,7 @@
                 (assoc-in response
                           [:session :cemerick.friend/identity] @*session*)
                 (do
-                  (log/debug (str "it is odd, but @*session* is empty, so not messing with the :session."))
+                  (log/debug (str "it is odd: @*session* is empty, so not messing with the :session."))
                   response))
               retval
               (assoc-in retval
