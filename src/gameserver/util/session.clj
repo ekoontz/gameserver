@@ -1,7 +1,7 @@
 (ns gameserver.util.session
     (:refer-clojure :exclude [get])
-    (:require [gameserver.middleware.session :as session-manager]))
-
+    (:require [clojure.tools.logging :as log]
+              [gameserver.middleware.session :as session-manager]))
 (defn put!
   [key value]
   (session-manager/session-put! key value))
@@ -12,6 +12,7 @@
 
 (defn set-user! 
   [user]
+  (log/info (str "set-user!: " user))
   (put! :user user))
 
 (defn current-user
