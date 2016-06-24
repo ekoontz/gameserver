@@ -9,6 +9,7 @@
             [gameserver.service.db :as db]
             [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]
             [gameserver.view.auth.google :refer [google-auth-config]]
+            [gameserver.view.auth.users :as users]
             [gameserver.util.session :as session]
             [gameserver.util.flash :as flash]
             [ring.util.response :as resp]

@@ -7,6 +7,7 @@
             [friend-oauth2.workflow :as oauth2]
             [friend-oauth2.util :refer [format-config-uri]]
             [gameserver.util.session :as session]
+            [gameserver.view.auth.users :as users]
             [korma.core :as k]
             [org.httpkit.client :as http]))
 

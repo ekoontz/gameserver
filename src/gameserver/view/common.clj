@@ -31,7 +31,7 @@
   (when-let [user (session/current-user)]
     (log/info (str "checking (2) admin properties of user: " user))
     (log/info (str "roles of user: " (:roles user)))
-    (contains? (:roles user) :gameserver.app/admin)))
+    (contains? (:roles user) :gameserver.view.auth.users/admin)))
 
 ;;; Layout
 (defn- base-content

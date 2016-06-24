@@ -17,7 +17,7 @@
          '[gameserver.view.about :refer [about-routes]])
 
 ;;; Load registration and authentication routes
-(require '[gameserver.view.auth :refer [auth-routes authenticate users]])
+(require '[gameserver.view.auth :refer [auth-routes authenticate]])
 
 ;;; Load generic routes
 (require '[gameserver.view.profile :refer [profile-routes]]
