@@ -11,7 +11,9 @@
                  [clj-http "0.7.3"]
                  [org.clojure/tools.logging "0.2.6"]
                  [cheshire "5.2.0"] ;; Clojure JSON and JSON SMILE (binary json format) encoding/decoding
-                 [log4j/log4j "1.2.17"]]
+                 [log4j/log4j "1.2.17"]
+                 [korma "0.4.2"]
+                 [org.postgresql/postgresql "9.4.1208.jre7"]]
   :profiles {:dev {:dependencies [[org.clojure/tools.namespace "0.2.4"]]
                    :source-paths ["dev"]}}
   :plugins [[cider/cider-nrepl "0.11.0"]
