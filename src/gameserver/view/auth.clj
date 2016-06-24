@@ -6,10 +6,11 @@
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes GET POST]]
             [friend-oauth2.workflow :as oauth2]
-            [gameserver.util.session :as session]
-            [gameserver.util.flash :as flash]
             [gameserver.service.db :as db]
             [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]
+            [gameserver.view.auth.google :refer [google-auth-config]]
+            [gameserver.util.session :as session]
+            [gameserver.util.flash :as flash]
             [ring.util.response :as resp]
             [stencil.core :as stencil]))
 
@@ -33,9 +34,8 @@
                                 "unauthorized"
                                 resp/response
                                 (resp/status 401))
-        :workflows [
-                    (workflows/interactive-form)
-                    ]
+        :workflows [(workflows/interactive-form)
+                    (oauth2/workflow google-auth-config)]
         :credential-fn (partial creds/bcrypt-credential-fn users)
         })))
 

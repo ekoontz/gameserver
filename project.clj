@@ -7,6 +7,7 @@
                  [cheshire "5.2.0"] ;; Clojure JSON and JSON SMILE (binary json format) encoding/decoding
                  [ring "1.2.0"]
                  [compojure "1.1.3"]
+                 [http-kit "2.1.16"]
                  [friend-oauth2 "0.1.3"]
                  [korma "0.4.2"]
                  [log4j/log4j "1.2.17"]
