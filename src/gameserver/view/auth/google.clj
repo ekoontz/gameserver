@@ -56,41 +56,6 @@
                   :uri-config uri-config
                   :credential-fn credential-fn})
 
-(defn auth [request]
-  (log/info (str "running /login with google-client-id: " (:client-id client-config) "; client request: " request))
-  
-  ;; need all three environment variables set correctly; otherwise thrown an exception.
-  (if (nil? (:client-id client-config))
-    (do
-      (log/error (str "No google client id was found in the environment."))
-      (throw (Exception. (str "Administrator must define GOOGLE_CLIENT_ID in my runtime environment.")))))
-
-  (if (nil? (:client-secret client-config))
-    (do
-      (log/error (str "No google client secret was found in the environment."))
-      (throw (Exception. (str "Administrator must define GOOGLE_CLIENT_SECRET in my runtime environment.")))))
-
-  (if (nil? (:callback client-config))
-    (do
-      (log/error (str "No google client callback was found in the environment."))
-      (throw (Exception. (str "Administrator must define GOOGLE_CALLBACK_DOMAIN in my runtime environment.")))))
-
-  (friend/authorize #{::user} "Authorized page.")
-
-  (is-authenticated
-   (let [username (token2username
-                   (-> request :session :cemerick.friend/identity :current :access-token)
-                   request)]
-     {:status 302
-      :headers {"Location" "/"}})))
-
-(defn is-authenticated [if-authenticated]
-  (if (not (nil? (friend/current-authentication)))
-    if-authenticated
-     (do (log/debug (str "is-authenticated: not authenticated; redirecting to /"))
-         {:status 302
-          :headers {"Location" "/"}})))
-
 (defn token2info [access-token]
   (first (k/exec-raw [(str "SELECT vc_user.* 
                               FROM vc_user
@@ -99,14 +64,6 @@
                              WHERE session.access_token=?")
                       [access-token]]
                      :results)))
-
-;; TODO: should be one level above this (verbcoach.auth)
-(defn is-authenticated [if-authenticated]
-  (if (not (nil? (friend/current-authentication)))
-    if-authenticated
-     (do (log/debug (str "is-authenticated: not authenticated; redirecting to /"))
-         {:status 302
-          :headers {"Location" "/"}})))
 
 (defn request2cookie [request]
   "get the cookie (if any) embedded at a certain path within the request params."
