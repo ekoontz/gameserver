@@ -1,29 +1,19 @@
 (ns gameserver.view.auth
   (:require [cemerick.friend
-             [workflows :as workflows]
-             [credentials :as creds]]
+             [workflows :as workflows]]
             [cemerick.friend :as friend]
+            [cemerick.friend.credentials :as creds]
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes GET POST]]
             [friend-oauth2.workflow :as oauth2]
             [gameserver.service.db :as db]
             [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]
-            [gameserver.view.auth.google :refer [google-auth-config]]
+            [gameserver.view.auth.google :as google]
             [gameserver.view.auth.users :as users]
             [gameserver.util.session :as session]
             [gameserver.util.flash :as flash]
             [ring.util.response :as resp]
             [stencil.core :as stencil]))
-
-;; TODO: replace with postgres store
-(def users {"admin" {:username "admin"
-                    :password (creds/hash-bcrypt "password")
-                    :roles #{::admin}}
-            "dave" {:username "dave"
-                    :password (creds/hash-bcrypt "password")
-                    :roles #{::user}}})
-
-(derive ::admin ::user)
 
 (defn authenticate [ring-handler]
   (-> ring-handler
@@ -36,8 +26,9 @@
                                 resp/response
                                 (resp/status 401))
         :workflows [(workflows/interactive-form)
-                    (oauth2/workflow google-auth-config)]
-        :credential-fn (partial creds/bcrypt-credential-fn users)
+                    ;(oauth2/workflow google/auth-config)
+                    ]
+        :credential-fn (partial creds/bcrypt-credential-fn users/users)
         })))
 
 (defn- signup-page

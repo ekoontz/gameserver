@@ -4,24 +4,16 @@
             [clojure.data.json :as json]
             [clojure.tools.logging :as log]
             [environ.core :refer [env]]
-            [friend-oauth2.workflow :as oauth2]
             [friend-oauth2.util :refer [format-config-uri]]
+            [friend-oauth2.workflow :as oauth2]
             [gameserver.util.session :as session]
             [gameserver.view.auth.users :as users]
             [korma.core :as k]
             [org.httpkit.client :as http]))
 
-(derive ::admin ::user)
-
 (declare insert-session)
 (declare is-authenticated)
 (declare token2username)
-
-(def client-config
-  {:client-id (env :google-client-id)
-   :client-secret (env :google-client-secret)
-   :callback {:domain (env :google-callback-domain)
-              :path "/oauth2callback"}})
 
 (if-let [google-client-id (env :google-client-id)]
   (log/info (str "google authentication configured client-id:" google-client-id)))
@@ -36,10 +28,17 @@
 (defn credential-fn [token]
   ;;lookup token in DB or whatever to fetch appropriate :roles
   (log/info (str "google/credential-fn token: " token))
-  (let [username (token2username token)]
+  (let [username (token2username (-> token :access-token))]
     (session/set-user! {:username username})
-    {:identity token :roles #{::user}}))
-  
+    ;; TODO: for now, google-authenticated users cannot be admins: instead, need to use postgres to define per-user roles.
+    {:identity token :roles #{:auth/user}}))
+
+(def client-config
+  {:client-id (env :google-client-id)
+   :client-secret (env :google-client-secret)
+   :callback {:domain (env :google-callback-domain)
+              :path "/oauth2callback"}})
+
 (def uri-config
   {:authentication-uri {:url "https://accounts.google.com/o/oauth2/auth"
                         :query {:client_id (:client-id client-config)
@@ -160,7 +159,7 @@
      (throw (Exception. (str "token2user: supplied access-token was null."))))
 
    true
-   (let [debug (log/debug (str "token2username: access-token: " access-token))
+   (let [debug (log/info (str "token2username: access-token: " access-token))
          user-by-access-token
          (first (k/exec-raw [(str "SELECT email,session.user_id AS userid
                                     FROM vc_user 
@@ -281,18 +280,3 @@
   (let [token2info (token2info access-token)]
     (if token2info
       (:picture token2info))))
-
-(def google-auth-config {:client-config client-config
-                         :uri-config {:authentication-uri {:url "https://accounts.google.com/o/oauth2/auth"
-                                                           :query {:client_id (:client-id client-config)
-                                                                   :response_type "code"
-                                                                   :redirect_uri (format-config-uri client-config)
-                                                                   :scope "email"}}
-                                      :access-token-uri {:url "https://accounts.google.com/o/oauth2/token"
-                                                         :query {:client_id (:client-id client-config)
-                                                                 :client_secret (:client-secret client-config)
-                                                                 :grant_type "authorization_code"
-                                                                 :redirect_uri (format-config-uri client-config)}}}
-                         :credential-fn (fn [token]
-                                          (let [username (token2username (:access-token token))]
-                                            {:identity username :roles #{::user}}))})
