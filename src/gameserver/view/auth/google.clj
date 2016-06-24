@@ -2,14 +2,13 @@
   (:require [cemerick.friend [workflows :as workflows]]
             [cemerick.friend :as friend]
             [clojure.data.json :as json]
-            [gameserver.util.session :as session]
             [clojure.tools.logging :as log]
+            [environ.core :refer [env]]
             [friend-oauth2.workflow :as oauth2]
             [friend-oauth2.util :refer [format-config-uri]]
-            [org.httpkit.client :as http]
-            [korma.core :as k]))
-
-(require '[environ.core :refer [env]])
+            [gameserver.util.session :as session]
+            [korma.core :as k]
+            [org.httpkit.client :as http]))
 
 (derive ::admin ::user)
 
