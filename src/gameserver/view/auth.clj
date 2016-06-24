@@ -66,19 +66,6 @@
     "gameserver/view/templates/login"
     {})))
 
-(defn- auth
-  "Initialise session with dummy data."
-  [request]
-  ;; TODO : replace with the authentication process
-  (let [user (db/get-user (-> request
-                              :params
-                              :username))]
-    (when user
-      (log/info (str "logging in user: " (-> request :params :username)
-                     " (TODO: no password-checking yet)"))
-      (session/set-user! (select-keys user [:username :type]))
-      user)))
-
 (defn- reset-pass-page
   "Render the reset password page."
   [request]
