@@ -26,8 +26,7 @@
                                 resp/response
                                 (resp/status 401))
         :workflows [(workflows/interactive-form)
-                    (oauth2/workflow google/auth-config)
-                    ]
+                    (oauth2/workflow google/auth-config)]
         :credential-fn (partial creds/bcrypt-credential-fn users/users)
         })))
 
@@ -110,5 +109,3 @@
           (do
             (log/info (str "You are authenticated: request keys: " (keys request)))
             (str "HELLO: " (-> request :session :cemerick.friend/identity)))))))
-
-
