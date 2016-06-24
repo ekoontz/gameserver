@@ -1,17 +1,17 @@
 (ns gameserver.view.auth
-    (:require [cemerick.friend
-               [workflows :as workflows]
-               [credentials :as creds]]
-              [cemerick.friend :as friend]
-              [clojure.tools.logging :as log]
-              [compojure.core :refer [defroutes GET POST]]
-              [friend-oauth2.workflow :as oauth2]
-              [gameserver.util.session :as session]
-              [gameserver.util.flash :as flash]
-              [gameserver.service.db :as db]
-              [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]
-              [ring.util.response :as resp]
-              [stencil.core :as stencil]))
+  (:require [cemerick.friend
+             [workflows :as workflows]
+             [credentials :as creds]]
+            [cemerick.friend :as friend]
+            [clojure.tools.logging :as log]
+            [compojure.core :refer [defroutes GET POST]]
+            [friend-oauth2.workflow :as oauth2]
+            [gameserver.util.session :as session]
+            [gameserver.util.flash :as flash]
+            [gameserver.service.db :as db]
+            [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]
+            [ring.util.response :as resp]
+            [stencil.core :as stencil]))
 
 ;; TODO: replace with postgres store
 (def users {"admin" {:username "admin"
