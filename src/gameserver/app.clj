@@ -4,13 +4,8 @@
             [compojure.handler :as handler]
             [compojure.route :as route]
             [stencil.loader :as stencil]
-            [cemerick.friend
-             [workflows :as workflows]
-             [credentials :as creds]]
-            [friend-oauth2.workflow :as oauth2]
             [gameserver.middleware.session :as session-manager]
-            [gameserver.middleware.context :as context-manager]
-            [ring.util.response :as resp]))
+            [gameserver.middleware.context :as context-manager]))
 
 ;;; Initialization
 ;; Add required code here (database, etc.)
@@ -22,7 +17,7 @@
          '[gameserver.view.about :refer [about-routes]])
 
 ;;; Load registration and authentication routes
-(require '[gameserver.view.auth :refer [auth-routes users]])
+(require '[gameserver.view.auth :refer [auth-routes authenticate users]])
 
 ;;; Load generic routes
 (require '[gameserver.view.profile :refer [profile-routes]]
@@ -44,20 +39,7 @@
               admin-routes
               (route/resources "/")
               (route/not-found "<h1>Page not found.</h1>"))
-
-      (friend/authenticate
-       {:allow-anon? true
-        :login-uri "/login"
-        :default-landing-uri "/"
-        :unauthorized-handler #(->
-                                "unauthorized"
-                                resp/response
-                                (resp/status 401))
-        :workflows [
-                    (workflows/interactive-form)
-                    ]
-        :credential-fn (partial creds/bcrypt-credential-fn users)
-        })
+      (authenticate)
       (session-manager/wrap-session)
       (context-manager/wrap-context-root-with-handler)
       (handler/site)))
