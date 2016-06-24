@@ -2,12 +2,23 @@
     (:require [clojure.tools.logging :as log]
               [ring.util.response :as response]
               [cemerick.friend :as friend]
+              [cemerick.friend.credentials :as creds]
               [compojure.core :refer [defroutes GET POST]]
               [stencil.core :as stencil]
               [gameserver.util.session :as session]
               [gameserver.util.flash :as flash]
               [gameserver.service.db :as db]
               [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]))
+
+;; TODO: replace with postgres store
+(def users {"admin" {:username "admin"
+                    :password (creds/hash-bcrypt "password")
+                    :roles #{::admin}}
+            "dave" {:username "dave"
+                    :password (creds/hash-bcrypt "password")
+                    :roles #{::user}}})
+
+(derive ::admin ::user)
 
 (defn- signup-page
   "Render the signup page."

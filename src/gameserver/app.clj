@@ -17,13 +17,12 @@
 (stencil/set-cache (cache/ttl-cache-factory {}))
 ;;(stencil/set-cache (cache/lru-cache-factory {}))
 
-
 ;;; Load public routes
 (require '[gameserver.view.home :refer [home-routes]]
          '[gameserver.view.about :refer [about-routes]])
 
 ;;; Load registration and authentication routes
-(require '[gameserver.view.auth :refer [auth-routes]])
+(require '[gameserver.view.auth :refer [auth-routes users]])
 
 ;;; Load generic routes
 (require '[gameserver.view.profile :refer [profile-routes]]
@@ -34,15 +33,6 @@
 
 ;;; Load website routes
 ;; Add your routes here
-
-(def users {"admin" {:username "admin"
-                    :password (creds/hash-bcrypt "password")
-                    :roles #{::admin}}
-            "dave" {:username "dave"
-                    :password (creds/hash-bcrypt "password")
-                    :roles #{::user}}})
-
-(derive ::admin ::user)
 
 ;; Ring handler definition
 (defroutes site-handler
