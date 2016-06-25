@@ -21,10 +21,6 @@
        {:allow-anon? true
         :login-uri "/login"
         :default-landing-uri "/"
-        :unauthorized-handler #(->
-                                "unauthorized"
-                                resp/response
-                                (resp/status 401))
         :workflows [(workflows/interactive-form)
                     (oauth2/workflow google/auth-config)]
         :credential-fn (partial creds/bcrypt-credential-fn users/users)
