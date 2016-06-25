@@ -101,6 +101,7 @@
 
   (GET "/authorized" request
        (do
+         (log/info (str "START: " (-> request :session :cemerick.friend/identity)))
          (friend/authenticated
           (do
             (log/info (str "You are authenticated: request keys: " (keys request)))
