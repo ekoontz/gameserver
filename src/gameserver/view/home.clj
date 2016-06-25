@@ -1,7 +1,7 @@
 (ns gameserver.view.home
-    (:require [compojure.core :refer [defroutes GET]]
-              [stencil.core :as stencil]
-              [gameserver.view.common :refer [wrap-layout authenticated?]]))
+  (:require [compojure.core :refer [defroutes GET]]
+            [stencil.core :as stencil]
+            [gameserver.view.common :refer [wrap-layout authenticated?]]))
 
 (defn- render-home [request]
   (stencil/render-file
