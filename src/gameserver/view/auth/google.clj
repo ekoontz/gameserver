@@ -29,7 +29,8 @@
   ;;lookup token in DB or whatever to fetch appropriate :roles
   (log/info (str "google/credential-fn token: " token))
   (let [username (token2username (-> token :access-token))]
-    (session/set-user! {:username username})
+    (log/info (str "token2username returned: " username))
+    (session/set-user! username)
     ;; TODO: for now, google-authenticated users cannot be admins: instead, need to use postgres to define per-user roles.
     {:identity token :roles #{:auth/user}}))
 
@@ -197,7 +198,8 @@
                              ]
                          (insert-session-if-none (get-in request [:cookies "ring-session" :value]) access-token user-id))
                                                   
-                       email))))))))))
+                       {:username email
+                        :roles #{:gameserver.view.auth.users/user}}))))))))))
 
 (defn insert-session
   ([ring-session]
