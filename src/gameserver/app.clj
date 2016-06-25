@@ -14,7 +14,8 @@
 
 ;;; Load public routes
 (require '[gameserver.view.home :refer [home-routes]]
-         '[gameserver.view.about :refer [about-routes]])
+         '[gameserver.view.about :refer [about-routes]]
+         '[gameserver.view.world :refer [world-routes]])
 
 ;;; Load registration and authentication routes
 (require '[gameserver.view.auth :refer [auth-routes authenticate]])
@@ -31,12 +32,13 @@
 
 ;; Ring handler definition
 (defroutes site-handler
-  (-> (routes home-routes
-              about-routes
+  (-> (routes about-routes
+              admin-routes
               auth-routes
+              home-routes
               profile-routes
               settings-routes
-              admin-routes
+              world-routes
               (route/resources "/")
               (route/not-found "<h1>Page not found.</h1>"))
       (authenticate)
