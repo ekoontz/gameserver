@@ -55,9 +55,10 @@
 (defn session-get
   "Get the value associated to a key for the current session"
   [k]
-  (let [current (get @*session* k)]
-    (if current
-      (get-in @*session* [:authentications current]))))
+  (let [v (get @*session* k)]
+    (if v
+      (get-in @*session* [:authentications v]) ;; (workflows/interactive-form) (gameserver.view.auth/authenticate)
+      (get-in @*session* [:user])))) ;; (oauth2/workflow google/auth-config)   (gameserver.view.auth/authenticate)
 
 (defn session-clear
   "Clear the current session"
