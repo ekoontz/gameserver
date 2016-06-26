@@ -21,6 +21,13 @@
        {:allow-anon? true
         :login-uri "/login"
         :default-landing-uri "/"
+        :unauthorized-handler (fn [request]
+                                (log/info (str "unauthZ-handler: request: " request))
+                                (log/info (str "authenticated status: " (authenticated?)))
+                                (if (authenticated?)
+                                  (ring.util.response/redirect (-> request :uri))
+                                  {:status 403
+                                   :body (str "Sorry, but you are not authorized.")}))
         :workflows [(workflows/interactive-form)
                     (oauth2/workflow google/auth-config)]
         :credential-fn (partial creds/bcrypt-credential-fn users/users)
