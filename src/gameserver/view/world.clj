@@ -1,7 +1,8 @@
 (ns gameserver.view.world
   (:require [cemerick.friend :as friend]
             [cheshire.core :refer :all]
-            [compojure.core :refer [defroutes GET]]))
+            [compojure.core :refer [defroutes GET POST]]
+            [stencil.core :as stencil]))
 
 (defroutes world-routes
   (GET "/world" request
@@ -31,7 +32,24 @@
           :owners {"ekoontz" #{"mission"}
                    "franco" #{"north beach" "chinatown"}}
           :location {"ekoontz" "mission"
-                     "franco" "north beach"}}))))
+                     "franco" "north beach"}})))
+
+  (GET "/world/move" request
+       (friend/authenticated
+        (stencil/render-file
+         "gameserver/view/templates/move"
+         {})))
+
+  (POST "/world/move" request
+        (friend/authenticated
+         ;; 1. deterimine user id
+         ;; 2. check if legal move
+         ;; 3. update world state
+         (generate-string
+          {:user "ekoontz"
+           :moved-to "tenderloin"}))))
+
+
 
                    
           
