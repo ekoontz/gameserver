@@ -5,6 +5,9 @@
             [cemerick.friend.credentials :as creds]
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes GET POST]]
+            ;; TODO: modify friend-oauth2.workflow so that it will show a login
+            ;; screen if user is known (by cookie or request) to prefer a local login
+            ;; workflow/interactivef-rom rather than oauth2. 
             [friend-oauth2.workflow :as oauth2]
             [gameserver.service.db :as db]
             [gameserver.view.common :refer [wrap-context-root wrap-layout authenticated?]]
