@@ -1,11 +1,17 @@
 #world {
-    border:1px dashed lightgreen;
+    float:left;
+    width:100%;
+}
+
+.info {
+    border:0px dashed blue;
+    width:35%;
+    float:left;
 }
 
 #map {
-    position:absolute;
-    left:10%;
-    top:10%;
-    width:85%;
-    height:85%;
+    left-margin:5%;
+    float:left;
+    width:500px;
+    height:500px;
 }
