@@ -42,13 +42,16 @@
 	  </div>
 	  <div class="navbar-collapse collapse">
 	    <ul class="nav navbar-nav">
-	      <li><a href="{{context-root}}/world/ui">World Info</a></li>
 	      {{#authenticated?}}
+	      <li><a href="{{context-root}}/world/ui">World Info</a></li>
 	      {{#nav-links}}
 	      <li><a href="{{link}}">{{label}}</a></li>
 	      {{/nav-links}}
 	      {{/authenticated?}}
 	      <li><a href="{{context-root}}/about">About</a></li>
+	      {{#notauthenticated?}}
+	      <li><a href="{{context-root}}/login/form">Login</a></li>
+	      {{/notauthenticated?}}
 	    </ul>
 	    <ul class="nav navbar-nav navbar-right">
 	      {{#authenticated?}}

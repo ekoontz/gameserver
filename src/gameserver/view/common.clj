@@ -60,7 +60,9 @@
                      :authenticated?
                      {:user (:username user)
                       :nav-links (user-nav-links)})
-              content)))
+              (assoc content
+                     :notauthenticated?
+                     [{:link (wrap-context-root "/login") :label "Login"}]))))
          ((fn [content]
             (if additional-resources
               (merge content
