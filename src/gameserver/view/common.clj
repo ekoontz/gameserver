@@ -47,15 +47,24 @@
     [{:link (wrap-context-root "/admin") :label "Administration"}]))
 
 (defn wrap-layout
-  "Define pages layout"
-  [title body]
+  "add user-specific content and apply standard page layout template"
+  [title body & [additional-resources]]
   (stencil/render-file
    "gameserver/view/templates/layout"
    (let [content (base-content title body)
          user (session/current-user)]
-     (if (authenticated?)
-       (assoc content 
-         :authenticated? 
-         {:user (:username user)
-          :nav-links (user-nav-links)})
-       content))))
+     (-> content
+         ((fn [content]
+            (if (authenticated?)
+              (assoc content
+                     :authenticated?
+                     {:user (:username user)
+                      :nav-links (user-nav-links)})
+              content)))
+         ((fn [content]
+            (if additional-resources
+              (merge content
+                     additional-resources)
+              content)))))))
+
+
