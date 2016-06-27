@@ -49,6 +49,7 @@
                      {:remote-js [{:src "http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"}
                                   {:src "http://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"}]
                       :local-js [{:src "log4.js"}
+                                 {:src "roma.js"}
                                  {:src "world.js"}]
                       :onload "load_world();"
                       :local-css [{:src "world.css"}]
