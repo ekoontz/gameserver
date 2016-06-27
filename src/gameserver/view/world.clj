@@ -33,11 +33,6 @@
    :location {"ekoontz" "mission"
               "franco" "north beach"}})
 
-(defn- page-body []
-  (stencil/render-file
-   "gameserver/view/templates/world"
-   {}))
-
 (defroutes world-routes
   (GET "/world" request
        (friend/authenticated
@@ -45,14 +40,19 @@
 
   (GET "/world/ui" request
        (friend/authenticated
-        (log/info (str "logging from /world/ui: GOT HERE."))
+        (log/debug (str "rendering map page."))
         (wrap-layout "World"
-                     (page-body)
+                     (stencil/render-file
+                      "gameserver/view/templates/world"
+                      {})
                      ;; add specific CSS and JS for map-containing HTML.
-                     {:js [{:src "map1.js"}
-                           {:src "map2.js"}]
-                      :css [{:src "map1.css"}
-                            {:src "map2.css"}]})))
+                     {:remote-js [{:src "http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"}
+                                  {:src "http://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"}]
+                      :local-js [{:src "log4.js"}
+                                 {:src "world.js"}]
+                      :onload "load_world();"
+                      :local-css [{:src "world.css"}]
+                      :remote-css [{:src "http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"}]})))
 
   (GET "/world/move" request
        (friend/authenticated
