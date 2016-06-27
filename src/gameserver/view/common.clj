@@ -29,8 +29,8 @@
   "Sample authorization function. Test if current user it admin."
   []
   (when-let [user (session/current-user)]
-    (log/info (str "checking (2) admin properties of user: " user))
-    (log/info (str "roles of user: " (:roles user)))
+    (log/debug (str "checking (2) admin properties of user: " user))
+    (log/debug (str "roles of user: " (:roles user)))
     (contains? (:roles user) :gameserver.view.auth.users/admin)))
 
 ;;; Layout

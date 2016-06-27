@@ -6,8 +6,8 @@
 
 (defn log-session-info [request]
   (when (= (-> request :uri) "/")
-    (log/info (str "wrap-session: request uri: " (-> request :uri)))
-    (log/info (str "wrap-session: request friend: " (-> request :session :cemerick.friend/identity)))))
+    (log/debug (str "wrap-session: request uri: " (-> request :uri)))
+    (log/debug (str "wrap-session: request friend: " (-> request :session :cemerick.friend/identity)))))
 
 (defn wrap-session
   "Store session into a Clojure map"
@@ -36,7 +36,7 @@
             (log/debug (str "wrap-session: resetting *flash* to: " flash)))
           (reset! *flash* flash))
         (let [response (handler request)]
-          (log/info (str "setting :session :cemerick.friend/identity to: " @*session*))
+          (log/debug (str "setting :session :cemerick.friend/identity to: " @*session*))
           (let [retval
                 (if (not (empty? @*session*))
                   (assoc-in response
