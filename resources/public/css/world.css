@@ -1,0 +1,11 @@
+#world {
+    border:1px dashed lightgreen;
+}
+
+#map {
+    position:absolute;
+    left:10%;
+    top:10%;
+    width:85%;
+    height:85%;
+}
