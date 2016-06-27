@@ -21,7 +21,7 @@ function load_world() {
     var mapboxVersion = 'v4';
 
     // http://leafletjs.com/reference.html#map-options
-    L.tileLayer('https://{s}.tiles.mapbox.com/{version}/{id}/{z}/{x}/{y}.png?access_token={k}', {
+/*    L.tileLayer('https://{s}.tiles.mapbox.com/{version}/{id}/{z}/{x}/{y}.png?access_token={k}', {
 	maxZoom: 21,
 	minZoom: 16,
 	// maxBounds..
@@ -32,7 +32,9 @@ function load_world() {
 	id: tileSet,
 	k: mapbox_api_key
     }).addTo(map);
-
+*/
+    L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyrYV5MFwg").addTo(map);
+    
     marker = L.marker([current_lat, current_long]).addTo(map);
     L.polygon([Firenze[3],Firenze[1],Firenze[0],Firenze[2]]).addTo(map);
     
