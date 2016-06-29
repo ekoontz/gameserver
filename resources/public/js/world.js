@@ -29,13 +29,12 @@ function load_world() {
 	k: mapbox_api_key
     }).addTo(map);
     
+    // SQL must use the EPSG4326 coordinate system for leaflet to show these correctly.
+    // e.g.: SELECT ...,ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326))::json AS geometry FROM rome_polygon;
     L.geoJson(sallustiano_e_castro_pretorio, {
-	// https://gist.github.com/onderaltintas/6649521
 	coordsToLatLng: function(coords) {
-	    x = coords[0];
-	    y = coords[1];
-            var lon = x *  180 / 20037508.34 ;
-	    var lat = Math.atan(Math.exp(y * Math.PI / 20037508.34)) * 360 / Math.PI - 90;
+	    lon = coords[0];
+	    lat = coords[1];
 	    return [lat,lon];
 	},
     }).addTo(map);
