@@ -9,9 +9,12 @@ var mapbox_api_key = "";
 
 function load_world() {
     log(INFO,"loading world..");
-    var current_lat = Roma[0][0];
-    var current_long = Roma[0][1];
-    var current_zoom = 17;
+    //var current_lat = Roma[0][0];
+    var current_lat = 51.4689338
+    //    var current_long = Roma[0][1];
+    //    var current_long = 12.9048389;
+    var current_long = 13.9048389;
+    var current_zoom = 15;
     var map = L.map('map', {
 	// http://leafletjs.com/reference.html#map-options
 	// dragging: false
@@ -35,12 +38,13 @@ function load_world() {
 */
     L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyrYV5MFwg").addTo(map);
  
-    L.geoJson(i_distritti_romani, {
-	style: function (feature) {
-	    return {color: feature.properties.color};
+    L.geoJson(sallustiano.features[0], {
+	coordsToLatLng: function(coords) {
+	    var foo = coords;
+	    var x = (foo[1] / 100000);
+	    var y = (foo[0] / 100000);
+	    return [x,y];
 	},
-	onEachFeature: function (feature, layer) {
-	    layer.bindPopup(feature.properties.description);
-	}
-	}).addTo(map);
+	
+    }).addTo(map);
 }
