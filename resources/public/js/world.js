@@ -9,11 +9,8 @@ var mapbox_api_key = "pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyr
 
 function load_world() {
     log(INFO,"loading world..");
-    //var current_lat = Roma[0][0];
-    var current_lat = 51.4689338
-    //    var current_long = Roma[0][1];
-    //    var current_long = 12.9048389;
-    var current_long = 13.9048389;
+    var current_lat = Roma[0][0];
+    var current_long = Roma[0][1];
     var current_zoom = 15;
     var map = L.map('map', {
 	// http://leafletjs.com/reference.html#map-options
@@ -23,11 +20,7 @@ function load_world() {
     var tileSet = 'mapbox.streets';
     var mapboxVersion = 'v4';
 
-    // http://leafletjs.com/reference.html#map-options
-/*    L.tileLayer('https://{s}.tiles.mapbox.com/{version}/{id}/{z}/{x}/{y}.png?access_token={k}', {
-	maxZoom: 21,
-	minZoom: 16,
-	// maxBounds..
+    L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyrYV5MFwg", {
 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 	    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 	    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -35,15 +28,16 @@ function load_world() {
 	id: tileSet,
 	k: mapbox_api_key
     }).addTo(map);
-*/
-    L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyrYV5MFwg").addTo(map);
- 
+    
     L.geoJson(sallustiano.features[0], {
+
+	// https://gist.github.com/onderaltintas/6649521
 	coordsToLatLng: function(coords) {
-	    var foo = coords;
-	    var x = (foo[1] / 100000);
-	    var y = (foo[0] / 100000);
-	    return [x,y];
+	    x = coords[0];
+	    y = coords[1];
+            var lon = x *  180 / 20037508.34 ;
+	    var lat = Math.atan(Math.exp(y * Math.PI / 20037508.34)) * 360 / Math.PI - 90;
+	    return [lat,lon];
 	},
 	
     }).addTo(map);
