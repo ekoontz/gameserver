@@ -34,24 +34,13 @@ function load_world() {
     }).addTo(map);
 */
     L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyrYV5MFwg").addTo(map);
-    
-
-    for (var distritto = 0; distritto < i_distritti_romani.length; distritto++) {
-	var foo = i_distritti_romani[distritto];
-	var bar = foo.geometry.coordinates[0];
-	var flipped_pairs = bar.map(function(pair) {
-	    var flipped = [
-		pair[1],
-		pair[0]
-	    ];
-	    return flipped;
-	});
-	
-	L.polygon(flipped_pairs).addTo(map);
-    }
-
-    marker = L.marker([current_lat, current_long]).addTo(map);
-//    L.polygon([Roma[3],Roma[1],Roma[0],Roma[2]]).addTo(map);
-
-    
+ 
+    L.geoJson(i_distritti_romani, {
+	style: function (feature) {
+	    return {color: feature.properties.color};
+	},
+	onEachFeature: function (feature, layer) {
+	    layer.bindPopup(feature.properties.description);
+	}
+	}).addTo(map);
 }
