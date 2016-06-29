@@ -29,8 +29,7 @@ function load_world() {
 	k: mapbox_api_key
     }).addTo(map);
     
-    //    L.geoJson(sallustiano.features, {
-    L.geoJson(sal_and_castro.features, {
+    L.geoJson(sallustiano_e_castro_pretorio.features, {
 	// https://gist.github.com/onderaltintas/6649521
 	coordsToLatLng: function(coords) {
 	    x = coords[0];
