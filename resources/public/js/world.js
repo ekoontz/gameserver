@@ -29,8 +29,8 @@ function load_world() {
 	k: mapbox_api_key
     }).addTo(map);
     
-    L.geoJson(sallustiano.features[0], {
-
+    //    L.geoJson(sallustiano.features, {
+    L.geoJson(sal_and_castro.features, {
 	// https://gist.github.com/onderaltintas/6649521
 	coordsToLatLng: function(coords) {
 	    x = coords[0];
@@ -39,6 +39,5 @@ function load_world() {
 	    var lat = Math.atan(Math.exp(y * Math.PI / 20037508.34)) * 360 / Math.PI - 90;
 	    return [lat,lon];
 	},
-	
     }).addTo(map);
 }
