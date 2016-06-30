@@ -47,19 +47,20 @@
                      (stencil/render-file
                       "gameserver/view/templates/world"
                       {})
-                     ;; add specific CSS and JS for map-containing HTML.
-                     {:remote-js [{:src "http://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"}
+
+                     {:remote-js [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js"}
                                   ;; TODO: use integrity= and crossorigin=
                                   ;; per https://code.jquery.com
                                   {:src "https://code.jquery.com/jquery-1.12.4.min.js"}
+
                                   ]
-                      ;; leaflet's CDN seems unreliable, so using local for it.
-                      :local-js [{:src "leaflet.js"}
-                                 {:src "log4.js"}
+
+                      :remote-css [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css"}]
+                      :local-js [{:src "log4.js"}
                                  {:src "world.js"}]
-                      :onload "load_world();"
-                      :local-css [{:src "leaflet.css"}
-                                  {:src "world.css"}]})))
+                      :local-css [{:src "world.css"}]
+                      :onload "load_world();"})))
+
   (GET "/world/move" request
        (friend/authenticated
         (stencil/render-file
