@@ -73,13 +73,16 @@ SELECT name,admin_level,ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
     OR name='Castro Pretorio';
 " []] :results)
               ;; TODO: we are reading json into edn, then writing it back to
-              ;; json: a bit inefficient.
+              ;; json: inefficient to do that.
               data (map (fn [hood]
-                          {:name (:name hood)
-                           :admin_level (:admin_level hood)
+                          {:properties {:name (:name hood)
+                                        :admin_level (:admin_level hood)}
+                           :type "Feature"
                            :geometry (json/read-str (:geometry hood))})
                         data)]
-          (generate-string data))))
+          (generate-string
+           {:type "FeatureCollection"
+            :features data}))))
   
   (POST "/world/move" request
         (friend/authenticated
