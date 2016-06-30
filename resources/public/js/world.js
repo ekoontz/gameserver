@@ -30,21 +30,27 @@ function load_world() {
     }).addTo(map);
     
     var player1 = {
-	"color": "#ffa800",
+	"fillColor": "#ffffee",
+	"color": "#000011",
 	"weight": 1,
 	"opacity": 0.65
     };
 
     var player2 = {
-	"color": "#007800",
+	"color": "#ffffee",
+	"fillColor": "#000011",
+	"border": "#ffffee",
 	"weight": 1,
-	"opacity": 0.15
+	"opacity": 0.95
     };
     
     $.ajax({
 	type: "GET",
 	url: "/world/map?player=0"}).done(function(content) {
 	    L.geoJson(content, {
+		onEachFeature: function onEachFeature(feature,layer) {
+		    layer.bindPopup(feature.properties.name);
+		},
 		style: player1,
 		coordsToLatLng: function(coords) {
 		    lon = coords[0];
@@ -58,6 +64,9 @@ function load_world() {
 	type: "GET",
 	url: "/world/map?player=1"}).done(function(content) {
 	    L.geoJson(content, {
+		onEachFeature: function onEachFeature(feature,layer) {
+		    layer.bindPopup(feature.properties.name);
+		},
 		style: player2,
 		coordsToLatLng: function(coords) {
 		    lon = coords[0];
