@@ -6,17 +6,17 @@ var styles_per_player = {
     0: {
 	"fill-color": "#0010a5",
 	"fill-outline-color": "#fff",
-	"fill-opacity": 0.6
+	"fill-opacity": 0.4
     },
     1: {
 	"fill-color": "#ffff00",
 	"fill-outline-color": "#000",
-	"fill-opacity": 0.6
+	"fill-opacity": 0.4
     },
     2: {
 	"fill-color": "#888700",
 	"fill-outline-color": "#001",
-	"fill-opacity": 0.6
+	"fill-opacity": 0.4
     }
 };
 
@@ -79,7 +79,7 @@ function load_world() {
 		[41.9013364,12.5010894]];
     var current_lat = Roma[0][0];
     var current_long = Roma[0][1];
-    var current_zoom = 12;
+    var current_zoom = 15;
 
     mapboxgl.accessToken = 'pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyrYV5MFwg';
     var map = new mapboxgl.Map({
