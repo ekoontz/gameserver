@@ -74,8 +74,7 @@
               (k/exec-raw ["
 SELECT name,admin_level,ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
   FROM rome_polygon AS hood
- WHERE name='Tiburtino'
-    OR name='Collatino' OR admin_level = '10'
+ WHERE admin_level = '10' ORDER BY name LIMIT 20;
 " []] :results)
               ;; TODO: we are reading json into edn, then writing it back to
               ;; json: inefficient to do that.
