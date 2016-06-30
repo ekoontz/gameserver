@@ -67,12 +67,18 @@
        (friend/authenticated
         (let [data
               (k/exec-raw ["
-SELECT ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
+SELECT name,admin_level,ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
   FROM rome_polygon AS hood
  WHERE name='Sallustiano'
     OR name='Castro Pretorio';
 " []] :results)
-              data data]
+              ;; TODO: we are reading json into edn, then writing it back to
+              ;; json: a bit inefficient.
+              data (map (fn [hood]
+                          {:name (:name hood)
+                           :admin_level (:admin_level hood)
+                           :geometry (json/read-str (:geometry hood))})
+                        data)]
           (generate-string data))))
   
   (POST "/world/move" request
