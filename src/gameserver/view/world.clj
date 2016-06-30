@@ -57,6 +57,7 @@
 
                       :remote-css [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css"}]
                       :local-js [{:src "log4.js"}
+                                 {:src "player.js"}
                                  {:src "world.js"}]
                       :local-css [{:src "world.css"}]
                       :onload "load_world();"})))
