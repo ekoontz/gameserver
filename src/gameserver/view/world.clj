@@ -52,7 +52,6 @@
                                   ;; TODO: use integrity= and crossorigin=
                                   ;; per https://code.jquery.com
                                   {:src "https://code.jquery.com/jquery-1.12.4.min.js"}
-;;                                  {:src "https://code.jquery.com/jquery-3.0.0.slim.min.js"}
                                   ]
                       :local-js [{:src "leaflet.js"}
                                  {:src "log4.js"}
