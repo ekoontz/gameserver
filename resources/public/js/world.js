@@ -24,58 +24,6 @@ var Roma = [[41.9012917,12.5012515],
 	    [41.9013996,12.5011637],
 	    [41.9011458,12.5008891],
 	    [41.9013364,12.5010894]];
-var db = {
-    "locations": {
-	"ekoontz": [12.5008891,41.9091458]
-    }
-};
-
-function show_player_marker(map,player) {
-    var current_long = db.locations.ekoontz[0];
-    var current_lat = db.locations.ekoontz[1];
-
-    var markers = new mapboxgl.GeoJSONSource({
-	data: {
-	    "type": "FeatureCollection",
-	    "features": [
-		{
-		"type": "Feature",
-		"geometry": {
-		    "type": "Point",
-		    "coordinates": [
-			current_long+(0.01*player),current_lat+(0.01*player)
-		    ]
-		}}]
-	}});
-
-    map.addSource('player_marker'+player, markers); 
-    map.addLayer({
-        id: "player_marker"+player,
-        type: "symbol",
-	layout: {
-	    visibility: 'visible'
-        },
-        source: 'player_marker'+player,
-        layout: {
-	    "icon-image": "marker-15"
-        }
-    });
-}
-
-function show_player_turf(map,player) {
-    var hoods = new mapboxgl.GeoJSONSource({
-	type: "geojson",
-	data: "/world/map?player="+player
-    });
-    map.addSource('player'+player,hoods);
-    map.addLayer({
-	type: "fill",
-	paint: styles_per_player[player],
-	id: "player"+player,
-	source: 'player'+player,
-	"source-layer": "player"+player
-    });
-};
 
 function load_world() {
     log(INFO,"loading world..");
@@ -104,7 +52,7 @@ function load_world() {
 	show_player_turf(map,1);
 	show_player_turf(map,2);
 
-	show_player_marker(map,0);
+	show_player_marker(map,"ekoontz");
     });
     
  }
