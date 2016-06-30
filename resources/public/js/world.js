@@ -5,18 +5,18 @@ var mapbox_api_key = "pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyr
 var styles_per_player = {
     0: {
 	"fill-color": "#0010a5",
-	"fill-outline-color": "#ffef59",
-	"fill-opacity": 0.3
+	"fill-outline-color": "#fff",
+	"fill-opacity": 0.6
     },
     1: {
 	"fill-color": "#ffff00",
-	"fill-outline-color": "#0000ff",
-	"fill-opacity": 0.5
+	"fill-outline-color": "#000",
+	"fill-opacity": 0.6
     },
     2: {
 	"fill-color": "#888700",
-	"fill-outline-color": "#3338ff",
-	"fill-opacity": 0.5
+	"fill-outline-color": "#001",
+	"fill-opacity": 0.6
     }
 };
 
