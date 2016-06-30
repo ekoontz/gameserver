@@ -11,7 +11,7 @@ function load_world() {
     log(INFO,"loading world..");
     var current_lat = Roma[0][0];
     var current_long = Roma[0][1];
-    var current_zoom = 15;
+    var current_zoom = 11;
     var map = L.map('map', {
 	// http://leafletjs.com/reference.html#map-options
 	// dragging: false
