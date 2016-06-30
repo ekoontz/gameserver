@@ -10,8 +10,9 @@
 }
 
 #map {
-    left-margin:5%;
-    float:left;
-    width:600px;
-    height:500px;
+    position:absolute;
+    left:0;
+    top:10%;
+    width:100%;
+    height:90%;
 }
