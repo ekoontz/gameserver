@@ -30,15 +30,15 @@ function load_world() {
     }).addTo(map);
     
     var player1 = {
-	"color": "#ff7800",
-	"weight": 5,
+	"color": "#ffa800",
+	"weight": 1,
 	"opacity": 0.65
     };
 
     var player2 = {
-	"color": "#557800",
-	"weight": 5,
-	"opacity": 0.65
+	"color": "#007800",
+	"weight": 1,
+	"opacity": 0.15
     };
     
     $.ajax({
