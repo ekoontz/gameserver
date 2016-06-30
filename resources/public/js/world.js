@@ -28,11 +28,37 @@ function load_world() {
 	id: tileSet,
 	k: mapbox_api_key
     }).addTo(map);
+    
+    var player1 = {
+	"color": "#ff7800",
+	"weight": 5,
+	"opacity": 0.65
+    };
+
+    var player2 = {
+	"color": "#557800",
+	"weight": 5,
+	"opacity": 0.65
+    };
+    
+    $.ajax({
+	type: "GET",
+	url: "/world/map?player=0"}).done(function(content) {
+	    L.geoJson(content, {
+		style: player1,
+		coordsToLatLng: function(coords) {
+		    lon = coords[0];
+		    lat = coords[1];
+		    return [lat,lon];
+		},
+	    }).addTo(map);
+	});
 
     $.ajax({
 	type: "GET",
-	url: "/world/map"}).done(function(content) {
+	url: "/world/map?player=1"}).done(function(content) {
 	    L.geoJson(content, {
+		style: player2,
 		coordsToLatLng: function(coords) {
 		    lon = coords[0];
 		    lat = coords[1];

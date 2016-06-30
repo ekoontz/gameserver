@@ -48,20 +48,18 @@
                       "gameserver/view/templates/world"
                       {})
                      ;; add specific CSS and JS for map-containing HTML.
-                     {:remote-js [{:src "http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"}
-                                  {:src "http://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"}
+                     {:remote-js [{:src "http://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"}
                                   ;; TODO: use integrity= and crossorigin=
                                   ;; per https://code.jquery.com
                                   {:src "https://code.jquery.com/jquery-1.12.4.min.js"}
 ;;                                  {:src "https://code.jquery.com/jquery-3.0.0.slim.min.js"}
                                   ]
-                      :local-js [{:src "log4.js"}
-                                 {:src "roma.js"}
+                      :local-js [{:src "leaflet.js"}
+                                 {:src "log4.js"}
                                  {:src "world.js"}]
                       :onload "load_world();"
-                      :local-css [{:src "world.css"}]
-                      :remote-css [{:src "http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"}]})))
-
+                      :local-css [{:src "leaflet.css"}
+                                  {:src "world.css"}]})))
   (GET "/world/move" request
        (friend/authenticated
         (stencil/render-file
@@ -70,12 +68,15 @@
 
   (GET "/world/map" request
        (friend/authenticated
-        (let [data
+        (let [player (if-let [player (:player (:params request))]
+                       (Integer. player)
+                       0)
+              data
               (k/exec-raw ["
 SELECT name,admin_level,ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
   FROM rome_polygon AS hood
- WHERE admin_level = '10' ORDER BY name LIMIT 20;
-" []] :results)
+ WHERE admin_level = '10' AND (((osm_id * -1 ) % 2) = ?)
+" [player]] :results)
               ;; TODO: we are reading json into edn, then writing it back to
               ;; json: inefficient to do that.
               data (map (fn [hood]
@@ -85,10 +86,9 @@ SELECT name,admin_level,ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
                                         :admin_level (:admin_level hood)}})
                         data)]
           {:headers {"Content-Type" "application/json;charset=utf-8"}
-           :body
-           (generate-string
-            {:type "FeatureCollection"
-             :features data})})))
+           :body (generate-string
+                  {:type "FeatureCollection"
+                   :features data})})))
   
   (POST "/world/move" request
         (friend/authenticated
