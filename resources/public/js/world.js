@@ -7,6 +7,24 @@ var Roma = [[41.9012917,12.5012515],
 
 var mapbox_api_key = "";
 
+function show_player_turf(map,player,style) {
+    $.ajax({
+	type: "GET",
+	url: "/world/map?player="+player}).done(function(content) {
+	    L.geoJson(content, {
+		onEachFeature: function onEachFeature(feature,layer) {
+		    layer.bindPopup(feature.properties.name);
+		},
+		style: style,
+		coordsToLatLng: function(coords) {
+		    lon = coords[0];
+		    lat = coords[1];
+		    return [lat,lon];
+		},
+	    }).addTo(map);
+	});
+}
+
 function load_world() {
     log(INFO,"loading world..");
     var current_lat = Roma[0][0];
@@ -30,50 +48,25 @@ function load_world() {
     }).addTo(map);
     
     var player1 = {
-	"fillColor": "#ffffee",
-	"color": "#000011",
+	"fillColor": "#f5f000",
 	"weight": 1,
 	"opacity": 0.65
     };
 
     var player2 = {
-	"color": "#ffffee",
-	"fillColor": "#000011",
-	"border": "#ffffee",
+	"fillColor": "#007ac7",
 	"weight": 1,
-	"opacity": 0.95
+	"opacity": 0.55
     };
-    
-    $.ajax({
-	type: "GET",
-	url: "/world/map?player=0"}).done(function(content) {
-	    L.geoJson(content, {
-		onEachFeature: function onEachFeature(feature,layer) {
-		    layer.bindPopup(feature.properties.name);
-		},
-		style: player1,
-		coordsToLatLng: function(coords) {
-		    lon = coords[0];
-		    lat = coords[1];
-		    return [lat,lon];
-		},
-	    }).addTo(map);
-	});
 
-    $.ajax({
-	type: "GET",
-	url: "/world/map?player=1"}).done(function(content) {
-	    L.geoJson(content, {
-		onEachFeature: function onEachFeature(feature,layer) {
-		    layer.bindPopup(feature.properties.name);
-		},
-		style: player2,
-		coordsToLatLng: function(coords) {
-		    lon = coords[0];
-		    lat = coords[1];
-		    return [lat,lon];
-		},
-	    }).addTo(map);
-	});
+    var player3 = {
+	"fillColor": "#ff2000",
+	"weight": 1,
+	"opacity": 0.45
+    };
+
+    show_player_turf(map,0,player1);
+    show_player_turf(map,1,player2);
+    show_player_turf(map,2,player3);
 }
 
