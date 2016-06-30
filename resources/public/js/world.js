@@ -2,23 +2,40 @@ var logging_level = INFO;
 
 var mapbox_api_key = "";
 
-function show_player_turf(map,player,style) {
-    $.ajax({
-	type: "GET",
-	url: "/world/map?player="+player}).done(function(content) {
-	    L.geoJson(content, {
-		onEachFeature: function onEachFeature(feature,layer) {
-		    layer.bindPopup(feature.properties.name);
-		},
-		style: style,
-		coordsToLatLng: function(coords) {
-		    lon = coords[0];
-		    lat = coords[1];
-		    return [lat,lon];
-		},
-	    }).addTo(map);
-	});
-}
+var styles_per_player = {
+    0: {
+	"fill-color": "#0010a5",
+	"fill-outline-color": "#ffef59",
+	"fill-opacity": 0.3
+    },
+    1: {
+	"fill-color": "#ffff00",
+	"fill-outline-color": "#0000ff",
+	"fill-opacity": 0.5
+    },
+    2: {
+	"fill-color": "#888700",
+	"fill-outline-color": "#3338ff",
+	"fill-opacity": 0.5
+    }
+    
+};
+    
+
+function show_player_turf(map,player) {
+    var hoods = new mapboxgl.GeoJSONSource({
+	type: "geojson",
+	data: "/world/map?player="+player
+    });
+    map.addSource('player'+player,hoods);
+    map.addLayer({
+	type: "fill",
+	paint: styles_per_player[player],
+	id: "player"+player,
+	source: 'player'+player,
+	"source-layer": "player"+player
+    });
+};
 
 function load_world() {
     log(INFO,"loading world..");
@@ -63,8 +80,11 @@ function load_world() {
 		}}]
 	}});
 
-
     map.on('load',function() {
+	show_player_turf(map,0);
+	show_player_turf(map,1);
+	show_player_turf(map,2);
+	
 	map.addSource('mypoints', markers); 
 	map.addLayer({
             id: "non-cluster-markers",
@@ -77,6 +97,7 @@ function load_world() {
 		"icon-image": "marker-15"
             }
 	});
+	
     });
     
  }
