@@ -96,7 +96,7 @@ SELECT name,admin_level,ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
          ;; 4. respond to client about result of their action
          (generate-string
           {:user "ekoontz"
-           :moved-to "tenderloin"
+           :moved-to "Campo Marzio"
            :request (-> request :params)
            }))))
 
