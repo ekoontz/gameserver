@@ -90,7 +90,8 @@ function load_world() {
 
 	// starting position
 	center: [current_long, current_lat],
-	zoom: current_zoom
+	zoom: current_zoom,
+	pitch:70
     });
 
     map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
