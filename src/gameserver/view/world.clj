@@ -49,7 +49,12 @@
                       {})
                      ;; add specific CSS and JS for map-containing HTML.
                      {:remote-js [{:src "http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"}
-                                  {:src "http://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"}]
+                                  {:src "http://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js"}
+                                  ;; TODO: use integrity= and crossorigin=
+                                  ;; per https://code.jquery.com
+                                  {:src "https://code.jquery.com/jquery-1.12.4.min.js"}
+;;                                  {:src "https://code.jquery.com/jquery-3.0.0.slim.min.js"}
+                                  ]
                       :local-js [{:src "log4.js"}
                                  {:src "roma.js"}
                                  {:src "world.js"}]
@@ -69,16 +74,16 @@
               (k/exec-raw ["
 SELECT name,admin_level,ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
   FROM rome_polygon AS hood
- WHERE name='Sallustiano'
-    OR name='Castro Pretorio';
+ WHERE name='Tiburtino'
+    OR name='Collatino' OR admin_level = '10'
 " []] :results)
               ;; TODO: we are reading json into edn, then writing it back to
               ;; json: inefficient to do that.
               data (map (fn [hood]
-                          {:properties {:name (:name hood)
-                                        :admin_level (:admin_level hood)}
-                           :type "Feature"
-                           :geometry (json/read-str (:geometry hood))})
+                          {:type "Feature"
+                           :geometry (json/read-str (:geometry hood))
+                           :properties {:name (:name hood)
+                                        :admin_level (:admin_level hood)}})
                         data)]
           (generate-string
            {:type "FeatureCollection"

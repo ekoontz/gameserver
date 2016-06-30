@@ -28,14 +28,18 @@ function load_world() {
 	id: tileSet,
 	k: mapbox_api_key
     }).addTo(map);
-    
-    // SQL must use the EPSG4326 coordinate system for leaflet to show these correctly.
-    // e.g.: SELECT ...,ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326))::json AS geometry FROM rome_polygon;
-    L.geoJson(sallustiano_e_castro_pretorio, {
-	coordsToLatLng: function(coords) {
-	    lon = coords[0];
-	    lat = coords[1];
-	    return [lat,lon];
-	},
-    }).addTo(map);
+
+    $.ajax({
+	type: "GET",
+	url: "/world/map"}).done(function(content) {
+	    var contentAsJson = jQuery.parseJSON(content);
+	    L.geoJson(contentAsJson, {
+		coordsToLatLng: function(coords) {
+		    lon = coords[0];
+		    lat = coords[1];
+		    return [lat,lon];
+		},
+	    }).addTo(map);
+	});
 }
+
