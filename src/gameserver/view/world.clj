@@ -1,5 +1,7 @@
 (ns gameserver.view.world
   (:require [cemerick.friend :as friend]
+            [clojure.data.json :as json]
+            [korma.core :as k]
             [cheshire.core :refer [generate-string]]
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes GET POST]]
@@ -61,6 +63,18 @@
          "gameserver/view/templates/move"
          {})))
 
+  (GET "/world/map" request
+       (friend/authenticated
+        (let [data
+              (k/exec-raw ["
+SELECT ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
+  FROM rome_polygon AS hood
+ WHERE name='Sallustiano'
+    OR name='Castro Pretorio';
+" []] :results)
+              data data]
+          (generate-string data))))
+  
   (POST "/world/move" request
         (friend/authenticated
          ;; 1. deterimine user id
