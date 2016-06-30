@@ -93,6 +93,8 @@ function load_world() {
 	zoom: current_zoom
     });
 
+    map.addControl(new mapboxgl.Navigation({position: 'top-left'}));
+    
     map.on('load',function() {
 	show_player_turf(map,0);
 	show_player_turf(map,1);
