@@ -80,6 +80,7 @@ function load_world() {
 		     ).addTo(map);
     var p2 = L.marker([41.8210211676156,12.526001169536],
 		      {icon: player2,
+		       opacity: '0.99'}
 		     ).addTo(map);
 }
 
