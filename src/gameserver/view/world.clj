@@ -70,11 +70,12 @@
         (let [player (if-let [player (:player (:params request))]
                        (Integer. player)
                        0)
+              logging (log/info (str "getting turf for player: " player))
               data
               (k/exec-raw ["
 SELECT name,admin_level,ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
   FROM rome_polygon AS hood
- WHERE admin_level = '10' AND (((osm_id * -1 ) % 2) = ?)
+ WHERE admin_level = '10' AND (((osm_id * -1 ) % 3) = ?)
 " [player]] :results)
               ;; TODO: we are reading json into edn, then writing it back to
               ;; json: inefficient to do that.
