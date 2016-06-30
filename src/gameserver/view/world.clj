@@ -53,6 +53,7 @@
                                   ;; per https://code.jquery.com
                                   {:src "https://code.jquery.com/jquery-1.12.4.min.js"}
                                   ]
+                      ;; leaflet's CDN seems unreliable, so using local for it.
                       :local-js [{:src "leaflet.js"}
                                  {:src "log4.js"}
                                  {:src "world.js"}]
