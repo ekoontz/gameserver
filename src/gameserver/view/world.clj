@@ -84,9 +84,11 @@ SELECT name,admin_level,ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
                            :properties {:name (:name hood)
                                         :admin_level (:admin_level hood)}})
                         data)]
-          (generate-string
-           {:type "FeatureCollection"
-            :features data}))))
+          {:headers {"Content-Type" "application/json;charset=utf-8"}
+           :body
+           (generate-string
+            {:type "FeatureCollection"
+             :features data})})))
   
   (POST "/world/move" request
         (friend/authenticated

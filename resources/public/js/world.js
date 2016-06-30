@@ -32,8 +32,7 @@ function load_world() {
     $.ajax({
 	type: "GET",
 	url: "/world/map"}).done(function(content) {
-	    var contentAsJson = jQuery.parseJSON(content);
-	    L.geoJson(contentAsJson, {
+	    L.geoJson(content, {
 		coordsToLatLng: function(coords) {
 		    lon = coords[0];
 		    lat = coords[1];
