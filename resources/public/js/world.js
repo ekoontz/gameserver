@@ -46,6 +46,8 @@ function load_world() {
 	id: tileSet,
 	k: mapbox_api_key
     }).addTo(map);
+
+    var marker = L.marker([41.9210211676156,12.566591169536]).addTo(map);
     
     var player1 = {
 	"fillColor": "#f5f000",
