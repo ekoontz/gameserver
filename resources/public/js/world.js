@@ -41,5 +41,35 @@ function load_world() {
 	zoom: 12
     });
 
-}
+    var sourceObj = new mapboxgl.GeoJSONSource({
+	data: {
+	    "type": "FeatureCollection",
+	    "features": [{
+		"type": "Feature",
+		"geometry": {
+		    "type": "Point",
+		    "coordinates": [
+			current_long,current_lat
+		    ]
+		}
+	    }]
+	}
+    });
+
+    map.on('load',function() {
+	map.addSource('mypoint', sourceObj); 
+	map.addLayer({
+            id: "non-cluster-markers",
+            type: "symbol",
+	    layout: {
+		visibility: 'visible'
+            },
+            source: "mypoint",
+            layout: {
+		"icon-image": "marker-15"
+            }
+	});
+    });
+    
+ }
 
