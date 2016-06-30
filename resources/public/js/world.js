@@ -47,20 +47,20 @@ function load_world() {
     }).addTo(map);
     
     show_player_turf(map,0,{
-	"fillColor": "#f5f000",
+	"fillColor": "#0010a5",
 	"weight": 1,
-	"opacity": 0.65
+	"opacity": 0.95
     });
     show_player_turf(map,1,{
-	"fillColor": "#007ac7",
+	"fillColor": "#ffff00",
 	"weight": 1,
-	"opacity": 0.55
+	"opacity": 0.95
     });
     show_player_turf(map,2,{
-	"fillColor": "#ff2000",
+	"fillColor": "#888700",
 	"weight": 1,
-	"opacity": 0.45
+	"opacity": 0.95
     });
-    var marker = L.marker([41.9210211676156,12.566591169536]).addTo(map);
+    var marker = L.marker([41.9210211676156,12.506591169536]).addTo(map);
 }
 
