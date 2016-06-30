@@ -61,6 +61,25 @@ function load_world() {
 	"weight": 1,
 	"opacity": 0.95
     });
-    var marker = L.marker([41.9210211676156,12.506591169536]).addTo(map);
+
+    var player1 = L.icon({
+	iconUrl: '/js/images/marker-icon.png',
+	shadowUrl: '/js/images/marker-shadow.png',
+	className: 'player1'
+    });
+
+    var player2 = L.icon({
+	iconUrl: '/js/images/marker-icon.png',
+	shadowUrl: '/js/images/marker-shadow.png',
+	className: 'player2'
+    });
+    
+    var p1 = L.marker([41.9210211676156,12.506591169536],
+		      {icon: player1,
+		       opacity: '0.9'}
+		     ).addTo(map);
+    var p2 = L.marker([41.8210211676156,12.526001169536],
+		      {icon: player2,
+		     ).addTo(map);
 }
 
