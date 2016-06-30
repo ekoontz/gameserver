@@ -18,9 +18,43 @@ var styles_per_player = {
 	"fill-outline-color": "#3338ff",
 	"fill-opacity": 0.5
     }
-    
 };
-    
+
+function show_player_marker(map,player) {
+    var Roma = [[41.9012917,12.5012515],
+		[41.9013996,12.5011637],
+		[41.9011458,12.5008891],
+		[41.9013364,12.5010894]];
+    var current_lat = Roma[0][0];
+    var current_long = Roma[0][1];
+
+    var markers = new mapboxgl.GeoJSONSource({
+	data: {
+	    "type": "FeatureCollection",
+	    "features": [
+		{
+		"type": "Feature",
+		"geometry": {
+		    "type": "Point",
+		    "coordinates": [
+			current_long+(0.01*player),current_lat+(0.01*player)
+		    ]
+		}}]
+	}});
+
+    map.addSource('player_marker'+player, markers); 
+    map.addLayer({
+        id: "player_marker"+player,
+        type: "symbol",
+	layout: {
+	    visibility: 'visible'
+        },
+        source: 'player_marker'+player,
+        layout: {
+	    "icon-image": "marker-15"
+        }
+    });
+}
 
 function show_player_turf(map,player) {
     var hoods = new mapboxgl.GeoJSONSource({
@@ -52,54 +86,22 @@ function load_world() {
 	// container id
 	container: 'map',
 	//stylesheet location
-	style: 'mapbox://styles/mapbox/light-v8',
+	style: 'mapbox://styles/mapbox/bright-v8',
+
 	// starting position
 	center: [current_long, current_lat],
 	zoom: current_zoom
     });
 
-    var markers = new mapboxgl.GeoJSONSource({
-	data: {
-	    "type": "FeatureCollection",
-	    "features": [
-		{
-		"type": "Feature",
-		"geometry": {
-		    "type": "Point",
-		    "coordinates": [
-			current_long,current_lat
-		    ]
-		}},
-		{
-		"type": "Feature",
-		"geometry": {
-		    "type": "Point",
-		    "coordinates": [
-			current_long+0.01,current_lat+0.01
-		    ]
-		}}]
-	}});
-
     map.on('load',function() {
-
-		map.addSource('mypoints', markers); 
-	map.addLayer({
-            id: "non-cluster-markers",
-            type: "symbol",
-	    layout: {
-		visibility: 'visible'
-            },
-            source: "mypoints",
-            layout: {
-		"icon-image": "marker-15"
-            }
-	});
-
 	show_player_turf(map,0);
 	show_player_turf(map,1);
 	show_player_turf(map,2);
-	
-	
+
+	show_player_marker(map,0);
+	show_player_marker(map,1);
+	show_player_marker(map,2);
+
     });
     
  }
