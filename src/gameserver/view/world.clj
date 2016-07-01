@@ -68,6 +68,18 @@
          "gameserver/view/templates/move"
          {})))
 
+  (GET "/world/players" request
+       (friend/authenticated
+        (let [logging (log/info (str "getting players.."))]
+          {:headers {"Content-Type" "application/json;charset=utf-8"}
+           :body (generate-string
+                  {:players {"0" {:name "ekoontz"
+                                  :position [12.5011637,41.9013996]}
+                             "1" {:name "gianna"
+                                  :position [12.5021637,41.9023996]}
+                             "2" {:name "bob"
+                                  :position [12.5031637,41.9003996]}}})})))
+
   ;; given a player, return the set of neighborhoods that are owned by that player.
   (GET "/world/map" request
        (friend/authenticated
