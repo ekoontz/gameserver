@@ -1,9 +1,3 @@
-var db = {
-    "locations": {
-	"ekoontz": [12.5008891,41.9091458]
-    }
-};
-
 var styles_per_player = {
     0: {
 	"fill-color": "#0010a5",
@@ -23,35 +17,41 @@ var styles_per_player = {
 };
 
 function show_player_marker(map,player) {
-    var current_long = db.locations[player][0];
-    var current_lat = db.locations[player][1];
+    $.ajax({cache:false,
+	    url: "/world/players",
+	    dataType: "json",
+	    success: function(content) {
+		var current_long = content.players[player].position[0];
+		var current_lat = content.players[player].position[1];
 
-    var markers = new mapboxgl.GeoJSONSource({
-	data: {
-	    "type": "FeatureCollection",
-	    "features": [
-		{
-		"type": "Feature",
-		"geometry": {
-		    "type": "Point",
-		    "coordinates": [
-			current_long,current_lat
-		    ]
-		}}]
-	}});
+		var markers =
+		    new mapboxgl.GeoJSONSource({
+			data: {
+			    "type": "FeatureCollection",
+			    "features": [
+				{
+				    "type": "Feature",
+				    "geometry": {
+					"type": "Point",
+					"coordinates": [
+					    current_long,current_lat
+					]
+				    }}]}});
 
-    map.addSource('player_marker'+player, markers); 
-    map.addLayer({
-        id: "player_marker"+player,
-        type: "symbol",
-	layout: {
-	    visibility: 'visible'
-        },
-        source: 'player_marker'+player,
-        layout: {
-	    "icon-image": "marker-15"
-        }
-    });
+		map.addSource('player_marker'+player, markers); 
+		map.addLayer({
+		    id: "player_marker"+player,
+		    type: "symbol",
+		    layout: {
+			visibility: 'visible'
+		    },
+		    source: 'player_marker'+player,
+		    layout: {
+			"icon-image": "marker-15"
+		    }
+		});
+	    }
+	   });
 }
 
 function show_player_turf(map,player) {
