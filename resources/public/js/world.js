@@ -36,6 +36,7 @@ function load_world() {
 		if (features[i].properties.admin_level == '10') {
 		    var hood = features[i].properties.name;
 		    log(INFO,"selected hood:" + hood + " with pos:" + pos);
+		    $("#player0-selected").html(hood);
 		}
 	    }
 	} else {

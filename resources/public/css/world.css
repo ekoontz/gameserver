@@ -14,7 +14,7 @@
 }
 
 #playerbox > div {
-    width:auto;
+    width:20%;
     position:relative;
     margin-right:0.5em;
     float:left;
