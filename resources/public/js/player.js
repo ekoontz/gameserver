@@ -23,7 +23,8 @@ function show_player_marker(map,player) {
 	url: "/world/player?player="+player,
 	success: function(content) {
 	    // 1. show current location in status window:
-	    $("#player"+player+"-position").html(content.properties.name);
+	    $("#player"+player+"-position").html(content.properties.neighborhood);
+	    $("#player"+player+"-name").html(content.properties.player);
 
 	    // 2. show marker:
 	    var markers = new mapboxgl.GeoJSONSource({
@@ -37,7 +38,7 @@ function show_player_marker(map,player) {
 		layout: {
 		    visibility: 'visible',
 		    "icon-image": "marker-11",
-		    "text-field":"player"+player,
+		    "text-field":content.properties.player,
 		    "text-offset":[0,1.5],
 		    "icon-size": 2
 		},
