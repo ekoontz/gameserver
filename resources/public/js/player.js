@@ -4,6 +4,24 @@ var db = {
     }
 };
 
+var styles_per_player = {
+    0: {
+	"fill-color": "#0010a5",
+	"fill-outline-color": "#fff",
+	"fill-opacity": 0.2
+    },
+    1: {
+	"fill-color": "#ffff00",
+	"fill-outline-color": "#000",
+	"fill-opacity": 0.2
+    },
+    2: {
+	"fill-color": "#888700",
+	"fill-outline-color": "#001",
+	"fill-opacity": 0.2
+    }
+};
+
 function show_player_marker(map,player) {
     var current_long = db.locations[player][0];
     var current_lat = db.locations[player][1];
