@@ -68,17 +68,28 @@
          "gameserver/view/templates/move"
          {})))
 
-  (GET "/world/players" request
+  (GET "/world/player" request
        (friend/authenticated
-        (let [logging (log/info (str "getting players.."))]
-          {:headers {"Content-Type" "application/json;charset=utf-8"}
-           :body (generate-string
-                  {:players {"0" {:name "ekoontz"
-                                  :position [12.5011637,41.9013996]}
-                             "1" {:name "gianna"
-                                  :position [12.5021637,41.9023996]}
-                             "2" {:name "bob"
-                                  :position [12.5031637,41.9003996]}}})})))
+        (if-let [player (:player (:params request))]
+          (let [player (Integer. player)
+                logging (log/info (str "getting player:" player))
+                data (k/exec-raw ["
+
+   SELECT rome_polygon.name,ST_AsGeoJSON(ST_Transform(ST_Centroid(way),4326)) AS centroid 
+     FROM player_location INNER JOIN rome_polygon 
+       ON (player_location.osm_id = rome_polygon.osm_id) WHERE player_id=?
+"
+                                  [player]] :results)
+                geojson (map (fn [hood]
+                               {:type "Feature"
+                                :geometry (json/read-str (:centroid hood))
+                                ;:properties {:name (:name hood)}
+                                }
+                               )
+                             data)]
+            (log/info (str "geojson:" (clojure.string/join ";" geojson)))
+            {:headers {"Content-Type" "application/json;charset=utf-8"}
+             :body (generate-string (first geojson))}))))
 
   ;; given a player, return the set of neighborhoods that are owned by that player.
   (GET "/world/map" request
