@@ -98,7 +98,10 @@
       WHERE admin_level = '10' 
         AND (((osm_id * -1 ) % 3) = ?)
 
-" [player]] :results)
+"
+                           [player]]
+                          :results)
+
               ;; TODO: we are reading json into edn, then writing it back to
               ;; json: inefficient to do that.
               data (map (fn [hood]
