@@ -50,8 +50,6 @@ function load_world() {
 	show_player_marker(map,1);
 	show_player_turf(map,2);
 	show_player_marker(map,2);
-
-
     });
 }
     

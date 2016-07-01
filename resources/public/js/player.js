@@ -17,41 +17,22 @@ var styles_per_player = {
 };
 
 function show_player_marker(map,player) {
-    $.ajax({cache:false,
-	    url: "/world/players",
-	    dataType: "json",
-	    success: function(content) {
-		var current_long = content.players[player].position[0];
-		var current_lat = content.players[player].position[1];
-
-		var markers =
-		    new mapboxgl.GeoJSONSource({
-			data: {
-			    "type": "FeatureCollection",
-			    "features": [
-				{
-				    "type": "Feature",
-				    "geometry": {
-					"type": "Point",
-					"coordinates": [
-					    current_long,current_lat
-					]
-				    }}]}});
-
-		map.addSource('player_marker'+player, markers); 
-		map.addLayer({
-		    id: "player_marker"+player,
-		    type: "symbol",
-		    layout: {
-			visibility: 'visible'
-		    },
-		    source: 'player_marker'+player,
-		    layout: {
-			"icon-image": "marker-15"
-		    }
-		});
-	    }
-	   });
+    var markers = new mapboxgl.GeoJSONSource({
+	type: "geojson",
+	data: "/world/player?player="+player
+    });
+    map.addSource('player_marker'+player, markers);
+    map.addLayer({
+	id: "player_marker"+player,
+	type: "symbol",
+	layout: {
+	    visibility: 'visible'
+	},
+	source: 'player_marker'+player,
+	layout: {
+	    "icon-image": "marker-15"
+	}
+    });
 }
 
 function show_player_turf(map,player) {
