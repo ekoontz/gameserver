@@ -34,9 +34,13 @@ function load_world() {
 		    var hood = features[i].properties.name;
 		    log(INFO,"selected hood:" + hood + " with pos:" + pos);
 		    $("#player0-selected").html(hood);
-		    map.rotateTo(map.getBearing()-45);
-		    break; // no need to look at other features we clicked on: we
+		    map.flyTo({center: pos,
+				bearing: map.getBearing() - 45});
+		    
+		    // break out of for() loop for efficiency, since
+		    // we don't need to look at other features in the array - we
 		    // only care about the neighborhood (admin_level == 10).
+		    break;
 		}
 	    }
 	} else {
