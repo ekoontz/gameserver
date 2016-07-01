@@ -26,12 +26,13 @@ function show_player_marker(map,player) {
 	id: "player_marker"+player,
 	type: "symbol",
 	layout: {
-	    visibility: 'visible'
+	    visibility: 'visible',
+	    "icon-image": "marker-11",
+	    "text-field":"player"+player,
+	    "text-offset":[0,1.5],
+	    "icon-size": 2
 	},
 	source: 'player_marker'+player,
-	layout: {
-	    "icon-image": "marker-15"
-	}
     });
 }
 
