@@ -75,15 +75,19 @@
                 logging (log/info (str "getting player:" player))
                 data (k/exec-raw ["
 
-   SELECT rome_polygon.name,ST_AsGeoJSON(ST_Transform(ST_Centroid(way),4326)) AS centroid 
-     FROM player_location INNER JOIN rome_polygon 
+   SELECT rome_polygon.name,ST_AsGeoJSON(ST_Transform(ST_Centroid(way),4326)) AS centroid,
+          vc_user.given_name AS player 
+     FROM player_location 
+INNER JOIN vc_user ON (player_location.user_id = vc_user.id)
+INNER JOIN rome_polygon 
        ON (player_location.osm_id = rome_polygon.osm_id) WHERE player_id=?
 "
                                   [player]] :results)
                 geojson (map (fn [hood]
                                {:type "Feature"
                                 :geometry (json/read-str (:centroid hood))
-                                :properties {:name (:name hood)}
+                                :properties {:player (:player hood)
+                                             :neighborhood (:name hood)}
                                 }
                                )
                              data)]
