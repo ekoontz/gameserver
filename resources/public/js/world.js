@@ -23,10 +23,26 @@ function load_world() {
 	// starting position
 	center: [current_long, current_lat],
 	zoom: current_zoom,
-	pitch:90,
+	pitch:80,
 	bearing:-45
     });
 
+    map.on('click',function(e) {
+	var pos = e.lngLat;
+	var features =
+	    map.queryRenderedFeatures(e.point);
+	if (features.length > 0) {
+	    for (var i = 0; i < features.length; i++) {
+		if (features[i].properties.admin_level == '10') {
+		    var hood = features[i].properties.name;
+		    log(INFO,"selected hood:" + hood + " with pos:" + pos);
+		}
+	    }
+	} else {
+	    log(DEBUG,"you didn't click on anything of importance at pos:" + pos);
+	}
+    }, false);
+    
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
@@ -36,6 +52,6 @@ function load_world() {
 
 	show_player_marker(map,"ekoontz");
     });
+}
     
- }
 
