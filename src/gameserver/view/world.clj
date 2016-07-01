@@ -83,7 +83,7 @@
                 geojson (map (fn [hood]
                                {:type "Feature"
                                 :geometry (json/read-str (:centroid hood))
-                                ;:properties {:name (:name hood)}
+                                :properties {:name (:name hood)}
                                 }
                                )
                              data)]
