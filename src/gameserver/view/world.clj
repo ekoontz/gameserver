@@ -140,7 +140,31 @@ INNER JOIN rome_polygon
           {:user "ekoontz"
            :moved-to "Campo Marzio"
            :request (-> request :params)
-           }))))
+           })))
+  
+  (GET "/world/centroids" request
+       (friend/authenticated
+        (let [logging (log/info (str "getting centroids for all neighborhoods."))
+              data (k/exec-raw ["
+
+   SELECT rome_polygon.name,ST_AsGeoJSON(ST_Transform(ST_Centroid(way),4326)) AS centroid
+     FROM rome_polygon WHERE admin_level='10'
+"
+                                  []] :results)
+                geojson (map (fn [hood]
+                               {:type "Feature"
+                                :geometry (json/read-str (:centroid hood))
+                                :properties {:neighborhood (:name hood)}
+                                }
+                               )
+                             data)]
+          (log/info (str "geojson:" (clojure.string/join ";" geojson)))
+          {:headers {"Content-Type" "application/json;charset=utf-8"}
+           :body (generate-string geojson)}))))
+
+
+
+
 
 
 
