@@ -27,11 +27,11 @@ function show_player_marker(map,player) {
 	    $("#player"+player+"-name").html(content.properties.player);
 
 	    // 2. show marker:
-	    var markers = new mapboxgl.GeoJSONSource({
+	    var marker = new mapboxgl.GeoJSONSource({
 		type: "geojson",
 		data: content // "/world/player?player="+player
 	    });
-	    map.addSource('player_marker'+player, markers);
+	    map.addSource('player_marker'+player, marker);
 	    map.addLayer({
 		id: "player_marker"+player,
 		type: "symbol",
