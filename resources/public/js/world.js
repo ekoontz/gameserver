@@ -86,7 +86,7 @@ function load_world() {
 	if (features.length > 0) {
 	    for (var i = 0; i < features.length; i++) {
 		if (features[i].properties.admin_level == '10') {
-		    var old_hood = $("#player0-position").html();
+		    var old_hood = $("#player195-position").html();
 		    var new_hood = features[i].properties.name;
 		    if (old_hood != new_hood) {
 			log(INFO,"selected hood:" + new_hood + " with pos:" + pos);
@@ -94,8 +94,8 @@ function load_world() {
 			var oldCentroid = centroids[old_hood];
 			var newCentroid = centroids[new_hood];
 
-			$("#player0-position").html(new_hood);
-			$("#player0-selected").html("");
+			$("#player195-position").html(new_hood);
+			$("#player195-selected").html("");
 		    
 			var newBearing;
 			if (updateBearing == true) {
@@ -126,10 +126,10 @@ function load_world() {
 	if (features.length > 0) {
 	    for (var i = 0; i < features.length; i++) {
 		if (features[i].properties.admin_level == '10') {
-		    if ($("#player0-position").html() != features[i].properties.name) {
-			$("#player0-selected").html(features[i].properties.name);
+		    if ($("#player195-position").html() != features[i].properties.name) {
+			$("#player195-selected").html(features[i].properties.name);
 		    } else {
-			$("#player0-selected").html("");
+			$("#player195-selected").html("");
 		    }
 		    break;
 		}
@@ -140,15 +140,13 @@ function load_world() {
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
-	show_player_turf(map,0);
-	show_player_marker(map,0);
 	if ((typeof centroids) == "undefined") {
 	    centroids = load_centroids(map);
 	}
-	show_player_turf(map,1);
-	show_player_marker(map,1);
-	show_player_turf(map,2);
-	show_player_marker(map,2);
+	show_player_turf(map,195);
+	show_player_marker(map,195);
+	show_player_turf(map,196);
+	show_player_marker(map,196);
     });
 }
     

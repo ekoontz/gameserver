@@ -46,9 +46,14 @@
     color:#ffef59;
 }
 .player2 h4 {
-    background: #ffff00;
-    color:#0000ff;
+    background: #ff0000;
+    color:#ffef59;
 }
+
+.player3 {
+    display:none;
+}
+
 .player3 h4 {
     background: #888700;
     color:#3338ff;
