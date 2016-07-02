@@ -15,6 +15,7 @@ function load_centroids() {
 	}
     }).responseJSON;
     var retval = {};
+    geojson = geojson.features;
     for (var i = 0; i < geojson.length; i++) {
 	var hood_name = geojson[i].properties.neighborhood;
 	var centroid = geojson[i].geometry.coordinates;
