@@ -91,7 +91,7 @@ INNER JOIN rome_polygon
                                 }
                                )
                              data)]
-            (log/info (str "geojson:" (clojure.string/join ";" geojson)))
+            (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string (first geojson))}))))
 
@@ -110,7 +110,7 @@ INNER JOIN rome_polygon
 
        FROM rome_polygon AS hood
 
-      WHERE admin_level = '10' 
+      WHERE admin_level = '10' AND true
         AND (((osm_id * -1 ) % 3) = ?)
 
 "
@@ -158,7 +158,7 @@ INNER JOIN rome_polygon
                                 }
                                )
                              data)]
-          (log/info (str "geojson:" (clojure.string/join ";" geojson)))
+          (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
           {:headers {"Content-Type" "application/json;charset=utf-8"}
            :body (generate-string {:type "FeatureCollection"
                                    :features geojson})}))))
