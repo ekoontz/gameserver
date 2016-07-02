@@ -4,6 +4,8 @@ var mapbox_api_key = "pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyr
 
 var Roma = [12.5012515,41.9012917];
 
+var updateBearing = false;
+
 function load_centroids(map) {
     geojson = $.ajax({
 	async:false,
@@ -21,10 +23,8 @@ function load_centroids(map) {
 		type: "symbol",
 		layout: {
 		    visibility: 'visible',
-		    "icon-image": "marker-11",
 		    "text-field":"{neighborhood}",
-		    "text-offset":[0,1.5],
-		    "icon-size": 2
+		    "text-offset":[0,0]
 		},
 		source: 'hood_markers'
 	    });
@@ -69,14 +69,14 @@ function load_world() {
     var map = new mapboxgl.Map({
 	// container id
 	container: 'map',
+
 	//stylesheet location
-	style: 'mapbox://styles/mapbox/light-v9',
+	style: 'mapbox://styles/ekoontz/ciq5kc64u0080bknqqv0f0dtx',
 
 	// starting position
 	center: [current_long, current_lat],
 	zoom: current_zoom,
-	pitch:80,
-	bearing:-45
+	pitch:80
     });
 
     map.on('click',function(e) {
@@ -97,7 +97,13 @@ function load_world() {
 			$("#player0-position").html(new_hood);
 			$("#player0-selected").html("");
 		    
-			var newBearing = getNewBearing(newCentroid,oldCentroid);
+			var newBearing;
+			if (updateBearing == true) {
+			    newBearing = getNewBearing(oldCentroid,newCentroid);
+			} else {
+			    newBearing = map.getBearing();
+			}
+
 			map.flyTo({center: newCentroid,
 				   bearing: newBearing});
 		    
@@ -110,6 +116,24 @@ function load_world() {
 	    }
 	} else {
 	    log(DEBUG,"you didn't click on anything of importance at pos:" + pos);
+	}
+    }, false);
+    
+    map.on('mousemove',function(e) {
+	// display the selected hood in the player-selected box.
+	var features =
+	    map.queryRenderedFeatures(e.point);
+	if (features.length > 0) {
+	    for (var i = 0; i < features.length; i++) {
+		if (features[i].properties.admin_level == '10') {
+		    if ($("#player0-position").html() != features[i].properties.name) {
+			$("#player0-selected").html(features[i].properties.name);
+		    } else {
+			$("#player0-selected").html("");
+		    }
+		    break;
+		}
+	    }
 	}
     }, false);
     
