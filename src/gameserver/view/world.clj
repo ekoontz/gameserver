@@ -80,7 +80,7 @@
      FROM player_location 
 INNER JOIN vc_user ON (player_location.user_id = vc_user.id)
 INNER JOIN rome_polygon 
-       ON (player_location.osm_id = rome_polygon.osm_id) WHERE player_id=?
+       ON (player_location.osm_id = rome_polygon.osm_id) WHERE user_id=?
 "
                                   [player]] :results)
                 geojson (map (fn [hood]
@@ -102,33 +102,47 @@ INNER JOIN rome_polygon
                        (Integer. player)
                        0)
               logging (log/info (str "getting turf for player: " player))
-              data
+              owns-data
               (k/exec-raw ["
 
      SELECT name,admin_level,
             ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
 
        FROM rome_polygon AS hood
-
-      WHERE admin_level = '10' AND true
-        AND (((osm_id * -1 ) % 3) = ?)
-
+ INNER JOIN owned_locations ON (hood.osm_id = owned_locations.osm_id)
+                           AND (owned_locations.user_id = ?)
 "
                            [player]]
                           :results)
 
-              ;; TODO: we are reading json into edn, then writing it back to
-              ;; json: inefficient to do that.
-              data (map (fn [hood]
-                          {:type "Feature"
-                           :geometry (json/read-str (:geometry hood))
-                           :properties {:name (:name hood)
-                                        :admin_level (:admin_level hood)}})
-                        data)]
+              owns-geo {:type "FeatureCollection"
+                        :features (map (fn [hood]
+                                         {:type "Feature"
+                                          :geometry (json/read-str (:geometry hood))
+                                          :properties {:name (:name hood)
+                                                       :admin_level (:admin_level hood)}})
+                                       owns-data)}
+
+              at-data
+              (k/exec-raw ["
+
+     SELECT name,admin_level,
+            ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
+
+       FROM rome_polygon AS hood
+ INNER JOIN player_location ON (hood.osm_id = player_location.osm_id)
+                           AND (player_location.user_id = ?)
+"
+                           [player]]
+                           :results)
+
+              at-geo {:type "Feature"
+                      :geometry (json/read-str (:geometry (first at-data)))
+                      :properties {:name (:name (first at-data))}}]
           {:headers {"Content-Type" "application/json;charset=utf-8"}
            :body (generate-string
-                  {:type "FeatureCollection"
-                   :features data})})))
+                  {:owns owns-geo
+                   :at at-geo})})))
   
   (POST "/world/move" request
         (friend/authenticated
