@@ -4,6 +4,24 @@ var mapbox_api_key = "";
 
 var Roma = [12.5012515,41.9012917];
 
+function toDegrees(radians) {
+    return radians * (180 / Math.PI);
+}
+
+function getNewBearing(center,new_position) {
+    // do some trigonometry
+    // thanks to http://www.movable-type.co.uk/scripts/latlong.html
+    var lat1 = center.lat;
+    var lat2 = new_position.lat;
+    var lon1 = center.lng;
+    var lon2 = new_position.lng;
+    var y = Math.sin(lon2-lon1) * Math.cos(lat2);
+    var x = Math.cos(lat1)*Math.sin(lat2) -
+        Math.sin(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1);
+    var bearing = toDegrees(Math.atan2(y, x));
+    return bearing;
+}
+
 function load_world() {
     log(INFO,"loading world..");
     var current_long = Roma[0];
@@ -34,8 +52,9 @@ function load_world() {
 		    var hood = features[i].properties.name;
 		    log(INFO,"selected hood:" + hood + " with pos:" + pos);
 		    $("#player0-selected").html(hood);
+		    var newBearing = getNewBearing(map.getCenter(),pos);
 		    map.flyTo({center: pos,
-				bearing: map.getBearing() - 45});
+			       bearing: newBearing});
 		    
 		    // break out of for() loop for efficiency, since
 		    // we don't need to look at other features in the array - we
