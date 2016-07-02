@@ -160,7 +160,9 @@ INNER JOIN rome_polygon
                              data)]
           (log/info (str "geojson:" (clojure.string/join ";" geojson)))
           {:headers {"Content-Type" "application/json;charset=utf-8"}
-           :body (generate-string geojson)}))))
+           :body (generate-string {:type "FeatureCollection"
+                                   :features geojson})}))))
+
 
 
 
