@@ -4,13 +4,30 @@ var mapbox_api_key = "pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyr
 
 var Roma = [12.5012515,41.9012917];
 
-function load_centroids() {
+function load_centroids(map) {
     geojson = $.ajax({
 	async:false,
 	cache:true,
 	dataType: "json",
 	url: "/world/centroids",
 	success: function(content) {
+	    var markers = new mapboxgl.GeoJSONSource({
+		type: "geojson",
+		data: content
+	    });
+	    map.addSource('hood_markers', markers);
+	    map.addLayer({
+		id: "hood_markers",
+		type: "symbol",
+		layout: {
+		    visibility: 'visible',
+		    "icon-image": "marker-11",
+		    "text-field":"{neighborhood}",
+		    "text-offset":[0,1.5],
+		    "icon-size": 2
+		},
+		source: 'hood_markers'
+	    });
 	    return content;
 	}
     }).responseJSON;
@@ -23,8 +40,6 @@ function load_centroids() {
     }
     return retval;
 }
-
-var centroids = load_centroids();
 
 function toDegrees(radians) {
     return radians * (180 / Math.PI);
@@ -103,6 +118,9 @@ function load_world() {
     map.on('load',function() {
 	show_player_turf(map,0);
 	show_player_marker(map,0);
+	if ((typeof centroids) == "undefined") {
+	    centroids = load_centroids(map);
+	}
 	show_player_turf(map,1);
 	show_player_marker(map,1);
 	show_player_turf(map,2);
