@@ -36,7 +36,7 @@ function show_player_marker(map,player) {
 		id: "player_marker"+player,
 		type: "symbol",
 		layout: {
-		    visibility: 'visible',
+		    visibility: 'none',
 		    "icon-image": "marker-11",
 		    "text-field":content.properties.player,
 		    "text-offset":[0,1.5],
