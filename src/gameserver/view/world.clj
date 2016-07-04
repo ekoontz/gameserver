@@ -68,6 +68,7 @@
          "gameserver/view/templates/move"
          {})))
 
+  ;; TODO: clarify /world/player?player= vs /world/map?player=
   (GET "/world/player" request
        (friend/authenticated
         (if-let [player (:player (:params request))]
@@ -95,6 +96,33 @@ INNER JOIN rome_polygon
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string (first geojson))}))))
 
+  (GET "/world/hoods" request
+       (friend/authenticated
+          (let [logging (log/info (str "getting hood data."))
+                data (k/exec-raw ["
+    SELECT rome_polygon.name,ST_AsGeoJSON(ST_Transform(ST_Centroid(way),4326)) AS centroid,
+           vc_user.id AS player,vc_user.email AS email
+      FROM rome_polygon
+ LEFT JOIN owned_locations
+        ON (owned_locations.osm_id = rome_polygon.osm_id)
+ LEFT JOIN vc_user
+        ON (owned_locations.user_id = vc_user.id)
+     WHERE (admin_level = '10') ORDER BY rome_polygon.name ASC;
+"
+                                  []] :results)
+                geojson (map (fn [hood]
+                               {:type "Feature"
+                                :geometry (json/read-str (:centroid hood))
+                                :properties {:player {:id (:player hood)
+                                                      :email (:email hood)}
+                                             :neighborhood (:name hood)}
+                                }
+                               )
+                             data)]
+            (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
+            {:headers {"Content-Type" "application/json;charset=utf-8"}
+             :body (generate-string geojson)})))
+  
   ;; given a player, return the set of neighborhoods that are owned by that player.
   (GET "/world/map" request
        (friend/authenticated
@@ -109,8 +137,9 @@ INNER JOIN rome_polygon
             ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
 
        FROM rome_polygon AS hood
- INNER JOIN owned_locations ON (hood.osm_id = owned_locations.osm_id)
-                           AND (owned_locations.user_id = ?)
+ INNER JOIN owned_locations 
+         ON (hood.osm_id = owned_locations.osm_id)
+        AND (owned_locations.user_id = ?)
 "
                            [player]]
                           :results)

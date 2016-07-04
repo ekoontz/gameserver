@@ -5,6 +5,7 @@ var mapbox_api_key = "pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyr
 var Roma = [12.5012515,41.9012917];
 
 var updateBearing = false;
+var hoods;
 
 function load_centroids(map) {
     geojson = $.ajax({
@@ -39,6 +40,19 @@ function load_centroids(map) {
 	retval[hood_name] = centroid;
     }
     return retval;
+}
+
+function load_hoods(map) {
+    $.ajax({
+	async:false,
+	cache:true,
+	dataType: "json",
+	url: "/world/hoods",
+	success: function(content) {
+	    hoods = content;
+	}
+    });
+    return hoods;
 }
 
 function toDegrees(radians) {
@@ -140,14 +154,14 @@ function load_world() {
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
-	if ((typeof centroids) == "undefined") {
-	    centroids = load_centroids(map);
-	}
+	centroids = load_centroids(map);
+	
+	// TODO wrap in a timer and refresh every X seconds.
+	hoods = load_hoods(map);
 	show_player_turf(map,195);
 	show_player_marker(map,195);
 	show_player_turf(map,196);
 	show_player_marker(map,196);
+
     });
 }
-    
-
