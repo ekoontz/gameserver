@@ -8,33 +8,6 @@
             [gameserver.view.common :refer [wrap-layout]]
             [stencil.core :as stencil]))
 
-(def sample-world
-  {:map
-   {:bounding-box [1 2 3 4]
-    :regions #{{:name "mission"
-                :polygon #{[1 2] [3 4] [5 6] [7 8]}}
-               {:name "north beach"
-                :polygon #{[9 10] [11 12] [13 14] [15 16]}}
-               {:name "chinatown"
-                :polygon #{[17 18] [19 20] [21 22]}}
-               {:name "financial district"
-                :polygon #{[23 24] [25 26] [27 28]}}
-               {:name "tenderloin"
-                :polygon #{[29 30] [31 32] [33 34]}}}
-    :adjacency #{["mission" "tenderloin"]
-                 ["tenderloin" "financial district"]
-                 ["tenderloin" "chinatown"]
-                 ["chinatown" "north beach"]
-                 ["financial district" "chinatown"]}}
-   :tokens {"mission" #{"questo"}
-            "chinatown" #{"cane" "la"}
-            "financial district" #{"rosso" "il"}
-            "tenderloin" #{"parlare"}}
-   :owners {"ekoontz" #{"mission"}
-            "franco" #{"north beach" "chinatown"}}
-   :location {"ekoontz" "mission"
-              "franco" "north beach"}})
-
 (defroutes world-routes
 (GET "/world/ui" request
        (friend/authenticated
@@ -43,14 +16,10 @@
                      (stencil/render-file
                       "gameserver/view/templates/world"
                       {})
-
                      {:remote-js [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js"}
                                   ;; TODO: use integrity= and crossorigin=
                                   ;; per https://code.jquery.com
-                                  {:src "https://code.jquery.com/jquery-1.12.4.min.js"}
-
-                                  ]
-
+                                  {:src "https://code.jquery.com/jquery-1.12.4.min.js"}]
                       :remote-css [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css"}]
                       :local-js [{:src "log4.js"}
                                  {:src "player.js"}
@@ -91,7 +60,6 @@
          "gameserver/view/templates/move"
          {})))
 
-  ;; TODO: clarify /world/player?player= vs /world/map?player=
   (GET "/world/player" request
        (friend/authenticated
         (if-let [player (:player (:params request))]
@@ -118,56 +86,6 @@ INNER JOIN rome_polygon
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string (first geojson))}))))
-  
-  ;; given a player, return the set of neighborhoods that are owned by that player.
-  (GET "/world/map" request
-       (friend/authenticated
-        (let [player (if-let [player (:player (:params request))]
-                       (Integer. player)
-                       0)
-              logging (log/info (str "getting turf for player: " player))
-              owns-data
-              (k/exec-raw ["
-
-     SELECT name,admin_level,
-            ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
-
-       FROM rome_polygon AS hood
- INNER JOIN owned_locations 
-         ON (hood.osm_id = owned_locations.osm_id)
-        AND (owned_locations.user_id = ?)
-"
-                           [player]]
-                          :results)
-
-              owns-geo {:type "FeatureCollection"
-                        :features (map (fn [hood]
-                                         {:type "Feature"
-                                          :geometry (json/read-str (:geometry hood))
-                                          :properties {:name (:name hood)
-                                                       :admin_level (:admin_level hood)}})
-                                       owns-data)}
-
-              at-data
-              (k/exec-raw ["
-
-     SELECT name,admin_level,
-            ST_AsGeoJSON(ST_Transform(hood.way,4326)) AS geometry
-
-       FROM rome_polygon AS hood
- INNER JOIN player_location ON (hood.osm_id = player_location.osm_id)
-                           AND (player_location.user_id = ?)
-"
-                           [player]]
-                           :results)
-
-              at-geo {:type "Feature"
-                      :geometry (json/read-str (:geometry (first at-data)))
-                      :properties {:name (:name (first at-data))}}]
-          {:headers {"Content-Type" "application/json;charset=utf-8"}
-           :body (generate-string
-                  {:owns owns-geo
-                   :at at-geo})})))
   
   (POST "/world/move" request
         (friend/authenticated
