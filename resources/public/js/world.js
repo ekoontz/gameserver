@@ -106,7 +106,7 @@ function load_world() {
 	    for (var i = 0; i < features.length; i++) {
 		if (features[i].properties.admin_level == '10') {
 		    var old_hood = $("#player195-position").html();
-		    var new_hood = features[i].properties.name;
+		    var new_hood = features[i].properties.neighborhood;
 		    if (old_hood != new_hood) {
 			log(INFO,"selected hood:" + new_hood + " with pos:" + pos);
 
@@ -145,8 +145,8 @@ function load_world() {
 	if (features.length > 0) {
 	    for (var i = 0; i < features.length; i++) {
 		if (features[i].properties.admin_level == '10') {
-		    if ($("#player195-position").html() != features[i].properties.name) {
-			$("#player195-selected").html(features[i].properties.name);
+		    if ($("#player195-position").html() != features[i].properties.neighborhood) {
+			$("#player195-selected").html(features[i].properties.neighborhood);
 		    } else {
 			$("#player195-selected").html("");
 		    }

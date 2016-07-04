@@ -103,6 +103,7 @@ SELECT rome_polygon.name,
 
     SELECT rome_polygon.name,
            ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
+           admin_level,
            vc_user.id AS player,vc_user.email AS email
       FROM rome_polygon
  INNER JOIN owned_locations
@@ -117,9 +118,8 @@ SELECT rome_polygon.name,
                 geojson (map (fn [hood]
                                {:type "Feature"
                                 :geometry (json/read-str (:polygon hood))
-                                :properties {:neighborhood (:name hood)}
-                                }
-                               )
+                                :properties {:neighborhood (:name hood)
+                                             :admin_level (:admin_level hood)}})
                              data)]
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
             {:headers {"Content-Type" "application/json;charset=utf-8"}
