@@ -72,19 +72,6 @@ function load_players(map) {
 	dataType: "json",
 	url: "/world/players",
 	success: function(content) {
-	    map.addSource('players', new mapboxgl.GeoJSONSource({
-		type: "geojson",
-		data: content}));
-	    map.addLayer({
-		id: "players",
-		type: "symbol",
-		layout: {
-		    visibility: 'visible',
-		    "text-field":"{neighborhood}",
-		    "text-offset":[0,0]
-		},
-		source: 'players'
-	    });
 	    // populate client-side 'player' db
 	    players = {};
 	    for (var i = 0; i < content.features.length; i++) {
