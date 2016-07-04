@@ -51,7 +51,7 @@ function show_player_turf(map,player) {
     $.ajax({
 	cache:false,
 	dataType: "json",
-	url: "/world/map?player="+player,
+	url: "/world/player/"+player,
 	success: function(content) {
 	    content = content.owns;
 	    var hoods = new mapboxgl.GeoJSONSource({
