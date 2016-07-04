@@ -9,7 +9,7 @@ var hoods = {};
 var updateBearing = false;
 
 function load_centroids(map) {
-    geojson = $.ajax({
+    $.ajax({
 	async:false,
 	cache:true,
 	dataType: "json",
@@ -30,17 +30,15 @@ function load_centroids(map) {
 		},
 		source: 'hood_markers'
 	    });
-	    return content;
+	    // populate client-side 'centroids' db
+	    centroids = {};
+	    for (var i = 0; i < content.length; i++) {
+		var hood_name = content[i].properties.neighborhood;
+		var centroid = content[i].geometry.coordinates;
+		centroids[hood_name] = centroid;
+	    }
 	}
-    }).responseJSON;
-    var retval = {};
-    geojson = geojson.features;
-    for (var i = 0; i < geojson.length; i++) {
-	var hood_name = geojson[i].properties.neighborhood;
-	var centroid = geojson[i].geometry.coordinates;
-	retval[hood_name] = centroid;
-    }
-    return retval;
+    });
 }
 
 function load_hoods(map) {
@@ -160,7 +158,7 @@ function load_world() {
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
-	centroids = load_centroids(map);
+	load_centroids(map);
 	
 	// TODO wrap in a timer and refresh every X seconds.
 	hoods = load_hoods(map);
