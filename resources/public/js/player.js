@@ -17,34 +17,31 @@ var styles_per_player = {
 };
 
 function show_player_marker(map,player) {
-    $.ajax({
-	cache:false,
-	dataType: "json",
-	url: "/world/player?player="+player,
-	success: function(content) {
-	    // 1. show current location in status window:
-	    $("#player"+player+"-position").html(content.properties.neighborhood);
-	    $("#player"+player+"-name").html(content.properties.player);
+    // 1. show neighborhood of player:
+    $("#player"+player+"-position").html(players[player].location.properties.neighborhood);
+    // 2. show name of player:
+    $("#player"+player+"-name").html(players[player].name);
 
-	    // 2. show marker:
-	    var marker = new mapboxgl.GeoJSONSource({
-		type: "geojson",
-		data: content // "/world/player?player="+player
-	    });
-	    map.addSource('player_marker'+player, marker);
-	    map.addLayer({
-		id: "player_marker"+player,
-		type: "symbol",
-		layout: {
-		    "icon-image": "marker-11",
-		    "icon-offset":[0,-25],
-		    "text-field":content.properties.player,
-		    "text-offset":[0,-2],
-		    "icon-size": 2
-		},
-		source: 'player_marker'+player,
-	    });
-	}});
+    // 3. show marker of player in neighborhood:
+    map.addSource('player_marker'+player,
+		  new mapboxgl.GeoJSONSource({
+		      type: "geojson",
+		      data: players[player].location
+		  }));
+		  
+    map.addLayer({
+        id: "player_marker"+player,
+        type: "symbol",
+        layout: {
+            "icon-image": "marker-11",
+            "icon-offset":[0,-35],
+            "text-field":players[player].name,
+            "text-offset":[0,-2],
+	    "text-size":12,
+            "icon-size": 1
+        },
+        source: 'player_marker'+player
+    });
 }
 
 function show_player_turf(map,player) {
@@ -53,7 +50,6 @@ function show_player_turf(map,player) {
 	dataType: "json",
 	url: "/world/player/"+player,
 	success: function(content) {
-	    content = content.owns;
 	    var hoods = new mapboxgl.GeoJSONSource({
 		type: "geojson",
 		data: content
@@ -68,3 +64,37 @@ function show_player_turf(map,player) {
 	    });
 	}});
 };
+
+function load_players(map) {
+    $.ajax({
+	async:false,
+	cache:true,
+	dataType: "json",
+	url: "/world/players",
+	success: function(content) {
+	    map.addSource('players', new mapboxgl.GeoJSONSource({
+		type: "geojson",
+		data: content}));
+	    map.addLayer({
+		id: "players",
+		type: "symbol",
+		layout: {
+		    visibility: 'visible',
+		    "text-field":"{neighborhood}",
+		    "text-offset":[0,0]
+		},
+		source: 'players'
+	    });
+	    // populate client-side 'player' db
+	    players = {};
+	    for (var i = 0; i < content.features.length; i++) {
+		var id = content.features[i].properties.player_id;
+		var player_record = { name: content.features[i].properties.player,
+				      location: content.features[i]}; 
+		players[id] = player_record;
+		show_player_marker(map,id);
+		show_player_turf(map,id);
+	    }
+	}
+    });
+}

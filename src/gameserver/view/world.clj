@@ -94,36 +94,39 @@ SELECT rome_polygon.name,
          "gameserver/view/templates/move"
          {})))
 
-  (GET "/world/player" request
+  (GET "/world/player/:player" request
        (friend/authenticated
-        (if-let [player (:player (:params request))]
+        (if-let [player (:player (:route-params request))]
           (let [player (Integer. player)
-                logging (log/info (str "getting player:" player))
+                logging (log/info (str "/world/player/" player))
                 data (k/exec-raw ["
 
-    SELECT rome_polygon.name,ST_AsGeoJSON(ST_Transform(ST_Centroid(way),4326)) AS centroid,
-           vc_user.given_name AS player 
-      FROM player_location 
-INNER JOIN vc_user ON (player_location.user_id = vc_user.id)
-INNER JOIN rome_polygon 
-        ON (player_location.osm_id = rome_polygon.osm_id) 
-     WHERE user_id=?
-  ORDER BY rome_polygon.name
+    SELECT rome_polygon.name,
+           ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
+           vc_user.id AS player,vc_user.email AS email
+      FROM rome_polygon
+ INNER JOIN owned_locations
+        ON (owned_locations.osm_id = rome_polygon.osm_id)
+ INNER JOIN vc_user
+        ON (owned_locations.user_id = vc_user.id)
+     WHERE (admin_level = '10')
+       AND vc_user.id = ?
+  ORDER BY rome_polygon.name ASC;
 "
                                   [player]] :results)
                 geojson (map (fn [hood]
                                {:type "Feature"
-                                :geometry (json/read-str (:centroid hood))
-                                :properties {:player (:player hood)
-                                             :neighborhood (:name hood)}
+                                :geometry (json/read-str (:polygon hood))
+                                :properties {:neighborhood (:name hood)}
                                 }
                                )
                              data)]
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
             {:headers {"Content-Type" "application/json;charset=utf-8"}
-             :body (generate-string (first geojson))}))))
+             :body (generate-string {:type "FeatureCollection"
+                                     :features geojson})}))))
 
-    (GET "/world/players" request
+  (GET "/world/players" request
        (friend/authenticated
         (let [data (k/exec-raw ["
 

@@ -59,37 +59,6 @@ function load_hoods(map) {
     });
 }
 
-function load_players(map) {
-    $.ajax({
-	async:false,
-	cache:true,
-	dataType: "json",
-	url: "/world/players",
-	success: function(content) {
-	    map.addSource('players', new mapboxgl.GeoJSONSource({
-		type: "geojson",
-		data: content}));
-	    map.addLayer({
-		id: "players",
-		type: "symbol",
-		layout: {
-		    visibility: 'visible',
-		    "text-field":"{neighborhood}",
-		    "text-offset":[0,0]
-		},
-		source: 'players'
-	    });
-	    // populate client-side 'player' db
-	    players = {};
-	    for (var i = 0; i < content.features.length; i++) {
-		var id = content.features[i].properties.player_id;
-		var player_record = { name: content.features[i].properties.player,
-				      location: content.features[i]}; 
-		players[id] = player_record;
-	    }
-	}
-    });
-}
 
 function toDegrees(radians) {
     return radians * (180 / Math.PI);
@@ -194,12 +163,7 @@ function load_world() {
 	
 	// TODO wrap in a timer and refresh every X seconds.
 	load_hoods(map);
+	log(INFO,"loaded hoods.");
 	load_players(map);
-	
-	show_player_turf(map,195);
-	show_player_marker(map,195);
-	show_player_turf(map,196);
-	show_player_marker(map,196);
-
     });
 }
