@@ -4,15 +4,16 @@ var mapbox_api_key = "";
 
 var Roma = [12.5012515,41.9012917];
 
+var centroids = {};
+var hoods = {};
 var updateBearing = false;
-var hoods;
 
 function load_centroids(map) {
     geojson = $.ajax({
 	async:false,
 	cache:true,
 	dataType: "json",
-	url: "/world/centroids",
+	url: "/world/hoods",
 	success: function(content) {
 	    var markers = new mapboxgl.GeoJSONSource({
 		type: "geojson",
@@ -49,7 +50,12 @@ function load_hoods(map) {
 	dataType: "json",
 	url: "/world/hoods",
 	success: function(content) {
-	    hoods = content;
+	    hoods = {};
+	    for(i = 0; i < content.length; i++) {
+		name = content[i].properties.neighborhood;
+		hoods[name] = content[i];
+	    }
+	    
 	}
     });
     return hoods;

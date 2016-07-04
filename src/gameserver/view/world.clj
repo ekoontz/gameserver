@@ -36,11 +36,7 @@
               "franco" "north beach"}})
 
 (defroutes world-routes
-  (GET "/world" request
-       (friend/authenticated
-        (generate-string sample-world)))
-
-  (GET "/world/ui" request
+(GET "/world/ui" request
        (friend/authenticated
         (log/debug (str "rendering map page."))
         (wrap-layout "World"
@@ -61,6 +57,33 @@
                                  {:src "world.js"}]
                       :local-css [{:src "world.css"}]
                       :onload "load_world();"})))
+  (GET "/world/hoods" request
+       (friend/authenticated
+          (let [logging (log/info (str "getting hood data."))
+                data (k/exec-raw ["
+    SELECT rome_polygon.name,ST_AsGeoJSON(ST_Transform(ST_Centroid(way),4326)) AS centroid,
+           vc_user.id AS player,vc_user.email AS email
+      FROM rome_polygon
+ LEFT JOIN owned_locations
+        ON (owned_locations.osm_id = rome_polygon.osm_id)
+ LEFT JOIN vc_user
+        ON (owned_locations.user_id = vc_user.id)
+     WHERE (admin_level = '10') ORDER BY rome_polygon.name ASC;
+"
+                                  []] :results)
+                geojson (map (fn [hood]
+                               {:type "Feature"
+                                :geometry (json/read-str (:centroid hood))
+                                :properties {:owner {:id (:player hood)
+                                                     :email (:email hood)}
+                                             :neighborhood (:name hood)}
+                                }
+                               )
+                             data)]
+            (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
+            {:headers {"Content-Type" "application/json;charset=utf-8"}
+             :body (generate-string {:type "FeatureCollection"
+                                     :features geojson})})))
 
   (GET "/world/move" request
        (friend/authenticated
@@ -95,33 +118,6 @@ INNER JOIN rome_polygon
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string (first geojson))}))))
-
-  (GET "/world/hoods" request
-       (friend/authenticated
-          (let [logging (log/info (str "getting hood data."))
-                data (k/exec-raw ["
-    SELECT rome_polygon.name,ST_AsGeoJSON(ST_Transform(ST_Centroid(way),4326)) AS centroid,
-           vc_user.id AS player,vc_user.email AS email
-      FROM rome_polygon
- LEFT JOIN owned_locations
-        ON (owned_locations.osm_id = rome_polygon.osm_id)
- LEFT JOIN vc_user
-        ON (owned_locations.user_id = vc_user.id)
-     WHERE (admin_level = '10') ORDER BY rome_polygon.name ASC;
-"
-                                  []] :results)
-                geojson (map (fn [hood]
-                               {:type "Feature"
-                                :geometry (json/read-str (:centroid hood))
-                                :properties {:player {:id (:player hood)
-                                                      :email (:email hood)}
-                                             :neighborhood (:name hood)}
-                                }
-                               )
-                             data)]
-            (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
-            {:headers {"Content-Type" "application/json;charset=utf-8"}
-             :body (generate-string geojson)})))
   
   ;; given a player, return the set of neighborhoods that are owned by that player.
   (GET "/world/map" request
@@ -185,26 +181,9 @@ INNER JOIN rome_polygon
            :request (-> request :params)
            })))
   
-  (GET "/world/centroids" request
-       (friend/authenticated
-        (let [logging (log/info (str "getting centroids for all neighborhoods."))
-              data (k/exec-raw ["
 
-   SELECT rome_polygon.name,ST_AsGeoJSON(ST_Transform(ST_Centroid(way),4326)) AS centroid
-     FROM rome_polygon WHERE admin_level='10'
-"
-                                  []] :results)
-                geojson (map (fn [hood]
-                               {:type "Feature"
-                                :geometry (json/read-str (:centroid hood))
-                                :properties {:neighborhood (:name hood)}
-                                }
-                               )
-                             data)]
-          (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
-          {:headers {"Content-Type" "application/json;charset=utf-8"}
-           :body (generate-string {:type "FeatureCollection"
-                                   :features geojson})}))))
+  )
+
 
 
 
