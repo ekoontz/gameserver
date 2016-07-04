@@ -33,6 +33,7 @@ function load_centroids(map) {
 	    });
 	    // populate client-side 'centroids' db
 	    centroids = {};
+	    content = content.features;
 	    for (var i = 0; i < content.length; i++) {
 		var hood_name = content[i].properties.neighborhood;
 		var centroid = content[i].geometry.coordinates;
