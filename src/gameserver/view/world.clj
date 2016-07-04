@@ -86,7 +86,33 @@ INNER JOIN rome_polygon
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string (first geojson))}))))
-  
+
+    (GET "/world/players" request
+       (friend/authenticated
+        (let [data (k/exec-raw ["
+
+    SELECT vc_user.given_name AS player_name,vc_user.id AS user_id,
+           rome_polygon.name AS location_name,rome_polygon.osm_id AS location_osm,
+           ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid
+      FROM vc_user
+INNER JOIN player_location ON (player_location.user_id = vc_user.id)
+INNER JOIN rome_polygon 
+        ON (player_location.osm_id = rome_polygon.osm_id) 
+  ORDER BY rome_polygon.name
+"
+                                []] :results)
+              geojson {:type "FeatureCollection"
+                       :features
+                       (map (fn [player]
+                              {:type "Feature" ;; intention of this feature: show a player marker.
+                               :geometry (json/read-str (:centroid player))
+                               :properties {:player (:player_name player)
+                                            :neighborhood (:location_name player)
+                                            :player_id (:user_id player)}})
+                            data)}]
+          {:headers {"Content-Type" "application/json;charset=utf-8"}
+           :body (generate-string geojson)})))
+
   (POST "/world/move" request
         (friend/authenticated
          ;; 1. deterimine user id
