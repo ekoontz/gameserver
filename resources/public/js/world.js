@@ -6,6 +6,7 @@ var Roma = [12.5012515,41.9012917];
 
 var centroids = {};
 var hoods = {};
+var players = {};
 var updateBearing = false;
 
 function load_centroids(map) {
@@ -56,7 +57,38 @@ function load_hoods(map) {
 	    
 	}
     });
-    return hoods;
+}
+
+function load_players(map) {
+    $.ajax({
+	async:false,
+	cache:true,
+	dataType: "json",
+	url: "/world/players",
+	success: function(content) {
+	    map.addSource('players', new mapboxgl.GeoJSONSource({
+		type: "geojson",
+		data: content}));
+	    map.addLayer({
+		id: "players",
+		type: "symbol",
+		layout: {
+		    visibility: 'visible',
+		    "text-field":"{neighborhood}",
+		    "text-offset":[0,0]
+		},
+		source: 'players'
+	    });
+	    // populate client-side 'player' db
+	    players = {};
+	    for (var i = 0; i < content.features.length; i++) {
+		var id = content.features[i].properties.player_id;
+		var player_record = { name: content.features[i].properties.player,
+				      location: content.features[i]}; 
+		players[id] = player_record;
+	    }
+	}
+    });
 }
 
 function toDegrees(radians) {
@@ -161,7 +193,9 @@ function load_world() {
 	load_centroids(map);
 	
 	// TODO wrap in a timer and refresh every X seconds.
-	hoods = load_hoods(map);
+	load_hoods(map);
+	load_players(map);
+	
 	show_player_turf(map,195);
 	show_player_marker(map,195);
 	show_player_turf(map,196);
