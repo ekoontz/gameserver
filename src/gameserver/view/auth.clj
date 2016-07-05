@@ -19,22 +19,21 @@
             [stencil.core :as stencil]))
 
 (defn authenticate [ring-handler]
-  (-> ring-handler
-      (friend/authenticate
-       {:allow-anon? true
-        :login-uri "/login"
-        :default-landing-uri "/"
-        :unauthorized-handler (fn [request]
-                                (log/debug (str "unauthorized request: " request))
-                                (log/debug (str "authenticated status: " (authenticated?)))
-                                (if (authenticated?)
-                                  (ring.util.response/redirect (:uri request))
-                                  {:status 403
-                                   :body (str "Sorry, but you are not authorized to view: " (:uri request))}))
-        :workflows [(workflows/interactive-form)
-                    (oauth2/workflow google/auth-config)]
-        :credential-fn (partial creds/bcrypt-credential-fn users/users)
-        })))
+  (friend/authenticate
+   ring-handler
+   {:allow-anon? true
+    :login-uri "/login"
+    :default-landing-uri "/"
+    :unauthorized-handler (fn [request]
+                            (log/debug (str "unauthorized request: " request))
+                            (log/debug (str "authenticated status: " (authenticated?)))
+                            (if (authenticated?)
+                              (ring.util.response/redirect (:uri request))
+                              {:status 403
+                               :body (str "Sorry, but you are not authorized to view: " (:uri request))}))
+    :workflows [(workflows/interactive-form)
+                (oauth2/workflow google/auth-config)]
+    :credential-fn (partial creds/bcrypt-credential-fn users/users)}))
 
 (defn- signup-page
   "Render the signup page."
