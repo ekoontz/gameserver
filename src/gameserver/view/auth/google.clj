@@ -202,6 +202,7 @@
                        {:username email
                         :roles #{:gameserver.view.auth.users/user}}))))))))))
 
+;; TODO: move insert-session and token2info, and above insertion code to auth.users, since local authentication needs db-related functionality as well.
 (defn insert-session
   ([user-id access-token]
    (let [ring-session (get-ring-session)]
