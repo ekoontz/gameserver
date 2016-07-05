@@ -52,7 +52,7 @@ ORDER BY n1.name;
 "
                                 []] :results)
               body (map (fn [row]
-                          {:name (:n1 row)
+                          {:osm_id (:n1 row)
                            :adj (map str (.getArray (:adj row)))})
                         rows)]
           {:headers {"Content-Type" "application/json;charset=utf-8"}
