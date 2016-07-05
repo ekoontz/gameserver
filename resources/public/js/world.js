@@ -8,8 +8,9 @@ var centroids = {};
 var hoods = {};
 var players = {};
 var updateBearing = false;
-
-function load_world(player_id) {
+var player_id;
+function load_world(current_player_id) {
+    player_id = current_player_id;
     log(INFO,"loading world..");
     var current_long = Roma[0];
     var current_lat = Roma[1];
@@ -28,25 +29,7 @@ function load_world(player_id) {
 	zoom: current_zoom,
 	pitch:80
     });
-    
-    map.on('mousemove',function(e) {
-	// display the selected hood in the player-selected box.
-	var features =
-	    map.queryRenderedFeatures(e.point);
-	if (features.length > 0) {
-	    for (var i = 0; i < features.length; i++) {
-		if (features[i].properties.admin_level == '10') {
-		    if ($("#player"+player_id+"-position").html() != features[i].properties.neighborhood) {
-			$("#player"+player_id+"-selected").html(features[i].properties.neighborhood);
-		    } else {
-			$("#player"+player_id+"-selected").html("");
-		    }
-		    break;
-		}
-	    }
-	}
-    }, false);
-    
+        
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
@@ -94,7 +77,7 @@ function load_centroids(map) {
 		if (features.length > 0) {
 		    for (var i = 0; i < features.length; i++) {
 			if (features[i].properties.admin_level == '10') {
-			    var old_hood = $("#player195-position").html();
+			    var old_hood = $("#player" + player_id + "-position").html();
 			    var new_hood = features[i].properties.neighborhood;
 			    if (old_hood != new_hood) {
 				log(INFO,"selected hood:" + new_hood + " with pos:" + pos);
@@ -102,8 +85,8 @@ function load_centroids(map) {
 				var oldCentroid = centroids[old_hood];
 				var newCentroid = centroids[new_hood];
 
-				$("#player195-position").html(new_hood);
-				$("#player195-selected").html("");
+				$("#player" + player_id + "-position").html(new_hood);
+				$("#player" + player_id + "-selected").html("");
 		    
 				var newBearing;
 				if (updateBearing == true) {
@@ -126,6 +109,26 @@ function load_centroids(map) {
 		    log(DEBUG,"you didn't click on anything of importance at pos:" + pos);
 		}
 	    }, false);
+
+	    map.on('mousemove',function(e) {
+		// display the selected hood in the player-selected box.
+		var features =
+		    map.queryRenderedFeatures(e.point);
+		if (features.length > 0) {
+		    for (var i = 0; i < features.length; i++) {
+			if (features[i].properties.admin_level == '10') {
+			    if ($("#player"+player_id+"-position").html() != features[i].properties.neighborhood) {
+				$("#player"+player_id+"-selected").html(features[i].properties.neighborhood);
+			    } else {
+				$("#player"+player_id+"-selected").html("");
+			    }
+			    break;
+			}
+		    }
+		}
+	    }, false);
+
+	    
 	}
     });
 }
@@ -146,7 +149,6 @@ function load_hoods(map) {
 	}
     });
 }
-
 
 function toDegrees(radians) {
     return radians * (180 / Math.PI);

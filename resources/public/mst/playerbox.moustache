@@ -1,0 +1,14 @@
+<div class="player{{style}}">
+  <h4>{{name}}</h4>
+  <table>
+    <tr>
+      <th>di</th>
+      <td id="player{{id}}-position">{{location.properties.neighborhood}}</th>	
+    </tr>
+    <tr>
+      <th>a</th>
+      <td id="player{{id}}-selected"></td>
+    </tr>
+  </table>
+</div>
+  
