@@ -25,7 +25,7 @@
         :login-uri "/login"
         :default-landing-uri "/"
         :unauthorized-handler (fn [request]
-                                (log/debug (str "unauthZ-handler: request: " request))
+                                (log/debug (str "unauthorized request: " request))
                                 (log/debug (str "authenticated status: " (authenticated?)))
                                 (if (authenticated?)
                                   (ring.util.response/redirect (:uri request))
@@ -109,6 +109,7 @@
   (GET "/check-session" request (check-session request))
   (GET "/logout" request (logout))
 
+  ;; TODO: remove: only for testing
   (GET "/authorized" request
        (do
          (log/info (str "START: " (-> request :session :cemerick.friend/identity)))
