@@ -10,6 +10,7 @@ var players = {};
 var adjacencies = {};
 var updateBearing = false;
 var player_id;
+var fitBounds = false;
 
 function load_world(current_player_id) {
     player_id = current_player_id;
@@ -31,7 +32,15 @@ function load_world(current_player_id) {
 	zoom: current_zoom,
 	pitch:80
     });
-        
+
+    if (fitBounds == true) {
+	map.fitBounds([[
+            12.4012515,41.9012917
+	], [
+	    12.5012515,42.0012917
+	]]);
+    }
+    
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
