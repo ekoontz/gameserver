@@ -7,6 +7,7 @@
             [friend-oauth2.util :refer [format-config-uri]]
             [friend-oauth2.workflow :as oauth2]
             [gameserver.util.session :as session]
+            [gameserver.middleware.session :refer [get-ring-session]]
             [gameserver.view.auth.users :as users]
             [korma.core :as k]
             [org.httpkit.client :as http]))
@@ -101,7 +102,7 @@
            debug (log/trace (str "insert-session-if-none: session:" session))
            ]
        (if (not session-row)
-         (insert-session user-id access-token session)))))
+         (insert-session user-id access-token)))))
 
 ;; TODO: factor out update/insert into separate function with more representative names
 (defn token2username [access-token & [request]]
@@ -202,18 +203,8 @@
                         :roles #{:gameserver.view.auth.users/user}}))))))))))
 
 (defn insert-session
-  ([ring-session]
-     (if (nil? ring-session)
-       (log/warn (str "not inserting session since ring_session is nil."))
-
-       ;; else
-       (do
-         (log/info (str "inserting new session record (session=" ring-session))
-         (k/exec-raw [(str "INSERT INTO session (ring_session)
-                             VALUES (?::uuid)")
-                      [ring-session]]))))
-
-  ([user-id access-token ring-session]
+  ([user-id access-token]
+   (let [ring-session (get-ring-session)]
      (if (nil? ring-session)
        (log/warn (str "not inserting session since ring session is nil."))
 
@@ -224,7 +215,7 @@
          (log/debug (str "                             (user-id=" user-id))
          (k/exec-raw [(str "INSERT INTO session (access_token,user_id,ring_session)
                              VALUES (?,?,?::uuid)")
-                      [access-token user-id ring-session]])))))
+                      [access-token user-id ring-session]]))))))
 
 (defn token2info [access-token]
   (first (k/exec-raw [(str "SELECT vc_user.* 
