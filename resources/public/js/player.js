@@ -1,3 +1,9 @@
+var open_hood_style = {
+	"fill-color": "#ffffff",
+	"fill-outline-color": "#eee",
+	"fill-opacity": 0.3
+};
+
 var styles_per_player = {
     196: {
 	"fill-color": "#0010a5",
@@ -65,9 +71,30 @@ function show_player_turf(map,player) {
 	}});
 };
 
+function show_open_turf(map) {
+    $.ajax({
+	cache:true,
+	dataType: "json",
+	url: "/world/hoods/open",
+	success: function(content) {
+	    map.addSource('open_hoods',
+			  new mapboxgl.GeoJSONSource({
+			      type: "geojson",
+			      data: content}));
+	    map.addLayer({
+		type: "fill",
+		paint: open_hood_style,
+		id: "open_hoods",
+		source: 'open_hoods',
+		"source-layer": "open_hoods"
+	    });
+	}});
+}
+
+
 function load_players(map) {
     $.ajax({
-	async:false,
+	async:true,
 	cache:true,
 	dataType: "json",
 	url: "/world/players",
@@ -84,4 +111,5 @@ function load_players(map) {
 	    }
 	}
     });
+    show_open_turf(map);
 }
