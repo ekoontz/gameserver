@@ -43,7 +43,6 @@ function load_world(current_player_id) {
 }
 function load_centroids(map) {
     $.ajax({
-	async:false,
 	cache:true,
 	dataType: "json",
 	url: "/world/hoods",
@@ -128,8 +127,6 @@ function load_centroids(map) {
 		    }
 		}
 	    }, false);
-
-	    
 	}
     });
 }
