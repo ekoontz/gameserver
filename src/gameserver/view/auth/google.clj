@@ -105,11 +105,10 @@
          (insert-session user-id access-token)))))
 
 ;; TODO: factor out update/insert into separate function with more representative names
-(defn token2username [access-token & [request]]
+(defn token2username [access-token]
   "Get user's email address from the vc_user table, given their access token. 
    If access-token is not registered in database,
    then ask Google for the user's email address and add as new row to the vc_user table.
-   _request_ is optional: if present, it allows for more diagnostic logging than without it.
 "
   (cond
    (nil? access-token)
@@ -129,14 +128,10 @@
      (if user-by-access-token
        (let [email (:email user-by-access-token)
              user-id (:userid user-by-access-token)
-             ring-session (get-in request [:cookies "ring-session" :value])]
-         
-         (log/debug (str "found user by access-token in Postgres vc_user database: email: "
-                        email))
-         (if request (do
-                       (log/trace (str "found user by access-token, and currently the request is: " request))
-                       (log/debug (str "found user by access-token, and currently the ring-session (from request) is: " ring-session))
-                       (insert-session-if-none (get-in request [:cookies "ring-session" :value]) access-token user-id)))
+             ring-session (get-ring-session)]
+         (log/debug (str "found user by access-token in Postgres vc_user database: email: " email))
+         (log/info (str "found user by access-token, and currently the ring-session is: " ring-session))
+         (insert-session-if-none ring-session access-token user-id)
          email)
 
        ;; else, user could not be found locally by searching the 'session' table access token, so get user's info from google by using the access-token.
@@ -147,6 +142,7 @@
                  (str "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" access-token))]
            (cond error
                  (log/warn "Failed, exception: " error)
+                                " : " error))
                  
                  (not (= status 200))
                  (do
@@ -195,9 +191,10 @@
                                                                  ON (session.user_id = vc_user.id)
                                                               WHERE vc_user.id=?" [user-id]] :results))
 
-                             ring-session (get-in request [:cookies "ring-session" :value])
-                             ]
-                         (insert-session-if-none (get-in request [:cookies "ring-session" :value]) access-token user-id))
+                             ring-session (get-ring-session)]
+                         (log/debug (str "calling: insert-session-if-none with userid:" user-id))
+                         (insert-session-if-none ring-session
+                                                 access-token user-id))
                                                   
                        {:username email
                         :roles #{:gameserver.view.auth.users/user}}))))))))))
