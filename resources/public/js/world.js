@@ -34,13 +34,16 @@ function load_world(current_player_id) {
     
     map.on('load',function() {
 	load_centroids(map);
-	load_hoods(map);
 
-	// TODO wrap in a timer and refresh every X seconds.
-	log(INFO,"loaded hoods.");
+	// TODO wrap in a timer and refresh every X seconds:
 	load_players(map);
+
     });
 }
+
+function load_adjacencies(map) {
+}
+
 function load_centroids(map) {
     $.ajax({
 	cache:true,
@@ -65,10 +68,12 @@ function load_centroids(map) {
 	    // populate client-side 'centroids' db
 	    centroids = {};
 	    content = content.features;
+	    hoods = {};
 	    for (var i = 0; i < content.length; i++) {
 		var hood_name = content[i].properties.neighborhood;
 		var centroid = content[i].geometry.coordinates;
 		centroids[hood_name] = centroid;
+		hoods[name] = content[i];
 	    }
 	    map.on('click',function(e) {
 		var pos = e.lngLat;
@@ -127,22 +132,6 @@ function load_centroids(map) {
 		    }
 		}
 	    }, false);
-	}
-    });
-}
-
-function load_hoods(map) {
-    $.ajax({
-	cache:true,
-	dataType: "json",
-	url: "/world/hoods",
-	success: function(content) {
-	    hoods = {};
-	    for(i = 0; i < content.length; i++) {
-		name = content[i].properties.neighborhood;
-		hoods[name] = content[i];
-	    }
-	    
 	}
     });
 }
