@@ -15,6 +15,9 @@
          (friend/authenticated
           (let [player-id (:id (get-user-from-ring-session
                                 (get-in request [:cookies "ring-session" :value])))]
+            (if (nil? player-id)
+              (throw (Exception. (str "player-id is null; ring-session: "
+                                      (get-in request [:cookies "ring-session" :value])))))
             (log/info (str "rendering map page: current-user: " (current-user)))
             (log/info (str "rendering map page: player_id: " player-id))
             (wrap-layout "World"
@@ -59,7 +62,7 @@ ORDER BY n1.name;
        (friend/authenticated
           (let [logging (log/info (str "getting hood data."))
                 data (k/exec-raw ["
-SELECT rome_polygon.name,
+SELECT rome_polygon.name,rome_polygon.osm_id,
            ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid,
            vc_user.id AS player,vc_user.email AS email
       FROM rome_polygon
@@ -91,7 +94,7 @@ SELECT rome_polygon.name,
        (friend/authenticated
           (let [logging (log/info (str "getting hood data."))
                 data (k/exec-raw ["
-    SELECT rome_polygon.name,
+    SELECT rome_polygon.name,rome_polygon.osm_id,
            ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
            vc_user.id AS player,vc_user.email AS email,
            admin_level
@@ -109,6 +112,7 @@ SELECT rome_polygon.name,
                                {:type "Feature"
                                 :geometry (json/read-str (:polygon hood))
                                 :properties {:neighborhood (:name hood)
+                                             :osm_id (:osm_id hood)
                                              :admin_level (:admin_level hood)}})
                              data)]
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
