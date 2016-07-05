@@ -7,8 +7,10 @@ var Roma = [12.5012515,41.9012917];
 var centroids = {};
 var hoods = {};
 var players = {};
+var adjacencies = {};
 var updateBearing = false;
 var player_id;
+
 function load_world(current_player_id) {
     player_id = current_player_id;
     log(INFO,"loading world..");
@@ -34,7 +36,8 @@ function load_world(current_player_id) {
     
     map.on('load',function() {
 	load_centroids(map);
-
+	load_adjacencies(map);
+	
 	// TODO wrap in a timer and refresh every X seconds:
 	load_players(map);
 
@@ -42,6 +45,25 @@ function load_world(current_player_id) {
 }
 
 function load_adjacencies(map) {
+    $.ajax({
+	cache:true,
+	dataType: "json",
+	url: "/world/adjacency",
+	success: function(content) {
+	    // populate client-side 'player' db
+	    adjacencies = {};
+	    count = 0;
+	    for (var i = 0; i < content.length; i++) {
+		var osm_id = content[i].osm_id;
+		var adj = content[i].adj;
+		adjacencies[osm_id] = adj;
+		count++;
+	    }
+	    log(INFO,"loaded " + count + " adjacencies.");
+ 	    $.get('/mst/infobox.moustache', function(template) {
+		$('#world').append(Mustache.render(template,{}));
+	    });
+	}});
 }
 
 function load_centroids(map) {

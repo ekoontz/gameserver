@@ -1,0 +1,19 @@
+<div id="infobox">
+  <div>
+    <h4 class="player0">{{name}}Monti</h4>
+    <table>
+      <tr>
+        <th>Owned by</th>
+	<td>{{owner}}Eugene</td>
+      </tr>	
+      <tr>
+        <th>Next to</th>
+	<td>Campitelli Trevi Castro Pretorio
+	  {{#adjacencies}}
+	    {{name}},
+	  {{/adjacencies}}
+	</td>
+      </tr>
+    </table>
+  </div>
+</div>
