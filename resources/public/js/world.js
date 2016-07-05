@@ -133,7 +133,6 @@ function load_centroids(map) {
 
 function load_hoods(map) {
     $.ajax({
-	async:false,
 	cache:true,
 	dataType: "json",
 	url: "/world/hoods",
