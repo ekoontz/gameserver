@@ -33,6 +33,28 @@
                           :local-css [{:src "world.css"}]
                           :onload (str "load_world('" player-id "');")}))))
 
+  (GET "/world/adjacency" request
+       (friend/authenticated
+        (let [logging (log/info (str "getting adjacency data."))
+              rows (k/exec-raw ["
+SELECT n1.osm_id AS n1,
+       ARRAY(SELECT n2.osm_id
+               FROM rome_polygon AS n2
+              WHERE n2.admin_level = '10'
+                AND ST_Touches(n1.way,n2.way)
+           ORDER BY n2.name) AS adj
+    FROM rome_polygon AS n1
+   WHERE n1.admin_level='10'
+ORDER BY n1.name;
+"
+                                []] :results)
+              body (map (fn [row]
+                          {:name (:n1 row)
+                           :adj (map str (.getArray (:adj row)))})
+                        rows)]
+          {:headers {"Content-Type" "application/json;charset=utf-8"}
+           :body (generate-string body)})))
+
   (GET "/world/hoods" request
        (friend/authenticated
           (let [logging (log/info (str "getting hood data."))
