@@ -34,8 +34,9 @@ function load_world(current_player_id) {
     
     map.on('load',function() {
 	load_centroids(map);
-	// TODO wrap in a timer and refresh every X seconds.
 	load_hoods(map);
+
+	// TODO wrap in a timer and refresh every X seconds.
 	log(INFO,"loaded hoods.");
 	load_players(map);
     });
