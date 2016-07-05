@@ -154,7 +154,7 @@
                  
                  true
                  (do
-                   (log/debug (str "body: " body))
+                   (log/debug (str "response from Google: " body))
                    (let [body (json/read-str body
                                              :key-fn keyword
                                              :value-fn (fn [k v]
