@@ -175,7 +175,8 @@
                                                             [email]] :results)))
                            user-id (if user-id
                                      (do
-                                       (log/info (str "found existing user record with email=" email ";user-id=" user-id))
+                                       (log/info (str "found existing user record with email="
+                                                      email ";user-id=" user-id))
                                        user-id)
                                     
                                      (do
