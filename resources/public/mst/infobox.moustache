@@ -8,12 +8,27 @@
       </tr>	
       <tr>
         <th>Next to</th>
-	<td>Campitelli Trevi Castro Pretorio
+	<td>Campitelli Castro Pretorio Esquilino Trevi
 	  {{#adjacencies}}
 	    {{name}},
 	  {{/adjacencies}}
 	</td>
       </tr>
-    </table>
-  </div>
+      <tr>
+        <th>Tokens</th>
+	<td>
+	  <span class="token l0">dormire</span>
+  	  <span class="token l1">gatto</span>
+	  <span class="token l2 meta">passato</span>
+  	  <span class="token l1 meta">imperfetto</span>		
+	  {{#tokens}}
+	  <span class="token l{{level}}">{{name}}</span>
+	  {{/tokens}}
+	</td>
+      </tr>
+  </table>
+  <textarea>
+  </textarea>
+
+</div>
 </div>
