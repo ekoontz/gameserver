@@ -5,6 +5,7 @@
 (declare ^:dynamic *flash*)
 (declare session-get)
 (declare session-put!)
+(declare get-ring-session)
 
 (defn log-session-info [request]
   (when (= (-> request :uri) "/")
@@ -15,13 +16,13 @@
   [handler]
   (fn [request]
     (log/debug (str "saving ring session from request: " request))
-
     (when-let [ring-session (get-in request [:cookies "ring-session" :value])]
       (if (not (= ring-session
-                    (session-get :ring-session)))
-        (do (log/info (str "saving ring session: " (get-in request [:cookies "ring-session" :value])))
-            (session-put! :ring-session ring-session))
-        (log/info (str "ring-session already set."))))
+                  (get-ring-session)))
+        (do (log/debug (str "saving ring session: " (get-in request [:cookies "ring-session" :value])))
+            (session-put! :ring-session ring-session)
+            (log/info (str "foooddd....:" (get-ring-session))))
+        (log/debug (str "ring-session already set."))))
     (handler request)))
 
 (defn wrap-session
@@ -84,16 +85,8 @@
       (get-in @*session* [:authentications v]) ;; (workflows/interactive-form) (gameserver.view.auth/authenticate)
       (get-in @*session* [:user])))) ;; (oauth2/workflow google/auth-config)   (gameserver.view.auth/authenticate)
 
-(defn session-get
-  "Get the value associated to a key for the current session"
-  [k]
-  (let [v (get @*session* k)]
-    (if v
-      (get-in @*session* [:authentications v]) ;; (workflows/interactive-form) (gameserver.view.auth/authenticate)
-      (get-in @*session* [:user])))) ;; (oauth2/workflow google/auth-config)   (gameserver.view.auth/authenticate)
-
 (defn get-ring-session []
-  (log/info (str "looking for ring-session in: " @*session*))
+  (log/debug (str "looking for ring-session in: " @*session*))
   (get @*session* :ring-session))
 
 (defn session-clear
