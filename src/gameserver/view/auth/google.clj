@@ -136,8 +136,9 @@
 
        ;; else, user could not be found locally by searching the 'session' table access token, so get user's info from google by using the access-token.
        (do
-         (log/info (str "user's token was not in database: querying: https://www.googleapis.com/oauth2/v1/userinfo?access_token=<input access token> to obtain user info"))
-         (let [{:keys [status headers body error] :as resp} 
+         (log/info (str "User's access-token is not yet in database: querying: https://www.googleapis.com/oauth2/v1/userinfo?access_token=<input access token> to obtain user info."))
+         (let [{:keys [status headers body error] :as resp}
+               ;; :keys destructures into HTTP-specific parts the Google response to the following URL:
                @(http/get 
                  (str "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" access-token))]
            (cond error
