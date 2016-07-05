@@ -92,10 +92,6 @@ function show_open_turf(map) {
 	}});
 }
 
-var foo = { player: "Eugene",
-	    neighborhood: "Esquilino",
-	    player_id: 196 };
-
 function load_players(map) {
     $.ajax({
 	async:true,
