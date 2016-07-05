@@ -5,17 +5,17 @@ var open_hood_style = {
 };
 
 var styles_per_player = {
-    196: {
+    0: {
 	"fill-color": "#0010a5",
 	"fill-outline-color": "#fff",
 	"fill-opacity": 0.2
     },
-    195: {
+    1: {
 	"fill-color": "#ff0000",
 	"fill-outline-color": "#000",
 	"fill-opacity": 0.2
     },
-    199: {
+    2: {
 	"fill-color": "#888700",
 	"fill-outline-color": "#001",
 	"fill-opacity": 0.2
@@ -50,7 +50,7 @@ function show_player_marker(map,player) {
     });
 }
 
-function show_player_turf(map,player) {
+function show_player_turf(map,player,style_index) {
     $.ajax({
 	cache:false,
 	dataType: "json",
@@ -63,7 +63,7 @@ function show_player_turf(map,player) {
 	    map.addSource('player'+player,hoods);
 	    map.addLayer({
 		type: "fill",
-		paint: styles_per_player[player],
+		paint: styles_per_player[style_index],
 		id: "player"+player,
 		source: 'player'+player,
 		"source-layer": "player"+player
@@ -91,6 +91,9 @@ function show_open_turf(map) {
 	}});
 }
 
+var foo = { player: "Eugene",
+	    neighborhood: "Esquilino",
+	    player_id: 196 };
 
 function load_players(map) {
     $.ajax({
@@ -104,11 +107,19 @@ function load_players(map) {
 	    for (var i = 0; i < content.features.length; i++) {
 		var id = content.features[i].properties.player_id;
 		var player_record = { name: content.features[i].properties.player,
-				      location: content.features[i]}; 
+				      id: id,
+				      style: i,
+				      location: content.features[i]
+				    }; 
 		players[id] = player_record;
 		show_player_marker(map,id);
-		show_player_turf(map,id);
+		show_player_turf(map,id,i);
 	    }
+ 	    $.get('/mst/playerbox.moustache', function(template) {
+		$.each(players, function(key,value) {
+		    $('#playerbox').append(Mustache.render(template,value));
+		});
+	    });
 	}
     });
     show_open_turf(map);

@@ -41,17 +41,18 @@
     opacity:0.9;
 }
 
-.player1 h4 {
+.player0 h4 {
     background: #0010a5;
     color:#ffef59;
 }
-.player2 h4 {
+.player1 h4 {
     background: #ff0000;
     color:#ffef59;
 }
 
-.player3 {
-    display:none;
+.player2 h4 {
+    background: #888700;
+    color:#3338ff;
 }
 
 .player3 h4 {
