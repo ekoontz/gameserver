@@ -4,23 +4,23 @@ var open_hood_style = {
 	"fill-opacity": 0.3
 };
 
-var styles_per_player = {
-    0: {
+var styles_per_player = [
+    {
 	"fill-color": "#0010a5",
 	"fill-outline-color": "#fff",
 	"fill-opacity": 0.2
     },
-    1: {
+    {
 	"fill-color": "#ff0000",
 	"fill-outline-color": "#000",
 	"fill-opacity": 0.2
     },
-    2: {
-	"fill-color": "#888700",
+    {
+	"fill-color": "#88ff00",
 	"fill-outline-color": "#001",
-	"fill-opacity": 0.2
+	"fill-opacity": 0.4
     }
-};
+];
 
 function show_player_marker(map,player) {
     // 1. show neighborhood of player:
@@ -40,9 +40,9 @@ function show_player_marker(map,player) {
         type: "symbol",
         layout: {
             "icon-image": "marker-11",
-            "icon-offset":[0,-35],
+            "icon-offset":[0,-15],
             "text-field":players[player].name,
-            "text-offset":[0,-2],
+            "text-offset":[0,-2.5],
 	    "text-size":12,
             "icon-size": 1
         },
@@ -51,6 +51,7 @@ function show_player_marker(map,player) {
 }
 
 function show_player_turf(map,player,style_index) {
+    log(INFO,"player:" + player + " has style:" + style_index);
     $.ajax({
 	cache:false,
 	dataType: "json",
