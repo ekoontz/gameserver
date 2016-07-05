@@ -41,21 +41,64 @@
     opacity:0.9;
 }
 
-.player0 h4 {
+#infobox {
+    left:1%;
+    width:30%;
+    z-index:1;
+    border:0px dashed blue;
+    top:40%;
+    max-height:9%;
+    position:absolute;
+}
+
+#infobox h4 {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    text-align:center;
+    padding:0.25em;
+    margin:0;
+    opacity:0.9;
+}
+
+#infobox > div {
+    position:relative;
+    margin-right:0.5em;
+    float:left;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 4px;
+    background:#ffffff;
+}
+
+#infobox table {
+    margin:0.25em;
+}
+
+#infobox th {
+    padding:0.25em;
+    padding-right:3em;
+    border-bottom:0px solid #ccc;
+}
+
+#infobox td {
+    width:10em;
+    border-bottom:1px solid #ccc;
+}
+
+h4.player0 {
     background: #0010a5;
     color:#ffef59;
 }
-.player1 h4 {
+h4.player1 {
     background: #ff0000;
     color:#ffef59;
 }
 
-.player2 h4 {
+h4.player2 {
     background: #88ff00;
     color:#3338ff;
 }
 
-.player3 h4 {
+h4.player3 {
     background: #888700;
     color:#3338ff;
 }

@@ -1,5 +1,5 @@
 <div class="player{{style}}">
-  <h4>{{name}}</h4>
+  <h4 class="player{{style}}">{{name}}</h4>
   <table>
     <tr>
       <th>di</th>
@@ -9,5 +9,5 @@
       <th>a</th>
       <td id="player{{id}}-selected"></td>
     </tr>
-  </table>
+</table>
 </div>
