@@ -14,13 +14,17 @@
 	  {{/adjacencies}}
 	</td>
       </tr>
+    </table>
+
+    <table style="margin-top:0.25em;">
       <tr>
         <th>Tokens</th>
-	<td>
+	<!-- TODO: move this to css -->
+        <td style="margin-top:0.5em;margin-bottom:1em;line-height:2.25em">
 	  <span class="token l0">dormire</span>
   	  <span class="token l1">gatto</span>
-	  <span class="token l2 meta">passato</span>
   	  <span class="token l1 meta">imperfetto</span>		
+	  <span class="token l2 meta">passato</span>
 	  {{#tokens}}
 	  <span class="token l{{level}}">{{name}}</span>
 	  {{/tokens}}
