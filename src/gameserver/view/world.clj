@@ -5,27 +5,29 @@
             [cheshire.core :refer [generate-string]]
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes GET POST]]
+            [gameserver.util.session :refer [current-user]]
             [gameserver.view.common :refer [wrap-layout]]
             [stencil.core :as stencil]))
 
 (defroutes world-routes
   (GET "/world" request
-       (friend/authenticated
-        (log/debug (str "rendering map page."))
-        (wrap-layout "World"
-                     (stencil/render-file
-                      "gameserver/view/templates/world"
-                      {})
-                     {:remote-js [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js"}
-                                  ;; TODO: use integrity= and crossorigin=
-                                  ;; per https://code.jquery.com
-                                  {:src "https://code.jquery.com/jquery-1.12.4.min.js"}]
-                      :remote-css [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css"}]
-                      :local-js [{:src "log4.js"}
-                                 {:src "player.js"}
-                                 {:src "world.js"}]
-                      :local-css [{:src "world.css"}]
-                      :onload "load_world();"})))
+       (let [player_id "196"]
+         (friend/authenticated
+          (log/info (str "rendering map page: current-user: " (current-user)))
+          (wrap-layout "World"
+                       (stencil/render-file
+                        "gameserver/view/templates/world"
+                        {})
+                       {:remote-js [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js"}
+                                    ;; TODO: use integrity= and crossorigin=
+                                    ;; per https://code.jquery.com
+                                    {:src "https://code.jquery.com/jquery-1.12.4.min.js"}]
+                        :remote-css [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css"}]
+                        :local-js [{:src "log4.js"}
+                                   {:src "player.js"}
+                                   {:src "world.js"}]
+                        :local-css [{:src "world.css"}]
+                        :onload (str "load_world('" player_id "');")}))))
 
   (GET "/world/hoods" request
        (friend/authenticated
