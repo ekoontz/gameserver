@@ -60,7 +60,7 @@ ORDER BY n1.name;
 
   (GET "/world/hoods" request
        (friend/authenticated
-          (let [logging (log/info (str "getting hood data."))
+          (let [logging (log/info (str "/world/hoods"))
                 data (k/exec-raw ["
 SELECT rome_polygon.name,rome_polygon.osm_id,
            ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid,
@@ -92,7 +92,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
   ;; neighborhoods which are not owned by any player.
   (GET "/world/hoods/open" request
        (friend/authenticated
-          (let [logging (log/info (str "getting hood data."))
+          (let [logging (log/info (str "/world/hoods/open"))
                 data (k/exec-raw ["
     SELECT rome_polygon.name,rome_polygon.osm_id,
            ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
