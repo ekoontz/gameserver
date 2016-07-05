@@ -142,7 +142,8 @@
                @(http/get 
                  (str "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" access-token))]
            (cond error
-                 (log/warn "Failed, exception: " error)
+                 (log/warn (str "Failed to GET "
+                                "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" access-token
                                 " : " error))
                  
                  (not (= status 200))
