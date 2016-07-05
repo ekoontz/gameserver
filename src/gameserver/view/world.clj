@@ -6,14 +6,17 @@
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes GET POST]]
             [gameserver.util.session :refer [current-user]]
+            [gameserver.view.auth.users :refer [get-user-from-ring-session]]
             [gameserver.view.common :refer [wrap-layout]]
             [stencil.core :as stencil]))
 
 (defroutes world-routes
   (GET "/world" request
-       (let [player_id "196"]
+       (let [player-id (:id (get-user-from-ring-session
+                                  (get-in request [:cookies "ring-session" :value])))]
          (friend/authenticated
           (log/info (str "rendering map page: current-user: " (current-user)))
+          (log/info (str "rendering map page: player_id: " player-id))
           (wrap-layout "World"
                        (stencil/render-file
                         "gameserver/view/templates/world"
@@ -27,7 +30,7 @@
                                    {:src "player.js"}
                                    {:src "world.js"}]
                         :local-css [{:src "world.css"}]
-                        :onload (str "load_world('" player_id "');")}))))
+                        :onload (str "load_world('" player-id "');")}))))
 
   (GET "/world/hoods" request
        (friend/authenticated
