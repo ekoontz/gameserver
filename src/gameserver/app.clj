@@ -41,7 +41,9 @@
               world-routes
               (route/resources "/")
               (route/not-found "<h1>Page not found.</h1>"))
+      (session-manager/put-ring-session)
       (authenticate)
       (session-manager/wrap-session)
       (context-manager/wrap-context-root-with-handler)
       (handler/site)))
+
