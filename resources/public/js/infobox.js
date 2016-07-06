@@ -1,7 +1,13 @@
 function update_infobox(hood_osm) {
     log(INFO,"update_infobox: " + hood_osm);
     var name = osm2hood[hood_osm];
-    var owner = osm2owner[hood_osm];
+    var owner = "";
+    if (players && osm2owner[hood_osm] &&
+	players[osm2owner[hood_osm]] &&
+	players[osm2owner[hood_osm]].name) {
+	owner = players[osm2owner[hood_osm]].name;
+    }
+    log(INFO,"update_infobox: owner:" + owner);
     var adjacent_osm_set = adjacencies[hood_osm];
     var adjacent_hoods = [];
     for (var i = 0; i < adjacent_osm_set.length; i++) {
