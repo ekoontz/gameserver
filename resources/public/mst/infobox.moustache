@@ -3,11 +3,11 @@
     <h4 class="player0">{{name}}Monti</h4>
     <table>
       <tr>
-        <th>Owned by</th>
+        <th>di</th>
 	<td>{{owner}}Eugene</td>
       </tr>	
       <tr>
-        <th>Next to</th>
+        <th>a prossima di</th>
 	<td>Campitelli Castro Pretorio Esquilino Trevi
 	  {{#adjacencies}}
 	    {{name}},
