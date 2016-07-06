@@ -1,6 +1,6 @@
 var open_hood_style = {
 	"fill-color": "#ffffff",
-	"fill-outline-color": "#eee",
+	"fill-outline-color": "#333",
 	"fill-opacity": 0.3
 };
 
