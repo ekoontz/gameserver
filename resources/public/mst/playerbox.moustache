@@ -9,5 +9,5 @@
       <th>a</th>
       <td id="player{{id}}-selected"></td>
     </tr>
-</table>
+  </table>
 </div>

@@ -69,6 +69,12 @@
     opacity:0.9;
 }
 
+div#tokens {
+    margin-top:0.5em;
+    margin-bottom:1em;
+    line-height:1.5em;
+}
+
 #infobox > div {
     position:relative;
     margin-right:0.5em;
@@ -83,6 +89,7 @@
 }
 
 #infobox th {
+    vertical-align:top;
     padding:.25em;
     padding-right:3em;
     border-bottom:0px solid #ccc;
@@ -151,5 +158,4 @@ span.l3 {
     background:#444444;
     color:#ccc;
 }
-
 
