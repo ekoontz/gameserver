@@ -34,11 +34,7 @@ function load_world(current_player_id) {
     });
 
     if (fitBounds == true) {
-	map.fitBounds([[
-            12.4012515,41.9012917
-	], [
-	    12.5012515,42.0012917
-	]]);
+	map.fitBounds([[12.4012515,41.9012917], [12.5012515,42.0012917]]);
     }
     
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
@@ -49,7 +45,6 @@ function load_world(current_player_id) {
 	
 	// TODO wrap in a timer and refresh every X seconds:
 	load_players(map);
-
     });
 }
 
@@ -108,13 +103,15 @@ function load_centroids(map) {
 	    }
 	    map.on('click',function(e) {
 		var pos = e.lngLat;
-		var features =
-		    map.queryRenderedFeatures(e.point);
+		var features = map.queryRenderedFeatures(e.point);
 		if (features.length > 0) {
 		    for (var i = 0; i < features.length; i++) {
 			if (features[i].properties.admin_level == '10') {
 			    var old_hood = $("#player" + player_id + "-position").html();
 			    var new_hood = features[i].properties.neighborhood;
+			    
+			    update_infobox(features[i].properties.osm_id);
+			    
 			    if (old_hood != new_hood) {
 				log(INFO,"selected hood:" + new_hood + " with pos:" + pos);
 				
@@ -184,3 +181,8 @@ function getNewBearing(from_centroid,to_centroid) {
     var bearing = toDegrees(Math.atan2(y, x));
     return bearing;
 }
+
+function update_infobox(new_hood_osm) {
+    log(INFO,"update_infobox: " + new_hood_osm);
+}
+
