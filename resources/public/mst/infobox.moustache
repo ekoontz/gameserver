@@ -16,7 +16,6 @@
       </tr>
     </table>
 
-    <!-- TODO: move this to css -->
     <div id="tokens">
       <p>
         <span class="token l0">dormire</span>
