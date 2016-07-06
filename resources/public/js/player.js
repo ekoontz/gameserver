@@ -1,26 +1,27 @@
+// c.f. player.css
 var open_hood_style = {
 	"fill-color": "#ffffff",
 	"fill-outline-color": "#333",
 	"fill-opacity": 0.3
 };
 
-var styles_per_player = [
-    {
+var styles_per_player = {
+    "player0": {
 	"fill-color": "#0010a5",
 	"fill-outline-color": "#fff",
 	"fill-opacity": 0.2
     },
-    {
+    "player1": {
 	"fill-color": "#ff0000",
 	"fill-outline-color": "#000",
 	"fill-opacity": 0.2
     },
-    {
+    "player2": {
 	"fill-color": "#88ff00",
 	"fill-outline-color": "#001",
 	"fill-opacity": 0.4
     }
-];
+};
 
 function show_player_marker(map,player) {
     // 1. show neighborhood of player:
@@ -50,8 +51,7 @@ function show_player_marker(map,player) {
     });
 }
 
-function show_player_turf(map,player,style_index) {
-    log(INFO,"player:" + player + " has style:" + style_index);
+function show_player_turf(map,player,css_class) {
     $.ajax({
 	cache:false,
 	dataType: "json",
@@ -64,7 +64,7 @@ function show_player_turf(map,player,style_index) {
 	    map.addSource('player'+player,hoods);
 	    map.addLayer({
 		type: "fill",
-		paint: styles_per_player[style_index],
+		paint: styles_per_player[css_class],
 		id: "player"+player,
 		source: 'player'+player,
 		"source-layer": "player"+player
@@ -102,15 +102,16 @@ function load_players(map) {
 	    // populate client-side 'player' db
 	    players = {};
 	    for (var i = 0; i < content.features.length; i++) {
+		var css_class = "player"+i;
 		var id = content.features[i].properties.player_id;
 		var player_record = { name: content.features[i].properties.player,
 				      id: id,
-				      style: i,
+				      css_class: css_class,
 				      location: content.features[i]
 				    }; 
 		players[id] = player_record;
 		show_player_marker(map,id);
-		show_player_turf(map,id,i);
+		show_player_turf(map,id,css_class);
 	    }
  	    $.get('/mst/playerbox.mustache', function(template) {
 		$.each(players, function(key,value) {

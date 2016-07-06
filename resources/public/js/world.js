@@ -134,8 +134,7 @@ function load_centroids(map) {
 			if (features[i].properties.admin_level == '10') {
 			    var old_hood = $("#player" + player_id + "-position").html();
 			    var new_hood = features[i].properties.neighborhood;
-			    log(INFO,"CLICKED ON ADMIN_LEVEL=10 WITH new_hood=" + new_hood);
-			    log(INFO,"CLICKED ON ADMIN_LEVEL=10 WITH osm_id=" +
+			    log(DEBUG,"user clicked on place:" + new_hood + " with osm_id=" +
 				features[i].properties.osm_id);
 			    update_infobox(features[i].properties.osm_id);
 			    

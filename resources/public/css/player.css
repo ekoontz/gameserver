@@ -1,0 +1,22 @@
+h4.open {
+    background: #ccc;
+}
+
+h4.player0 {
+    background: #0010a5;
+    color:#ffef59;
+}
+h4.player1 {
+    background: #ff0000;
+    color:#ffef59;
+}
+
+h4.player2 {
+    background: #88ff00;
+    color:#3338ff;
+}
+
+h4.player3 {
+    background: #888700;
+    color:#3338ff;
+}
