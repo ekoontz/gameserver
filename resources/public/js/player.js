@@ -112,7 +112,7 @@ function load_players(map) {
 		show_player_marker(map,id);
 		show_player_turf(map,id,i);
 	    }
- 	    $.get('/mst/playerbox.moustache', function(template) {
+ 	    $.get('/mst/playerbox.mustache', function(template) {
 		$.each(players, function(key,value) {
 		    $('#playerbox').append(Mustache.render(template,value));
 		});
