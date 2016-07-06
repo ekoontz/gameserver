@@ -37,7 +37,8 @@
                                          {:src "player.js"}
                                          {:src "infobox.js"}
                                          {:src "world.js"}]
-                              :local-css [{:src "infobox.css"}
+                              :local-css [{:src "player.css"}
+                                          {:src "infobox.css"}
                                           {:src "world.css"}]
                               :onload (str "load_world('" player-id "');")}))))))
 
