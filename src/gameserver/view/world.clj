@@ -42,7 +42,7 @@
 
   (GET "/world/adjacency" request
        (friend/authenticated
-        (let [logging (log/info (str "getting adjacency data."))
+        (let [logging (log/info (str "/world/adjacency"))
               rows (k/exec-raw ["
 SELECT n1.osm_id AS n1,
        ARRAY(SELECT n2.osm_id
