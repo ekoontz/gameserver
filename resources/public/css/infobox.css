@@ -49,3 +49,7 @@
     width:10em;
     border-bottom:0px solid #ccc;
 }
+#infobox ul {
+    padding:0;
+    list-style-type:none;
+}
