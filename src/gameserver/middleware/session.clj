@@ -20,8 +20,7 @@
       (if (not (= ring-session
                   (get-ring-session)))
         (do (log/debug (str "saving ring session: " (get-in request [:cookies "ring-session" :value])))
-            (session-put! :ring-session ring-session)
-            (log/info (str "foooddd....:" (get-ring-session))))
+            (session-put! :ring-session ring-session))
         (log/debug (str "ring-session already set."))))
     (handler request)))
 
