@@ -36,7 +36,8 @@
                                          {:src "mustache.min.js"}
                                          {:src "player.js"}
                                          {:src "world.js"}]
-                              :local-css [{:src "world.css"}]
+                              :local-css [{:src "infobox.css"}
+                                          {:src "world.css"}]
                               :onload (str "load_world('" player-id "');")}))))))
 
   (GET "/world/adjacency" request
