@@ -84,6 +84,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                                 :geometry (json/read-str (:centroid hood))
                                 :properties {:owner {:id (:player hood)
                                                      :email (:email hood)}
+                                             :osm_id (:osm_id hood)
                                              :neighborhood (:name hood)}
                                 }
                                )
