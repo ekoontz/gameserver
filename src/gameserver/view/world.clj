@@ -63,6 +63,16 @@ ORDER BY n1.name;
           {:headers {"Content-Type" "application/json;charset=utf-8"}
            :body (generate-string body)})))
 
+  (GET "/world/owners" request
+       (friend/authenticated
+        (let [logging (log/info (str "/world/owners"))
+              rows (k/exec-raw ["
+SELECT osm_id,user_id AS owner_id FROM owned_locations
+"
+                                []] :results)]
+          {:headers {"Content-Type" "application/json;charset=utf-8"}
+           :body (generate-string rows)})))
+  
   (GET "/world/hoods" request
        (friend/authenticated
           (let [logging (log/info (str "/world/hoods"))

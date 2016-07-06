@@ -42,11 +42,16 @@ function load_world(current_player_id) {
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
+	// server-supplied info that doesn't change during gameplay:
+	// TODO: map's onclick and onmouse are defined in here: pull out
+	// and add to last client action before starting game.
 	load_centroids(map);
 	load_adjacencies(map);
 	
+	// server-supplied info that *does* change during gameplay:
 	// TODO wrap in a timer and refresh every X seconds:
 	load_players(map);
+	load_owners(map);
     });
 }
 
@@ -58,7 +63,7 @@ function load_adjacencies(map) {
 	success: function(content) {
 	    // populate client-side 'adjacencies' db
 	    adjacencies = {};
-	    count = 0;
+	    var count = 0;
 	    for (var i = 0; i < content.length; i++) {
 		var osm_id = content[i].osm_id;
 		var adj = content[i].adj;
@@ -69,6 +74,26 @@ function load_adjacencies(map) {
 	}});
 }
 
+function load_owners(map) {
+    $.ajax({
+	dataType: "json",
+	url: "/world/owners",
+	success: function(content) {
+	    // populate client-side 'osm2owner' db
+	    osm2owner = {};
+	    var count = 0;
+	    for (var i = 0; i < content.length; i++) {
+		var osm_id = content[i].osm_id;
+		var owner_id = content[i].owner_id;
+		osm2owner[osm_id] = owner_id;
+		count++;
+	    }
+	    log(INFO,"loaded " + count + " owning relationships.");
+	}});
+}
+
+// TODO: map's onclick and onmouse are defined in here: pull out
+// and add to last client action before starting game.
 function load_centroids(map) {
     $.ajax({
 	cache:true,
