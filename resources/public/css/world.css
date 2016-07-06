@@ -48,6 +48,10 @@ div#tokens {
     line-height:1.5em;
 }
 
+h4.open {
+    background: #ccc;
+}
+
 h4.player0 {
     background: #0010a5;
     color:#ffef59;
