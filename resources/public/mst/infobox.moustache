@@ -1,4 +1,3 @@
-<div id="infobox">
   <div>
     <h4 class="player0">{{name}}Monti</h4>
     <table>
@@ -36,7 +35,7 @@
      </p>
      {{/tokens}}
     </div>
-    <textarea name="ok" placeholder="agguingi le tue sentenze!"></textarea>
+    <textarea name="ok" placeholder="agguingi le tue sentenze.."></textarea>
 
   </div>
-</div>
+
