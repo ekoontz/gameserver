@@ -37,9 +37,7 @@
      </p>
      {{/tokens}}
     </div>
-
-    <textarea>Add new sentences to secure this neighborhood!
-    </textarea>
+    <textarea name="ok" placeholder="agguingi le tue sentenze!"></textarea>
 
   </div>
 </div>
