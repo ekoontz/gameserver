@@ -139,7 +139,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                 logging (log/info (str "/world/player/" player))
                 data (k/exec-raw ["
 
-    SELECT rome_polygon.name,
+    SELECT rome_polygon.name,rome_polygon.osm_id,
            ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
            admin_level,
            vc_user.id AS player,vc_user.email AS email
@@ -157,6 +157,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                                {:type "Feature"
                                 :geometry (json/read-str (:polygon hood))
                                 :properties {:neighborhood (:name hood)
+                                             :osm_id (:osm_id hood)
                                              :admin_level (:admin_level hood)}})
                              data)]
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
