@@ -70,7 +70,7 @@ function load_adjacencies(map) {
 	    }
 	    log(INFO,"loaded " + count + " adjacencies.");
  	    $.get('/mst/infobox.moustache', function(template) {
-		$('#world').append(Mustache.render(template,{}));
+		$('#infobox').append(Mustache.render(template,{}));
 	    });
 	}});
 }
