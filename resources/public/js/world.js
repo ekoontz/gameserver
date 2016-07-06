@@ -4,13 +4,15 @@ var mapbox_api_key = "";
 
 var Roma = [12.5012515,41.9012917];
 
-var centroids = {};
-var hoods = {};
-var players = {};
 var adjacencies = {};
-var updateBearing = false;
-var player_id;
+var centroids = {};
 var fitBounds = false;
+var hoods = {};
+var osm2hood = {};
+var osm2owner = {};
+var players = {};
+var player_id;
+var updateBearing = false;
 
 function load_world(current_player_id) {
     player_id = current_player_id;
@@ -97,6 +99,7 @@ function load_centroids(map) {
 		var centroid = content[i].geometry.coordinates;
 		centroids[hood_name] = centroid;
 		hoods[name] = content[i];
+		osm2hood[content[i].properties.osm_id] = hood_name;
 	    }
 	    map.on('click',function(e) {
 		var pos = e.lngLat;
@@ -106,7 +109,9 @@ function load_centroids(map) {
 			if (features[i].properties.admin_level == '10') {
 			    var old_hood = $("#player" + player_id + "-position").html();
 			    var new_hood = features[i].properties.neighborhood;
-			    
+			    log(INFO,"CLICKED ON ADMIN_LEVEL=10 WITH new_hood=" + new_hood);
+			    log(INFO,"CLICKED ON ADMIN_LEVEL=10 WITH osm_id=" +
+				features[i].properties.osm_id);
 			    update_infobox(features[i].properties.osm_id);
 			    
 			    if (old_hood != new_hood) {
