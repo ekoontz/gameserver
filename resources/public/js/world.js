@@ -59,7 +59,7 @@ function load_adjacencies(map) {
 	dataType: "json",
 	url: "/world/adjacency",
 	success: function(content) {
-	    // populate client-side 'player' db
+	    // populate client-side 'adjacencies' db
 	    adjacencies = {};
 	    count = 0;
 	    for (var i = 0; i < content.length; i++) {
