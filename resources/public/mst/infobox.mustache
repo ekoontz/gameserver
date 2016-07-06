@@ -1,0 +1,29 @@
+<div>
+  <h4 class="player0">{{name}}</h4>
+  <table>
+    <tr>
+      <th>di</th>
+      <td>{{owner}}</td>
+    </tr>	
+    <tr>
+      <th>a prossima di</th>
+      <td>
+        <ul>
+          {{#adjacencies}}
+	  <li>{{name}}</li>
+	  {{/adjacencies}}
+        </ul>
+      </td>
+    </tr>
+  </table>
+
+  <div id="tokens">
+    <p>
+    {{#tokens}}
+      <span class="token l{{level}} {{meta}}">{{name}}</span>
+    {{/tokens}}
+    </p>
+  </div>
+  <textarea name="ok" placeholder="agguingi le tue sentenze.."></textarea>
+</div>
+
