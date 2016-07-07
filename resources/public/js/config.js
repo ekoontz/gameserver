@@ -40,5 +40,5 @@ var styles_per_player = {
 var highlighted_layer_style = {
     "fill-color": "#cccccc",
     "fill-outline-color": "#111",
-    "fill-opacity": 0.5
+    "fill-opacity": 0.6
 };
