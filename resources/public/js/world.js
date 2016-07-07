@@ -143,43 +143,6 @@ function getNewBearing(from_centroid,to_centroid) {
     return bearing;
 }
 
-function highlight_place(map,osm_id) {
-    log(DEBUG,"highlighting_place: " + osm_id);
-    if (typeof(osm2hood[osm_id].polygon) == "undefined") {
-	$.ajax({
-	    cache:false, // we use our own cache (osm2hood), so don't waste more client memory here.
-	    dataType: "json",
-	    url: "/world/hoods/" + osm_id,
-	    success: function(content) {
-		osm2hood[osm_id].polygon = content;
-		highlight_polygon(map,osm2hood[osm_id].polygon);
-	    }
-	});
-    } else {
-	highlight_polygon(map,osm2hood[osm_id].polygon);
-    }
-}
-
-function highlight_polygon(map,polygon) {
-    if (typeof(map.getSource('highlighted')) == "undefined") {
-	map.addSource('highlighted',
-		      new mapboxgl.GeoJSONSource({
-			  type: "geojson",
-			  data: polygon}));
-    } else {
-	var source = map.getSource('highlighted');
-	source.setData(polygon);
-    }
-    if (typeof(map.getLayer('highlighted')) == "undefined") {
-	map.addLayer({
-	    type: "fill",
-	    paint: highlighted_layer_style,
-	    id: "highlighted",
-	    source: 'highlighted',
-	    "source-layer": "highlighted"
-	});
-    }
-}
 
 function show_open_turf(map) {
     $.ajax({
