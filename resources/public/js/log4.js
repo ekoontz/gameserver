@@ -16,6 +16,8 @@ var logging = {
     0 : "ERROR"
 };
 
+var logging_level = INFO;
+
 function log(level,str) {
     if (logging_level >= level) {
 	console.log(logging[level] + ":" + str);

@@ -1,28 +1,3 @@
-// c.f. player.css
-var open_hood_style = {
-	"fill-color": "#ffffff",
-	"fill-outline-color": "#333",
-	"fill-opacity": 0.3
-};
-
-var styles_per_player = {
-    "player0": {
-	"fill-color": "#0010a5",
-	"fill-outline-color": "#fff",
-	"fill-opacity": 0.2
-    },
-    "player1": {
-	"fill-color": "#ff0000",
-	"fill-outline-color": "#000",
-	"fill-opacity": 0.2
-    },
-    "player2": {
-	"fill-color": "#88ff00",
-	"fill-outline-color": "#001",
-	"fill-opacity": 0.4
-    }
-};
-
 function show_player_marker(map,player) {
     // 1. show neighborhood of player:
     $("#player"+player+"-position").html(players[player].location.properties.neighborhood);
