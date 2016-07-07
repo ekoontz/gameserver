@@ -201,7 +201,6 @@ function highlight_place(map,osm_id) {
     log(DEBUG,"highlighting_place: " + osm_id);
     if (typeof(osm2hood[osm_id].polygon) == "undefined") {
 	$.ajax({
-	    async: false,
 	    cache:false, // we use our own cache (osm2hood), so don't waste more client memory here.
 	    dataType: "json",
 	    url: "/world/hoods/" + osm_id,
