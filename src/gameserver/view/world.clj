@@ -138,6 +138,36 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
              :body (generate-string {:type "FeatureCollection"
                                      :features geojson})})))
 
+  ;; given an :osm_id, return its polygon
+  (GET "/world/hoods/:osm" request
+       (friend/authenticated
+        (if-let [osm (Integer. (:osm (:route-params request)))]
+          (let [logging (log/info (str "/world/hoods/" osm))
+                data (k/exec-raw ["
+    SELECT rome_polygon.name,rome_polygon.osm_id,
+           ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
+           vc_user.id AS player,vc_user.email AS email,
+           admin_level
+      FROM rome_polygon
+ LEFT JOIN owned_locations
+        ON (owned_locations.osm_id = rome_polygon.osm_id)
+ LEFT JOIN vc_user
+        ON (owned_locations.user_id = vc_user.id)
+     WHERE (admin_level = '10') 
+       AND rome_polygon.osm_id = ?
+"
+                                  [osm]] :results)
+                geojson (map (fn [hood]
+                               {:type "Feature"
+                                :geometry (json/read-str (:polygon hood))
+                                :properties {:neighborhood (:name hood)
+                                             :osm_id (:osm_id hood)
+                                             :admin_level (:admin_level hood)}})
+                             data)]
+            (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
+            {:headers {"Content-Type" "application/json;charset=utf-8"}
+             :body (generate-string (first geojson))}))))
+
   (GET "/world/move" request
        (friend/authenticated
         (stencil/render-file
