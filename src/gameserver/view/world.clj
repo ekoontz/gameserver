@@ -37,6 +37,7 @@
                                          {:src "log4.js"}
                                          {:src "player.js"}
                                          {:src "infobox.js"}
+                                         {:src "map_actions.js"}
                                          {:src "world.js"}]
                               :local-css [{:src "player.css"}
                                           {:src "infobox.css"}
