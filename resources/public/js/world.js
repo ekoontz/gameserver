@@ -215,24 +215,24 @@ function highlight_place(map,osm_id) {
 }
 
 function highlight_polygon(map,polygon) {
-    if (map.getSource('highlighted')) {
-	map.removeSource('highlighted');
+    if (typeof(map.getSource('highlighted')) == "undefined") {
+	map.addSource('highlighted',
+		      new mapboxgl.GeoJSONSource({
+			  type: "geojson",
+			  data: polygon}));
+    } else {
+	var source = map.getSource('highlighted');
+	source.setData(polygon);
     }
-
-    if (map.getLayer('highlighted')) {
-	map.removeLayer('highlighted');
+    if (typeof(map.getLayer('highlighted')) == "undefined") {
+	map.addLayer({
+	    type: "fill",
+	    paint: highlighted_layer_style,
+	    id: "highlighted",
+	    source: 'highlighted',
+	    "source-layer": "highlighted"
+	});
     }
-    map.addSource('highlighted',
-		  new mapboxgl.GeoJSONSource({
-		      type: "geojson",
-		      data: polygon}));
-    map.addLayer({
-	type: "fill",
-	paint: highlighted_layer_style,
-	id: "highlighted",
-	source: 'highlighted',
-	"source-layer": "highlighted"
-    });
 }
 
 function show_open_turf(map) {
