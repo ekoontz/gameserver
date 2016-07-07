@@ -17,12 +17,31 @@
     </tr>
   </table>
 
-  <div id="tokens">
-    <p>
-    {{#tokens}}
-      <span class="token l{{level}} {{meta}}">{{name}}</span>
-    {{/tokens}}
-    </p>
+  <div id="language">
+    <div id="words">
+      <h4>words</h4>
+      <p>
+        {{#words}}
+          <span class="token l{{level}} {{meta}}">{{name}}</span>
+        {{/words}}
+      </p>
+    </div>
+    <div id="tenses">
+      <h4>tenses</h4>
+      <p>
+        {{#tenses}}
+          <span class="token l{{level}} {{meta}}">{{name}}</span>
+        {{/tenses}}
+      </p>
+    </div>
+    <div id="sentences">
+      <h4>sentences</h4>
+      <p>
+        {{#sentences}}
+          <span class="token l{{level}} {{meta}}">{{name}}</span>
+        {{/sentences}}
+      </p>
+    </div>
   </div>
   <textarea name="ok" placeholder="agguingi le tue sentenze.."></textarea>
 </div>
