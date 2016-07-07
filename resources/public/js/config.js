@@ -13,12 +13,6 @@ var player_id;
 var updateBearing = false;
 
 // c.f. player.css
-var open_hood_style = {
-	"fill-color": "#ffffff",
-	"fill-outline-color": "#333",
-	"fill-opacity": 0.3
-};
-
 var styles_per_player = {
     "player0": {
 	"fill-color": "#0010a5",
@@ -35,6 +29,11 @@ var styles_per_player = {
 	"fill-outline-color": "#001",
 	"fill-opacity": 0.4
     }
+};
+var open_hood_style = {
+	"fill-color": "#cccccc",
+	"fill-outline-color": "#111",
+	"fill-opacity": 0.1
 };
 
 var highlighted_layer_style = {
