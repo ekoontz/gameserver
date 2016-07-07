@@ -1,19 +1,3 @@
-var logging_level = INFO;
-
-var mapbox_api_key = "pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyrYV5MFwg";
-
-var Roma = [12.5012515,41.9012917];
-
-var adjacencies = {};
-var centroids = {};
-var fitBounds = false;
-var hoods = {};
-var osm2hood = {};
-var osm2owner = {};
-var players = {};
-var player_id;
-var updateBearing = false;
-
 function load_world(current_player_id) {
     player_id = current_player_id;
     log(INFO,"loading world..");
