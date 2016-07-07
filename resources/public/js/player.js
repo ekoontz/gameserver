@@ -1,4 +1,4 @@
-function show_player_marker(map,player) {
+function create_player_marker(map,player) {
     // 1. show neighborhood of player:
     $("#player"+player+"-position").html(players[player].location.properties.neighborhood);
     // 2. show name of player:
@@ -54,18 +54,18 @@ function load_players(map) {
 	dataType: "json",
 	url: "/world/players",
 	success: function(content) {
-	    // populate client-side 'player' db
+	    // populate client-side 'players' db
 	    players = {};
 	    for (var i = 0; i < content.features.length; i++) {
 		var css_class = "player"+i;
 		var id = content.features[i].properties.player_id;
 		var player_record = { name: content.features[i].properties.player,
 				      id: id,
+				      location: content.features[i],
 				      css_class: css_class,
-				      location: content.features[i]
 				    }; 
 		players[id] = player_record;
-		show_player_marker(map,id);
+		create_player_marker(map,id);
 		show_player_turf(map,id,css_class);
 	    }
  	    $.get('/mst/playerbox.mustache', function(template) {
