@@ -51,6 +51,7 @@ function load_world(current_player_id) {
 	// server-supplied info that *does* change during gameplay:
 	// TODO wrap in a timer and refresh every X seconds:
 	load_players(map);
+        show_open_turf(map);
 	load_owners(map);
     });
 }
@@ -171,8 +172,7 @@ function load_centroids(map) {
 
 	    map.on('mousemove',function(e) {
 		// display the selected hood in the player-selected box.
-		var features =
-		    map.queryRenderedFeatures(e.point);
+		var features = map.queryRenderedFeatures(e.point);
 		if (features.length > 0) {
 		    for (var i = 0; i < features.length; i++) {
 			if (features[i].properties.admin_level == '10') {
@@ -206,6 +206,26 @@ function getNewBearing(from_centroid,to_centroid) {
         Math.sin(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1);
     var bearing = toDegrees(Math.atan2(y, x));
     return bearing;
+}
+
+function show_open_turf(map) {
+    $.ajax({
+	cache:true,
+	dataType: "json",
+	url: "/world/hoods/open",
+	success: function(content) {
+	    map.addSource('open_hoods',
+			  new mapboxgl.GeoJSONSource({
+			      type: "geojson",
+			      data: content}));
+	    map.addLayer({
+		type: "fill",
+		paint: open_hood_style,
+		id: "open_hoods",
+		source: 'open_hoods',
+		"source-layer": "open_hoods"
+	    });
+	}});
 }
 
 

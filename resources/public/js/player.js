@@ -72,26 +72,6 @@ function show_player_turf(map,player,css_class) {
 	}});
 };
 
-function show_open_turf(map) {
-    $.ajax({
-	cache:true,
-	dataType: "json",
-	url: "/world/hoods/open",
-	success: function(content) {
-	    map.addSource('open_hoods',
-			  new mapboxgl.GeoJSONSource({
-			      type: "geojson",
-			      data: content}));
-	    map.addLayer({
-		type: "fill",
-		paint: open_hood_style,
-		id: "open_hoods",
-		source: 'open_hoods',
-		"source-layer": "open_hoods"
-	    });
-	}});
-}
-
 function load_players(map) {
     $.ajax({
 	async:true,
@@ -120,5 +100,4 @@ function load_players(map) {
 	    });
 	}
     });
-    show_open_turf(map);
 }
