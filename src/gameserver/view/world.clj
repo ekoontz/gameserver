@@ -32,6 +32,7 @@
                                           ;; per https://code.jquery.com
                                           {:src "https://code.jquery.com/jquery-1.12.4.min.js"}]
                               :remote-css [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css"}]
+                              ;; TODO: consider using http://browserify.org/ to bundle all local js.
                               :local-js [{:src "mustache.min.js"}
                                          {:src "config.js"}
                                          {:src "log4.js"}
