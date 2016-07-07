@@ -181,6 +181,8 @@ function load_centroids(map) {
 			    } else {
 				$("#player"+player_id+"-selected").html("");
 			    }
+			    var osm_id = features[i].properties.osm_id;
+			    highlight_place(map,osm_id);
 			    break;
 			}
 		    }
@@ -207,6 +209,11 @@ function getNewBearing(from_centroid,to_centroid) {
     var bearing = toDegrees(Math.atan2(y, x));
     return bearing;
 }
+
+function highlight_place(map,osm_id) {
+    log(INFO,"highlighting_place: " + osm_id);
+}
+
 
 function show_open_turf(map) {
     $.ajax({
