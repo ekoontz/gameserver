@@ -116,7 +116,7 @@ function load_centroids(map) {
 		},
 		source: 'hood_markers'
 	    });
-	    // populate client-side 'centroids' db
+	    // populate client-side 'centroids' and 'osm2hood' maps.
 	    centroids = {};
 	    content = content.features;
 	    hoods = {};
@@ -125,7 +125,10 @@ function load_centroids(map) {
 		var centroid = content[i].geometry.coordinates;
 		centroids[hood_name] = centroid;
 		hoods[name] = content[i];
-		osm2hood[content[i].properties.osm_id] = hood_name;
+		osm2hood[content[i].properties.osm_id] = {
+		    name: hood_name,
+		    centroid: centroid
+		};
 	    }
 	    map.on('click',function(e) {
 		var pos = e.lngLat;
