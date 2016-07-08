@@ -44,6 +44,7 @@ function load_world(current_player_id) {
 	// TODO wrap in a timer and refresh every X seconds:
 	window.setInterval(function() {
 	    update_players(map);
+	    update_open_turf(map);
 	},5000);
     });
 }
@@ -180,16 +181,12 @@ function update_open_turf(map) {
 	dataType: "json",
 	url: "/world/hoods/open",
 	success: function(content) {
-	    map.addSource('open_hoods',
-			  new mapboxgl.GeoJSONSource({
-			      type: "geojson",
-			      data: content}));
-	    map.addLayer({
-		type: "fill",
-		paint: open_hood_style,
-		id: "open_hoods",
-		source: 'open_hoods',
-		"source-layer": "open_hoods"
-	    });
-	}});
+	    add_or_update_layer(map,content,
+				{type: "fill",
+				 paint: open_hood_style,
+				 id: "open_hoods",
+				 source: 'open_hoods',
+				 "source-layer": "open_hoods"});
+	}
+    });
 }
