@@ -171,12 +171,6 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string (first geojson))}))))
 
-  (GET "/world/move" request
-       (friend/authenticated
-        (stencil/render-file
-         "gameserver/view/templates/move"
-         {})))
-
   (GET "/world/player/:player" request
        (friend/authenticated
         (if-let [player (:player (:route-params request))]
@@ -242,8 +236,9 @@ INNER JOIN rome_polygon
          ;; 2. check if legal move
          ;; 3. update world state
          ;; 4. respond to client about result of their action
-         (let [player-id (:id (get-user-from-ring-session
-                               (get-in request [:cookies "ring-session" :value])))]
+         (let [player-id (if-let [id (:id (get-user-from-ring-session
+                                           (get-in request [:cookies "ring-session" :value])))]
+                           (Integer. id))]
            (if (nil? player-id)
              (do (log/error (str "player-id is null; ring-session: "
                                  (get-in request [:cookies "ring-session" :value])))
@@ -251,9 +246,22 @@ INNER JOIN rome_polygon
                    :headers {"Location" (str "/logout?session-expired")}}))
            (let [osm-id (Integer. (:osm (:params request)))]
              (log/info (str "POST /world/move with osm: " osm-id " and user_id:" player-id))
-             (k/exec-raw ["UPDATE player_location SET osm_id=? WHERE user_id=?" [osm-id player-id]])
+             (k/exec-raw ["UPDATE player_location 
+                              SET osm_id=? 
+                            WHERE user_id=? 
+                              AND ? IN (SELECT adjacent.osm_id
+                                               FROM rome_polygon p1
+                                         INNER JOIN rome_polygon adjacent
+                                                 ON (p1 != adjacent)
+                                                AND p1.admin_level='10'
+                                                AND adjacent.admin_level = '10'
+                                                AND ST_Touches(p1.way,adjacent.way)
+                                                AND p1.osm_id = (SELECT osm_id
+                                                                   FROM player_location
+                                                                  WHERE user_id=?));" [osm-id player-id osm-id player-id]])
              {:status 302
               :headers {"Location" "/world/players"}})))))
+
 
   
 
