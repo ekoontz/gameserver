@@ -1,4 +1,4 @@
-function add_or_update_layer(map,content,layer_spec) {
+function upsert_layer(map,content,layer_spec) {
     var source_name = layer_spec.source;
     var source = map.getSource(source_name);
     if (typeof(source) == "undefined") {
@@ -21,7 +21,7 @@ function add_or_update_layer(map,content,layer_spec) {
 }
 
 function highlight_polygon(map,polygon) {
-    add_or_update_layer(map,polygon,{
+    upsert_layer(map,polygon,{
         type: "fill",
         paint: highlighted_layer_style,
         id: "highlighted",
