@@ -36,6 +36,7 @@
                               :local-js [{:src "mustache.min.js"}
                                          {:src "config.js"}
                                          {:src "log4.js"}
+                                         {:src "geolib.js"}
                                          {:src "player.js"}
                                          {:src "infobox.js"}
                                          {:src "actions.js"}
