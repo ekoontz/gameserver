@@ -76,24 +76,3 @@ function highlight_place(map,osm_id) {
 	highlight_polygon(map,osm2hood[osm_id].polygon);
     }
 }
-
-function highlight_polygon(map,polygon) {
-    if (typeof(map.getSource('highlighted')) == "undefined") {
-	map.addSource('highlighted',
-		      new mapboxgl.GeoJSONSource({
-			  type: "geojson",
-			  data: polygon}));
-    } else {
-	var source = map.getSource('highlighted');
-	source.setData(polygon);
-    }
-    if (typeof(map.getLayer('highlighted')) == "undefined") {
-	map.addLayer({
-	    type: "fill",
-	    paint: highlighted_layer_style,
-	    id: "highlighted",
-	    source: 'highlighted',
-	    "source-layer": "highlighted"
-	});
-    }
-}

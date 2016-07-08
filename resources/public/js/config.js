@@ -1,15 +1,15 @@
 var mapbox_api_key = "pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyrYV5MFwg";
 
-var Roma = [12.5012515,41.9012917];
-
 var adjacencies = {};
 var centroids = {};
 var fitBounds = false;
 var hoods = {};
+var logging_level = INFO;
 var osm2hood = {};
 var osm2owner = {};
 var players = {};
 var player_id;
+var Roma = [12.5012515,41.9012917];
 var updateBearing = false;
 
 var icons = [
