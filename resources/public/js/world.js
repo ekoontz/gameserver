@@ -38,7 +38,7 @@ function load_world(current_player_id) {
 	
 	// server-supplied info that *does* change during gameplay:
 	update_players(map);
-//        show_open_turf(map);
+        update_open_turf(map);
 //	load_owners(map);
 
 	// TODO wrap in a timer and refresh every X seconds:
@@ -152,7 +152,7 @@ function getNewBearing(from_centroid,to_centroid) {
     return bearing;
 }
 
-function show_open_turf(map) {
+function update_open_turf(map) {
     $.ajax({
 	cache:false,
 	dataType: "json",
