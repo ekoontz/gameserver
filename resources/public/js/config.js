@@ -15,10 +15,10 @@ var updateBearing = false;
 var icons = [
     "airport-15",
     "aquarium-15",
+    "bicycle-15",
     "castle-15",
     "cinema-15",
     "college-15",
-    "dog-park-15",
     "embassy-15",
     "music-15",
     "rocket-15",
