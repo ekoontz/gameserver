@@ -34,8 +34,8 @@
                               :remote-css [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css"}]
                               ;; TODO: consider using http://browserify.org/ to bundle all local js.
                               :local-js [{:src "mustache.min.js"}
-                                         {:src "config.js"}
                                          {:src "log4.js"}
+                                         {:src "config.js"}
                                          {:src "geolib.js"}
                                          {:src "player.js"}
                                          {:src "infobox.js"}
