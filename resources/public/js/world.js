@@ -159,12 +159,12 @@ function update_open_turf(map) {
 	dataType: "json",
 	url: "/world/hoods/open",
 	success: function(content) {
-	    add_or_update_layer(map,content,
-				{type: "fill",
-				 paint: open_hood_style,
-				 id: "open_hoods",
-				 source: 'open_hoods',
-				 "source-layer": "open_hoods"});
+	    upsert_layer(map,content,
+			 {type: "fill",
+			  paint: open_hood_style,
+			  id: "open_hoods",
+			  source: 'open_hoods',
+			  "source-layer": "open_hoods"});
 	}
     });
 }

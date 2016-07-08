@@ -7,18 +7,18 @@ function update_player_marker(map,player) {
     // TODO: let players choose their icon.
     icon = icons[player % icons.length];
 
-    add_or_update_layer(map,players[player].location,
- 			{id: "player_marker"+player,
-			 type: "symbol",
-			 layout: {
-			     "icon-image": icon,
-			     "icon-offset":[0,-15],
-			     "text-field":players[player].name,
-			     "text-offset":[0,-1.5],
-			     "text-size":12,
-			     "icon-size": 3
-			 },
-			 source: 'player_marker'+player});
+    upsert_layer(map,players[player].location,
+ 		 {id: "player_marker"+player,
+		  type: "symbol",
+		  layout: {
+		      "icon-image": icon,
+		      "icon-offset":[0,-15],
+		      "text-field":players[player].name,
+		      "text-offset":[0,-1.5],
+		      "text-size":12,
+		      "icon-size": 3
+		  },
+		  source: 'player_marker'+player});
 }
 
 function update_player_turf(map,player,css_class) {
