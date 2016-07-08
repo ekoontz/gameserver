@@ -242,11 +242,18 @@ INNER JOIN rome_polygon
          ;; 2. check if legal move
          ;; 3. update world state
          ;; 4. respond to client about result of their action
-         (generate-string
-          {:user "ekoontz"
-           :moved-to "Campo Marzio"
-           :request (-> request :params)
-           })))
+         (let [player-id (:id (get-user-from-ring-session
+                               (get-in request [:cookies "ring-session" :value])))]
+           (if (nil? player-id)
+             (do (log/error (str "player-id is null; ring-session: "
+                                 (get-in request [:cookies "ring-session" :value])))
+                  {:status 302
+                   :headers {"Location" (str "/logout?session-expired")}}))
+           (let [osm-id (Integer. (:osm (:params request)))]
+             (log/info (str "POST /world/move with osm: " osm-id " and user_id:" player-id))
+             (k/exec-raw ["UPDATE player_location SET osm_id=? WHERE user_id=?" [osm-id player-id]])
+             {:status 302
+              :headers {"Location" "/world/players"}})))))
+
   
 
-  )
