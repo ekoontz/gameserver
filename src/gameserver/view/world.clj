@@ -221,7 +221,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
 INNER JOIN player_location ON (player_location.user_id = vc_user.id)
 INNER JOIN rome_polygon 
         ON (player_location.osm_id = rome_polygon.osm_id) 
-  ORDER BY rome_polygon.name
+  ORDER BY vc_user.id
 "
                                 []] :results)
               geojson {:type "FeatureCollection"
