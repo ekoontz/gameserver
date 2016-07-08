@@ -29,17 +29,22 @@ var icons = [
 // c.f. player.css
 var styles_per_player = {
     "player0": {
-	"fill-color": "#0010a5",
+	"fill-color": "#0010a5", /* blue */
 	"fill-outline-color": "#fff",
-	"fill-opacity": 0.2
+	"fill-opacity": 0.2 
     },
     "player1": {
-	"fill-color": "#ff0000",
+	"fill-color": "#ff0000", /* red */
 	"fill-outline-color": "#000",
-	"fill-opacity": 0.2
+	"fill-opacity": 0.7
     },
     "player2": {
 	"fill-color": "#88ff00",
+	"fill-outline-color": "#001",
+	"fill-opacity": 0.4
+    },
+    "player3": {
+	"fill-color": "#778800",
 	"fill-outline-color": "#001",
 	"fill-opacity": 0.4
     }
