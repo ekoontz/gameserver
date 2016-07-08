@@ -16,10 +16,12 @@ var icons = [
     "airport-15",
     "aquarium-15",
     "castle-15",
+    "cinema-15",
+    "college-15",
     "dog-park-15",
+    "embassy-15",
+    "music-15",
     "rocket-15",
-    "star-15",
-    "star-stroke-15",
     "zoo-15"
 ];
 
