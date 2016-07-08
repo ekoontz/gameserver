@@ -4,8 +4,24 @@ function onclick(e,map) {
     if (features.length > 0) {
 	for (var i = 0; i < features.length; i++) {
 	    if (features[i].properties.admin_level == '10') {
-		var old_hood = $("#player" + player_id + "-position").html();
 		var new_hood = features[i].properties.neighborhood;
+		var selected_osm = features[i].properties.osm_id;
+		$.ajax({cache:false,
+			type: "POST",
+			data: {osm: selected_osm},
+			dataType: "json",
+			success: function(content) {
+			    log(INFO,"succeeded with the POST.")
+			    // The server should be configured to handle this POST with a redirect to /world/players, so that
+			    // the content will have the result of GET /world/players.
+			    // c.f. player.js:update_players().
+			    update_players_from(map,content);
+			},
+			url: "/world/move"
+		       }
+		      );
+
+		var old_hood = $("#player" + player_id + "-position").html();
 		log(DEBUG,"user clicked on place:" + new_hood + " with osm_id=" +
 		    features[i].properties.osm_id);
 		update_infobox(features[i].properties.osm_id);
