@@ -12,6 +12,18 @@ var players = {};
 var player_id;
 var updateBearing = false;
 
+var icons = [
+    "airport-15",
+    "aquarium-15",
+    "castle-15",
+    "dog-park-15",
+    "rocket-15",
+    "star-15",
+    "star-stroke-15",
+    "zoo-15"
+];
+
+
 // c.f. player.css
 var styles_per_player = {
     "player0": {
