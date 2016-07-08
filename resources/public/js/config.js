@@ -26,7 +26,6 @@ var icons = [
     "zoo-15"
 ];
 
-
 // c.f. player.css
 var styles_per_player = {
     "player0": {
