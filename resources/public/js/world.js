@@ -37,11 +37,14 @@ function load_world(current_player_id) {
 	// TODO: load_place_geometries() not loaded yet.
 	// load_place_geometries(map);
 	
-	// server-supplied info that *does* change during gameplay:
+	// server-supplied info that *does* change during gameplay..
 	update_players(map);
 	update_owners(map);
         update_open_turf(map);
 
+	// ..these same things are updated regularly in this block.
+	// TODO: server should compute changes from client state
+	// to server state and return only the necessary diff between them.
 	window.setInterval(function() {
 	    update_players(map);
 	    update_owners(map);
@@ -155,6 +158,8 @@ function getNewBearing(from_centroid,to_centroid) {
 }
 
 function update_open_turf(map) {
+    // TODO: should also update infobox, since infobox might contain information
+    // about a place that's changed hands while the infobox about it is open.
     $.ajax({
 	cache:false,
 	dataType: "json",
