@@ -34,16 +34,17 @@ function load_world(current_player_id) {
 
 	// things that need to be loaded once, but can be done
 	// post-game startup (in the background while user is playing).
+	// TODO: load_place_geometries() not loaded yet.
 	// load_place_geometries(map);
 	
 	// server-supplied info that *does* change during gameplay:
 	update_players(map);
+	update_owners(map);
         update_open_turf(map);
-//	load_owners(map);
 
-	// TODO wrap in a timer and refresh every X seconds:
 	window.setInterval(function() {
 	    update_players(map);
+	    update_owners(map);
 	    update_open_turf(map);
 	},5000);
     });
@@ -68,7 +69,7 @@ function load_adjacencies(map) {
 	}});
 }
 
-function load_owners(map) {
+function update_owners(map) {
     $.ajax({
 	dataType: "json",
 	url: "/world/owners",
