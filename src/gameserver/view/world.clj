@@ -206,7 +206,8 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
 
   (GET "/world/players" request
        (friend/authenticated
-        (let [data (k/exec-raw ["
+        (let [logging (log/info "/world/players")
+              data (k/exec-raw ["
 
     SELECT vc_user.given_name AS player_name,vc_user.id AS user_id,
            rome_polygon.name AS location_name,rome_polygon.osm_id AS location_osm,
