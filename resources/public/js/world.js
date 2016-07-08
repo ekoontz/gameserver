@@ -31,12 +31,20 @@ function load_world(current_player_id) {
 	// and add to last client action before starting game.
 	load_centroids(map);
 	load_adjacencies(map);
+
+	// things that need to be loaded once, but can be done
+	// post-game startup (in the background while user is playing).
+	// load_place_geometries(map);
 	
 	// server-supplied info that *does* change during gameplay:
-	// TODO wrap in a timer and refresh every X seconds:
 	load_players(map);
         show_open_turf(map);
 	load_owners(map);
+
+	// TODO wrap in a timer and refresh every X seconds:
+	window.setInterval(function() {
+	    update_players(map);
+	},5000);
     });
 }
 
@@ -77,8 +85,9 @@ function load_owners(map) {
 	}});
 }
 
-// TODO: map's onclick and onmouse are defined in here: pull out
-// and add to last client action before starting game.
+// TODO: map's onclick and onmouse are set up in here:
+// should be somewhere later - more precisely, not until last client
+// data-loading has happened.
 function load_centroids(map) {
     $.ajax({
 	cache:true,
@@ -143,10 +152,9 @@ function getNewBearing(from_centroid,to_centroid) {
     return bearing;
 }
 
-
 function show_open_turf(map) {
     $.ajax({
-	cache:true,
+	cache:false,
 	dataType: "json",
 	url: "/world/hoods/open",
 	success: function(content) {
