@@ -5,6 +5,7 @@ var centroids = {};
 var fitBounds = false;
 var hoods = {};
 var logging_level = INFO;
+var map_refresh_interval = 2000;
 var osm2hood = {};
 var osm2owner = {};
 var players = {};
