@@ -46,7 +46,7 @@ function load_world(current_player_id) {
 	    update_players(map);
 	    update_owners(map);
 	    update_open_turf(map);
-	},5000);
+	},map_refresh_interval);
     });
 }
 
