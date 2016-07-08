@@ -152,6 +152,28 @@ function getNewBearing(from_centroid,to_centroid) {
     return bearing;
 }
 
+function add_or_update_layer(map,content,layer_spec) {
+    var source_name = layer_spec.source;
+    var source = map.getSource(source_name);
+    if (typeof(source) == "undefined") {
+	var geojson = new mapboxgl.GeoJSONSource({
+	    type: "geojson",
+	    data: content
+	});
+	map.addSource(source_name,geojson);
+	source = map.getSource(source_name);
+    }
+    // use same name for both source and layer.
+    var layer = map.getLayer(source_name);
+    if (typeof(layer) == "undefined") {
+	map.addLayer(layer_spec);
+	layer = map.getLayer(source_name);
+    } else {
+	source.setData(content);
+    }
+    log(INFO,"finished updating:" + source_name);
+}
+
 function update_open_turf(map) {
     $.ajax({
 	cache:false,
