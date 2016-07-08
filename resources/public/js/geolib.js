@@ -17,7 +17,7 @@ function upsert_layer(map,content,layer_spec) {
     } else {
 	source.setData(content);
     }
-    log(INFO,"finished updating:" + source_name);
+    log(DEBUG,"finished updating:" + source_name);
 }
 
 function highlight_polygon(map,polygon) {
