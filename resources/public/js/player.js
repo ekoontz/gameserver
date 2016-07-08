@@ -50,14 +50,14 @@ function update_player_turf(map,player,css_class) {
 	dataType: "json",
 	url: "/world/player/"+player,
 	success: function(content) {
-	    var source = map.getSource('player'+player,places);
+	    var source = map.getSource('player'+player);
 	    if (typeof(source) == "undefined") {
-		var places = new mapboxgl.GeoJSONSource({
+		var player_turf = new mapboxgl.GeoJSONSource({
 		    type: "geojson",
 		    data: content
 		});
-		map.addSource('player'+player,places);
-		source = map.getSource('player'+player,places);
+		map.addSource('player'+player,player_turf);
+		source = map.getSource('player'+player);
 	    }
 	    var layer = map.getLayer('player'+player);
 	    if (typeof(layer) == "undefined") {
