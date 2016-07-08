@@ -46,27 +46,7 @@ function update_players(map) {
 	dataType: "json",
 	url: "/world/players",
 	success: function(content) {
-	    // populate client-side 'players' db
-	    players = {};
-	    for (var i = 0; i < content.features.length; i++) {
-		var css_class = "player"+i;
-		var player_id = content.features[i].properties.player_id;
-		var player_record = {
-		    name: content.features[i].properties.player,
-		    id: player_id,
-		    location: content.features[i],
-		    css_class: css_class,
-		}; 
-		players[player_id] = player_record;
-		update_player_marker(map,player_id);
-		update_player_turf(map,player_id,css_class);
-	    }
- 	    $.get('/mst/playerbox.mustache', function(template) {
-		$.each(players, function(key,value) {
-		    $("#player"+value.id+"_box").remove();
-		    $('#playerbox').append(Mustache.render(template,value));
-		});
-	    });
+	    update_players_from(map,content);
 	}
     });
 }
