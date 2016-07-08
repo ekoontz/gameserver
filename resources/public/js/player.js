@@ -10,17 +10,20 @@ function create_player_marker(map,player) {
 		      type: "geojson",
 		      data: players[player].location
 		  }));
-		  
+
+    // TODO: let players choose their icon.
+    icon = icons[player % icons.length];
+    
     map.addLayer({
         id: "player_marker"+player,
         type: "symbol",
         layout: {
-            "icon-image": "marker-11",
+            "icon-image": icon,
             "icon-offset":[0,-15],
             "text-field":players[player].name,
-            "text-offset":[0,-2.5],
+            "text-offset":[0,-1.5],
 	    "text-size":12,
-            "icon-size": 1
+            "icon-size": 3
         },
         source: 'player_marker'+player
     });
