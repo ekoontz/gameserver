@@ -1,24 +1,3 @@
-function highlight_polygon(map,polygon) {
-    if (typeof(map.getSource('highlighted')) == "undefined") {
-	map.addSource('highlighted',
-		      new mapboxgl.GeoJSONSource({
-			  type: "geojson",
-			  data: polygon}));
-    } else {
-	var source = map.getSource('highlighted');
-	source.setData(polygon);
-    }
-    if (typeof(map.getLayer('highlighted')) == "undefined") {
-	map.addLayer({
-	    type: "fill",
-	    paint: highlighted_layer_style,
-	    id: "highlighted",
-	    source: 'highlighted',
-	    "source-layer": "highlighted"
-	});
-    }
-}
-
 function add_or_update_layer(map,content,layer_spec) {
     var source_name = layer_spec.source;
     var source = map.getSource(source_name);
@@ -39,4 +18,14 @@ function add_or_update_layer(map,content,layer_spec) {
 	source.setData(content);
     }
     log(INFO,"finished updating:" + source_name);
+}
+
+function highlight_polygon(map,polygon) {
+    add_or_update_layer(map,polygon,{
+        type: "fill",
+        paint: highlighted_layer_style,
+        id: "highlighted",
+        source: 'highlighted',
+        "source-layer": "highlighted"
+    });
 }
