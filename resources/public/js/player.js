@@ -44,34 +44,35 @@ function update_player_marker(map,player) {
     }
 }
 
-function show_player_turf(map,player,css_class) {
-    $.ajax({
-	cache:false,
-	dataType: "json",
-	url: "/world/player/"+player,
-	success: function(content) {
-	    var hoods = new mapboxgl.GeoJSONSource({
-		type: "geojson",
-		data: content
-	    });
-	    map.addSource('player'+player,hoods);
-	    map.addLayer({
-		type: "fill",
-		paint: styles_per_player[css_class],
-		id: "player"+player,
-		source: 'player'+player,
-		"source-layer": "player"+player
-	    });
-	}});
-};
-
 function update_player_turf(map,player,css_class) {
     $.ajax({
 	cache:false,
 	dataType: "json",
 	url: "/world/player/"+player,
 	success: function(content) {
-	    map.getSource('player'+player).setData(content);
+	    var source = map.getSource('player'+player,places);
+	    if (typeof(source) == "undefined") {
+		var places = new mapboxgl.GeoJSONSource({
+		    type: "geojson",
+		    data: content
+		});
+		map.addSource('player'+player,places);
+		source = map.getSource('player'+player,places);
+	    }
+	    var layer = map.getLayer('player'+player);
+	    if (typeof(layer) == "undefined") {
+		map.addLayer({
+		    type: "fill",
+		    paint: styles_per_player[css_class],
+		    id: "player"+player,
+		    source: 'player'+player,
+		    "source-layer": "player"+player
+		});
+		layer = map.getLayer('player'+player);
+	    } else {
+		source.setData(content);
+	    }
+	    log(INFO,"updated turf for player: " + player);
 	}
     });
 }
@@ -96,7 +97,7 @@ function update_players(map) {
 		}; 
 		players[player_id] = player_record;
 		update_player_marker(map,player_id);
-//		update_player_turf(map,player_id,css_class);
+		show_player_turf(map,player_id,css_class);
 	    }
  	    $.get('/mst/playerbox.mustache', function(template) {
 		$.each(players, function(key,value) {
