@@ -37,9 +37,9 @@ function load_world(current_player_id) {
 	// load_place_geometries(map);
 	
 	// server-supplied info that *does* change during gameplay:
-	load_players(map);
-        show_open_turf(map);
-	load_owners(map);
+	update_players(map);
+//        show_open_turf(map);
+//	load_owners(map);
 
 	// TODO wrap in a timer and refresh every X seconds:
 	window.setInterval(function() {
