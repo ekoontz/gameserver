@@ -4,44 +4,21 @@ function update_player_marker(map,player) {
     // 2. show name of player:
     $("#player"+player+"-name").html(players[player].name);
 
-    // 3. show marker of player in neighborhood:
-    var source = map.getSource('player_marker'+player);
-    if (typeof(source) == "undefined") {
-	// if source is undefined, this is the
-	// first call of update_player_marker().
-	map.addSource('player_marker'+player,
-		      new mapboxgl.GeoJSONSource({
-			  type: "geojson",
-			  data: players[player].location
-		      }));
-	source = map.getSource('player_marker'+player);
-    }
+    // TODO: let players choose their icon.
+    icon = icons[player % icons.length];
 
-    var layer = map.getLayer('player_marker'+player);
-    if (typeof(layer) == "undefined") {
-	// if layer is undefined, this is the
-	// first call of update_player_marker().
-
-	// TODO: let players choose their icon.
-	icon = icons[player % icons.length];
-	map.addLayer({
-            id: "player_marker"+player,
-            type: "symbol",
-            layout: {
-		"icon-image": icon,
-		"icon-offset":[0,-15],
-		"text-field":players[player].name,
-		"text-offset":[0,-1.5],
-		"text-size":12,
-		"icon-size": 3
-            },
-            source: 'player_marker'+player
-	});
-	layer = map.getLayer('player_marker'+player);
-    } else {
-	// not the first call.
-	source.setData(players[player].location);
-    }
+    add_or_update_layer(map,players[player].location,
+ 			{id: "player_marker"+player,
+			 type: "symbol",
+			 layout: {
+			     "icon-image": icon,
+			     "icon-offset":[0,-15],
+			     "text-field":players[player].name,
+			     "text-offset":[0,-1.5],
+			     "text-size":12,
+			     "icon-size": 3
+			 },
+			 source: 'player_marker'+player});
 }
 
 function update_player_turf(map,player,css_class) {
