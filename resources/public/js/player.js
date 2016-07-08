@@ -97,7 +97,7 @@ function update_players(map) {
 		}; 
 		players[player_id] = player_record;
 		update_player_marker(map,player_id);
-		show_player_turf(map,player_id,css_class);
+		update_player_turf(map,player_id,css_class);
 	    }
  	    $.get('/mst/playerbox.mustache', function(template) {
 		$.each(players, function(key,value) {
