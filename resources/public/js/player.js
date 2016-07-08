@@ -27,31 +27,14 @@ function update_player_turf(map,player,css_class) {
 	dataType: "json",
 	url: "/world/player/"+player,
 	success: function(content) {
-	    var source = map.getSource('player'+player);
-	    if (typeof(source) == "undefined") {
-		var player_turf = new mapboxgl.GeoJSONSource({
-		    type: "geojson",
-		    data: content
-		});
-		map.addSource('player'+player,player_turf);
-		source = map.getSource('player'+player);
-	    }
-	    var layer = map.getLayer('player'+player);
-	    if (typeof(layer) == "undefined") {
-		map.addLayer({
-		    type: "fill",
-		    paint: styles_per_player[css_class],
-		    id: "player"+player,
-		    source: 'player'+player,
-		    "source-layer": "player"+player
-		});
-		layer = map.getLayer('player'+player);
-	    } else {
-		source.setData(content);
-	    }
-	    log(INFO,"updated turf for player: " + player);
-	}
-    });
+	    upsert_layer(map,content,{
+		type: "fill",
+		paint: styles_per_player[css_class],
+		id: "player"+player,
+		source: 'player'+player,
+		"source-layer": "player"+player
+	    });
+	}});
 }
 
 function update_players(map) {
