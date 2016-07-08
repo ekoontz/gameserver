@@ -16,8 +16,16 @@ var logging = {
     0 : "ERROR"
 };
 
+var default_logging_level = INFO;
+
 function log(level,str) {
-    if (logging_level >= level) {
+    var use_logging_level;
+    if (typeof(logging_level) == "undefined") {
+	use_logging_level = default_logging_level;
+    } else {
+	use_logging_level = logging_level;
+    }
+    if (use_logging_level >= level) {
 	console.log(logging[level] + ":" + str);
     }
 }
