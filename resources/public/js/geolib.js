@@ -47,9 +47,9 @@ function update_players_from(map,content) {
 	update_player_turf(map,player_id,css_class);
     }
     $.get('/mst/playerbox.mustache', function(template) {
-	$.each(players, function(key,value) {
-	    $("#player"+value.id+"_box").remove();
-	    $('#playerbox').append(Mustache.render(template,value));
+	$.each(players, function(key,player_record) {
+	    $("#player"+player_record.id+"_box").remove();
+	    $('#playerbox').append(Mustache.render(template,player_record));
 	});
     });
 }
