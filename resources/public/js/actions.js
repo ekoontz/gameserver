@@ -1,4 +1,4 @@
-function onclick(e,map) {
+function onclick(e,map,current_player_id) {
     var pos = e.lngLat;
     var features = map.queryRenderedFeatures(e.point);
     if (features.length > 0) {
@@ -15,7 +15,7 @@ function onclick(e,map) {
 			    // The server should be configured to handle this POST with a redirect to /world/players, so that
 			    // the content will have the result of GET /world/players.
 			    // c.f. player.js:update_players().
-			    update_players_from(map,content);
+			    update_players_from(map,content,current_player_id);
 			},
 			url: "/world/move"
 		       }
