@@ -37,7 +37,7 @@ function update_player_turf(map,player,css_class) {
 	}});
 }
 
-function update_players(map,current_player_id) {
+function update_players(map,current_player_id,post_load_function) {
     $.ajax({
 	async:true,
 	cache:true,
@@ -45,6 +45,9 @@ function update_players(map,current_player_id) {
 	url: "/world/players",
 	success: function(content) {
 	    update_players_from(map,content,current_player_id);
+	    if (post_load_function) {
+		post_load_function();
+	    }
 	}
     });
 }
@@ -71,17 +74,20 @@ function update_players_from(map,content,current_player_id) {
     }
     $.get('/mst/playerbox.mustache', function(template) {
 	$.each(players, function(key,player_record) {
-	    $("#player"+player_record.id+"_box").remove();
-	    if (player_record.id == current_player_id) {
-		$('#me').append(Mustache.render(template,player_record));
+	    var box_id = "player"+player_record.id+"_box";
+	    $("#"+box_id).remove();
+	    var playerbox = Mustache.render(template,player_record);
+	    if (true && (player_record.id == current_player_id)) {
+		$('#me').append(playerbox);
 	    } else {		
-		$('#playerbox').append(Mustache.render(template,player_record));
+		$('#playerbox').append(playerbox);
 	    }
-	    // add "onclick" for each playerbox:
-	    $("#player"+player_record.id+"_box").click(
+	    $("#"+box_id).click(
 		function() {
-		    map.flyTo({center: player_record.location.geometry.coordinates});
+                    map.flyTo({center: player_record.location.geometry.coordinates});
 		});
 	});
     });
 }
+
+

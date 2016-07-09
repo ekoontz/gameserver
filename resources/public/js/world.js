@@ -29,7 +29,7 @@ function load_world(current_player_id) {
 	// server-supplied info that doesn't change during gameplay:
 	// TODO: map's onclick and onmouse are defined in here: pull out
 	// and add to last client action before starting game.
-	load_centroids(map);
+	load_centroids(map,current_player_id);
 	load_adjacencies(map);
 
 	// things that need to be loaded once, but can be done
@@ -38,7 +38,9 @@ function load_world(current_player_id) {
 	// load_place_geometries(map);
 	
 	// server-supplied info that *does* change during gameplay..
-	update_players(map,current_player_id);
+	update_players(map,current_player_id,function() {
+	    map.flyTo({center: players[current_player_id].location.geometry.coordinates});
+	});
 	update_owners(map);
         update_open_turf(map);
 
@@ -93,7 +95,7 @@ function update_owners(map) {
 // TODO: map's onclick and onmouse are set up in here:
 // should be somewhere later - more precisely, not until last client
 // data-loading has happened.
-function load_centroids(map) {
+function load_centroids(map,current_player_id) {
     $.ajax({
 	cache:true,
 	dataType: "json",
@@ -129,7 +131,7 @@ function load_centroids(map) {
 		};
 	    }
 	    map.on('click',function(e) {
-		onclick(e,map);
+		onclick(e,map,current_player_id);
 	    }, false);
 
 	    map.on('mousemove',function(e) {
