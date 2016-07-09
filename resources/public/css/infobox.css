@@ -25,6 +25,11 @@
     opacity:0.9;
 }
 
+#infobox > h4 {
+    text-align:left;
+    background:blue;
+}
+
 #infobox > div {
     position:relative;
     margin-right:0.5em;
@@ -52,4 +57,35 @@
 #infobox ul {
     padding:0;
     list-style-type:none;
+}
+
+div#use span {
+    border-radius:10px;
+    border:1px solid #ccc;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    paddiong-top:0.25em;
+    paddiong-bottom:0.25em;
+    
+}
+
+span.used {
+    padding-left:1em;
+    padding-right:1em;
+    margin-right:1em;
+    background:#ccc;
+}
+
+span.meta {
+    font-weight:bold;
+    font-style:italic;
+}
+
+span.blank1 {
+    text-decoration: underline;
+}
+
+
+span.meta {
+    font-style:italic;
 }
