@@ -211,11 +211,14 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
 
     SELECT vc_user.given_name AS player_name,vc_user.id AS user_id,
            rome_polygon.name AS location_name,rome_polygon.osm_id AS location_osm,
-           ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid
+           ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid,
+           owned.count AS places_count
       FROM vc_user
 INNER JOIN player_location ON (player_location.user_id = vc_user.id)
 INNER JOIN rome_polygon 
-        ON (player_location.osm_id = rome_polygon.osm_id) 
+        ON (player_location.osm_id = rome_polygon.osm_id)
+INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY player_id) AS owned
+        ON (owned.player_id = vc_user.id)
   ORDER BY vc_user.id
 "
                                 []] :results)
@@ -226,6 +229,7 @@ INNER JOIN rome_polygon
                                :geometry (json/read-str (:centroid player))
                                :properties {:player (:player_name player)
                                             :neighborhood (:location_name player)
+                                            :places_count (:places_count player)
                                             :player_id (:user_id player)}})
                             data)}]
           {:headers {"Content-Type" "application/json;charset=utf-8"}
