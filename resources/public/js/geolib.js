@@ -45,6 +45,7 @@ function update_players_from(map,content) {
 	    id: player_id,
 	    location: content.features[i],
 	    css_class: css_class,
+	    icon: icons[player_id % icons.length],
 	    // get the player's count of how many places they control.
 	    places_count: content.features[i].properties.places_count
 	}; 
