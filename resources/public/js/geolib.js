@@ -41,6 +41,8 @@ function update_players_from(map,content) {
 	    id: player_id,
 	    location: content.features[i],
 	    css_class: css_class,
+	    // get the player's count of how many places they control.
+	    places_count: content.features[i].properties.places_count
 	}; 
 	players[player_id] = player_record;
 	update_player_marker(map,player_id);
