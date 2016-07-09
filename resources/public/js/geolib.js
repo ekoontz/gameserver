@@ -30,6 +30,10 @@ function highlight_polygon(map,polygon) {
     });
 }
 
+// TODO: this is too domain-specific than 'geo'
+// since it mentions 'players'. it is here because
+// we use it both in players.js and in actions.js, and
+// geolib is the only common place to put stuff for now.
 function update_players_from(map,content) {
     // populate client-side 'players' db
     players = {};
