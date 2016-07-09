@@ -37,23 +37,23 @@ function update_player_turf(map,player,css_class) {
 	}});
 }
 
-function update_players(map) {
+function update_players(map,current_player_id) {
     $.ajax({
 	async:true,
 	cache:true,
 	dataType: "json",
 	url: "/world/players",
 	success: function(content) {
-	    update_players_from(map,content);
+	    update_players_from(map,content,current_player_id);
 	}
     });
 }
 
-function update_players_from(map,content) {
+function update_players_from(map,content,current_player_id) {
     // populate client-side 'players' db
     players = {};
     for (var i = 0; i < content.features.length; i++) {
-	var css_class = "player"+i;
+	var css_class = "player_info player"+i;
 	var player_id = content.features[i].properties.player_id;
 	var player_record = {
 	    name: content.features[i].properties.player,
@@ -72,7 +72,11 @@ function update_players_from(map,content) {
     $.get('/mst/playerbox.mustache', function(template) {
 	$.each(players, function(key,player_record) {
 	    $("#player"+player_record.id+"_box").remove();
-	    $('#playerbox').append(Mustache.render(template,player_record));
+	    if (player_record.id == current_player_id) {
+		$('#me').append(Mustache.render(template,player_record));
+	    } else {		
+		$('#playerbox').append(Mustache.render(template,player_record));
+	    }
 	    // add "onclick" for each playerbox:
 	    $("#player"+player_record.id+"_box").click(
 		function() {
