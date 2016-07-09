@@ -38,7 +38,7 @@ function load_world(current_player_id) {
 	// load_place_geometries(map);
 	
 	// server-supplied info that *does* change during gameplay..
-	update_players(map);
+	update_players(map,current_player_id);
 	update_owners(map);
         update_open_turf(map);
 
@@ -46,7 +46,7 @@ function load_world(current_player_id) {
 	// TODO: server should compute changes from client state
 	// to server state and return only the necessary diff between them.
 	window.setInterval(function() {
-	    update_players(map);
+	    update_players(map,current_player_id);
 	    update_owners(map);
 	    update_open_turf(map);
 	},map_refresh_interval);
