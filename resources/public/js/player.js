@@ -13,11 +13,8 @@ function update_player_marker(map,player) {
 		  type: "symbol",
 		  layout: {
 		      "icon-image": icon,
-		      "icon-offset":[0,-15],
-		      "text-field":players[player].name,
-		      "text-offset":[0,-1.5],
-		      "text-size":12,
-		      "icon-size": 3
+		      "icon-offset":[0,-10],
+		      "icon-size": 2
 		  },
 		  source: 'player_marker'+player});
 }
