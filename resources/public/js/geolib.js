@@ -57,6 +57,11 @@ function update_players_from(map,content) {
 	$.each(players, function(key,player_record) {
 	    $("#player"+player_record.id+"_box").remove();
 	    $('#playerbox').append(Mustache.render(template,player_record));
+	    // add "onclick" for each playerbox:
+	    $("#player"+player_record.id+"_box").click(
+		function() {
+		    map.flyTo({center: player_record.location.geometry.coordinates});
+		});
 	});
     });
 }
