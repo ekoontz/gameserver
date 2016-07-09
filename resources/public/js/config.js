@@ -36,15 +36,15 @@ var styles_per_player = {
     "player1": {
 	"fill-color": "#ff0000", /* red */
 	"fill-outline-color": "#000",
-	"fill-opacity": 0.7
+	"fill-opacity": 0.5
     },
     "player2": {
-	"fill-color": "#88ff00",
+	"fill-color": "#88ff00", /* yellow */
 	"fill-outline-color": "#001",
 	"fill-opacity": 0.4
     },
     "player3": {
-	"fill-color": "#778800",
+	"fill-color": "#778800", /* green */
 	"fill-outline-color": "#001",
 	"fill-opacity": 0.4
     }
