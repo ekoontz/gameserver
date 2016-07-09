@@ -5,6 +5,7 @@ function update_player_marker(map,player) {
     $("#player"+player+"-name").html(players[player].name);
 
     // TODO: let players choose their icon.
+    // cf. playerbox.mustache
     icon = icons[player % icons.length];
 
     upsert_layer(map,players[player].location,
