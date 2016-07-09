@@ -1,31 +1,22 @@
 <div>
   <h4 class="{{css_class}}">{{name}}</h4>
-  <div id="language">
-    <div id="words">
-      <h4>words</h4>
-      <p>
-        {{#words}}
-          <span class="token l{{level}} {{meta}}">{{name}}</span>
-        {{/words}}
-      </p>
+  <div id="language"> <!-- TODO make 'language' a class, not an id. -->
+    <div id="use">
+      <h4>use</h4>
+      <p><span class="used">io</span> <span>parlare</span></p>
+<!-- inside here are many '<p>...<span>..</span> ... </p>'s. -->
     </div>
-    <div id="tenses">
-      <h4>tenses</h4>
-      <p>
-        {{#tenses}}
-          <span class="token l{{level}} {{meta}}">{{name}}</span>
-        {{/tenses}}
-      </p>
-    </div>
-    <div id="sentences">
-      <h4>sentences</h4>
-      <p>
-        {{#sentences}}
-          <span class="token l{{level}} {{meta}}">{{name}}</span>
-        {{/sentences}}
-      </p>
+    <div id="unsolved">
+      <h4>unsolved</h4>
+      <!-- inside here are many '<p>...<span>..</span> ... </p>'s. -->
+      <p><span class="blank1"> </span> parlare</p>
+</div>
+    <textarea name="ok" placeholder="agguingi le tue sentenze.."></textarea>
+    <div id="solved">
+      <h4>solved</h4>
+      <!-- inside here are many '<p>...<span>..</span> ... </p>'s. -->
+      No sentences solved yet.
     </div>
   </div>
-  <textarea name="ok" placeholder="agguingi le tue sentenze.."></textarea>
 </div>
 
