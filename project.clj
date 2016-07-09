@@ -3,7 +3,8 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[clj-http "0.7.3"]
+  :dependencies [[babel "1.6.1"]
+                 [clj-http "0.7.3"]
                  [cheshire "5.2.0"] ;; Clojure JSON and JSON SMILE (binary json format) encoding/decoding
                  [ring "1.5.0"]
                  [ring/ring-jetty-adapter "1.5.0"]
