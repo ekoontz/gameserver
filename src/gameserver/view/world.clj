@@ -210,7 +210,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
               data (k/exec-raw ["
 
     SELECT vc_user.given_name AS player_name,vc_user.id AS user_id,
-           rome_polygon.name AS location_name,rome_polygon.osm_id AS location_osm,
+           rome_polygon.name AS location_name,rome_polygon.osm_id AS neighborhood_osm,
            ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid,
            owned.count AS places_count
       FROM vc_user
@@ -228,6 +228,7 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
                               {:type "Feature" ;; intention of this feature: show a player marker.
                                :geometry (json/read-str (:centroid player))
                                :properties {:player (:player_name player)
+                                            :osm (:neighborhood_osm player)
                                             :neighborhood (:location_name player)
                                             :places_count (:places_count player)
                                             :player_id (:user_id player)}})
