@@ -56,7 +56,7 @@ function update_players_from(map,content,current_player_id) {
     // populate client-side 'players' db
     players = {};
     for (var i = 0; i < content.features.length; i++) {
-	var css_class = "player_info player"+i;
+	var css_class = "player"+i;
 	var player_id = content.features[i].properties.player_id;
 	var player_record = {
 	    name: content.features[i].properties.player,
