@@ -19,4 +19,11 @@ function update_infobox(hood_osm) {
 	    owner:owner
 	}));
     });
+
+    $.get('/mst/acd.mustache', function(template) {
+	$('#acd').html(Mustache.render(template, {
+    	    css_class:css_class
+	}));
+    });
+
 }
