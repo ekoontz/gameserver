@@ -14,9 +14,7 @@
 
 #playerbox {
     left:1%;
-    width:90%;
     z-index:1;
-    border:0px dashed blue;
     top:80%;
     max-height:9%;
     position:absolute;
@@ -26,7 +24,6 @@
     right:10%;
     width:10%;
     z-index:1;
-    border:0px dashed blue;
     top:80%;
     max-height:9%;
     position:absolute;
