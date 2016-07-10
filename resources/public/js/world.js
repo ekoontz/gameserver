@@ -26,6 +26,8 @@ function initPano() {
 function load_world(current_player_id) {
     player_id = current_player_id;
     log(INFO,"loading world..");
+    // TODO: get user's position before map.on() to avoid
+    // going to the center of rome first.
     var current_long = Roma[0];
     var current_lat = Roma[1];
     var current_zoom = 15;
