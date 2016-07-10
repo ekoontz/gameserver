@@ -4,10 +4,13 @@ function respond_to_user_input(event) {
 	// send to language server:
 	$.ajax({
 	    cache: false,
-	    type: "GET",
+	    type: "POST",
 	    data: {expr: $("#userinput").val()},
             dataType: "json",
             url: "/world/say"}).done(function(content) {
+		log(INFO,"server responded with content: " + content);
+		$("#userinput").val("");
+		$("#userinput").focus();
 	    });
     }
 }
