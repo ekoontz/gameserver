@@ -1,7 +1,9 @@
 var panorama;
 function setGoogleStreetViewPosition(current_lat,current_long) {
-    var heading = 0;
+    // random heading.
+    var heading = Math.floor(Math.random() * 360);
     var pitch = 0;
+
     panorama.setPosition({
 	lat: current_lat,
 	lng: current_long});
@@ -19,7 +21,6 @@ function initPano() {
 	    fullscreenControl: false,
 	    clickToGo: true
 	});
-    setGoogleStreetViewPosition(Roma[1],Roma[0]);
 }
 
 function load_world(current_player_id) {
@@ -27,7 +28,7 @@ function load_world(current_player_id) {
     log(INFO,"loading world..");
     var current_long = Roma[0];
     var current_lat = Roma[1];
-    var current_zoom = 13;
+    var current_zoom = 15;
 
     var s = document.createElement("script");
     s.type = "text/javascript";
@@ -74,7 +75,9 @@ function load_world(current_player_id) {
 		players[current_player_id].location.geometry.coordinates[0]);
 	});
 	update_owners(map);
-        update_open_turf(map);
+        update_open_turf(map,function() {
+	    update_infobox(players[current_player_id].location.properties.osm);
+	});
 
 	// ..these same things are updated regularly in this block.
 	// TODO: server should compute changes from client state
@@ -191,7 +194,7 @@ function getNewBearing(from_centroid,to_centroid) {
     return bearing;
 }
 
-function update_open_turf(map) {
+function update_open_turf(map,callback_fn) {  // callback_fn: what to do at the end of this.
     // TODO: should also update infobox, since infobox might contain information
     // about a place that's changed hands while the infobox about it is open.
     $.ajax({
@@ -205,6 +208,9 @@ function update_open_turf(map) {
 			  id: "open_hoods",
 			  source: 'open_hoods',
 			  "source-layer": "open_hoods"});
+	    if (callback_fn) {
+		callback_fn();
+	    }
 	}
     });
 }
