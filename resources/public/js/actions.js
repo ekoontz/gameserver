@@ -6,6 +6,10 @@ function onclick(e,map,current_player_id) {
 	    if (features[i].properties.admin_level == '10') {
 		var new_hood = features[i].properties.neighborhood;
 		var selected_osm = features[i].properties.osm_id;
+		// This asks the server via POST to update the player's location to _selected_osm_.
+		// The might not be allowed to move to that location, however.
+		// The content returned by the server from the POST will show the client
+		// whether the request was allowed or not.
 		$.ajax({cache:false,
 			type: "POST",
 			data: {osm: selected_osm},
