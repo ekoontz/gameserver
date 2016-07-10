@@ -40,6 +40,7 @@
                                          {:src "player.js"}
                                          {:src "infobox.js"}
                                          {:src "actions.js"}
+                                         {:src "input.js"}
                                          {:src "world.js"}]
                               :local-css [{:src "acd.css"}
                                           {:src "player.css"}

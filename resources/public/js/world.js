@@ -82,6 +82,9 @@ function load_world(current_player_id) {
 	    update_infobox(players[current_player_id].location.properties.osm);
 	});
 
+	// connect input box to the game.
+	$("#userinput").keypress(respond_to_user_input);
+	
 	// ..these same things are updated regularly in this block.
 	// TODO: server should compute changes from client state
 	// to server state and return only the necessary diff between them.
