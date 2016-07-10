@@ -1,3 +1,27 @@
+var panorama;
+function setGoogleStreetViewPosition(current_lat,current_long) {
+    var heading = 0;
+    var pitch = 0;
+    panorama.setPosition({
+	lat: current_lat,
+	lng: current_long});
+    panorama.setPov({
+	heading: heading,
+	pitch: pitch
+    });
+}
+
+function initPano() {
+    panorama = new google.maps.StreetViewPanorama(
+	document.getElementById('streetview'), {
+	    linksControl: false,
+	    enableCloseButton:false,
+	    fullscreenControl: false,
+	    clickToGo: false
+	});
+    setGoogleStreetViewPosition(Roma[1],Roma[0]);
+}
+
 function load_world(current_player_id) {
     player_id = current_player_id;
     log(INFO,"loading world..");
@@ -5,6 +29,11 @@ function load_world(current_player_id) {
     var current_lat = Roma[1];
     var current_zoom = 13;
 
+    var s = document.createElement("script");
+    s.type = "text/javascript";
+    s.src = "https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&callback=initPano";
+    $("head").append(s);
+        
     mapboxgl.accessToken = 'pk.eyJ1IjoiZWtvb250eiIsImEiOiJpSkF1VU84In0.fYYjf551Wds8jyrYV5MFwg';
     var map = new mapboxgl.Map({
 	// container id
@@ -40,6 +69,9 @@ function load_world(current_player_id) {
 	// server-supplied info that *does* change during gameplay..
 	update_players(map,current_player_id,function() {
 	    map.flyTo({center: players[current_player_id].location.geometry.coordinates});
+	    setGoogleStreetViewPosition(
+		players[current_player_id].location.geometry.coordinates[1],
+		players[current_player_id].location.geometry.coordinates[0]);
 	});
 	update_owners(map);
         update_open_turf(map);
