@@ -50,14 +50,9 @@ var styles_per_player = {
 	"fill-opacity": 0.4
     }
 };
+
 var open_hood_style = {
 	"fill-color": "#cccccc",
 	"fill-outline-color": "#111",
 	"fill-opacity": 0.1
-};
-
-var highlighted_layer_style = {
-    "fill-color": "#cccccc",
-    "fill-outline-color": "#111",
-    "fill-opacity": 0.6
 };
