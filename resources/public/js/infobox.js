@@ -12,16 +12,11 @@ function update_infobox(hood_osm) {
 	}
     }
     log(INFO,"update_infobox: owner:" + owner);
-    var tokens = [{name:"cane",level:0},
-		  {name:"ragazzo",level:1},
-		  {name:"trapassato",meta:"meta",level:2}];
-			
     $.get('/mst/infobox.mustache', function(template) {
-	$('#infobox').html(Mustache.render(template,{
+	$('#infobox').html(Mustache.render(template, {
 	    name:name,
 	    css_class:css_class,
-	    owner:owner,
-	    tokens:tokens,
+	    owner:owner
 	}));
     });
 }
