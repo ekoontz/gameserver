@@ -75,26 +75,47 @@ function onmousemove(e,map) {
 		    $("#player"+player_id+"-selected").html("");
 		}
 		var osm_id = features[i].properties.osm_id;
-		highlight_place(map,osm_id);
+		var owner = osm2owner[osm_id];
+
+		// create a new style, like the old one but with more opacity.
+		// TODO: should store more-opaque versions of each of styles_per_player
+		// and open_hood_style rather than copying every time we highlight.
+		var layer_style = {};
+		if (typeof(owner) == "undefined") {
+		    layer_style["fill-color"] = open_hood_style["fill-color"];
+		    layer_style["fill-opacity"] =
+			open_hood_style["fill-opacity"] + 0.3;
+		} else {
+		    layer_style["fill-color"] =
+			styles_per_player[players[owner].css_class]["fill-color"];
+		    layer_style["fill-opacity"] =
+			styles_per_player[players[owner].css_class]["fill-opacity"] + 0.1;
+		}
+		if (layer_style["fill-opacity"] > 1.0) {
+		    layer_style["fill-opacity"] = 1.0;
+		}
+		highlight_place(map,osm_id,layer_style);
 		break;
 	    }
 	}
     }
 }
 
-function highlight_place(map,osm_id) {
+function highlight_place(map,osm_id,layer_style) {
     log(DEBUG,"highlighting_place: " + osm_id);
     if (typeof(osm2hood[osm_id].polygon) == "undefined") {
+	// We haven't gotten this polygon from the server yet, so get it now...
 	$.ajax({
 	    cache:true,
 	    dataType: "json",
 	    url: "/world/hoods/" + osm_id,
 	    success: function(content) {
+		// .. and save it so we don't need to do this server call again.
 		osm2hood[osm_id].polygon = content;
-		highlight_polygon(map,osm2hood[osm_id].polygon);
+		highlight_polygon(map,osm2hood[osm_id].polygon,layer_style);
 	    }
 	});
     } else {
-	highlight_polygon(map,osm2hood[osm_id].polygon);
+	highlight_polygon(map,osm2hood[osm_id].polygon,layer_style);
     }
 }
