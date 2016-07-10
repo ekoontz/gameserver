@@ -17,7 +17,7 @@ function initPano() {
 	    linksControl: false,
 	    enableCloseButton:false,
 	    fullscreenControl: false,
-	    clickToGo: false
+	    clickToGo: true
 	});
     setGoogleStreetViewPosition(Roma[1],Roma[0]);
 }
