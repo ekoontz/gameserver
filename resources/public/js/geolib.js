@@ -30,4 +30,13 @@ function highlight_polygon(map,polygon) {
     });
 }
 
-
+function adjacent_osms(osm) {
+    var adjacent_osm_set = adjacencies[osm];
+    var adjacent_hoods = [];
+    for (var i = 0; i < adjacent_osm_set.length; i++) {
+	adjacent_hoods.push({
+	    osm: adjacent_osm_set[i],
+	    name: osm2hood[adjacent_osm_set[i]].name});
+    }
+    return adjacent_hoods;
+}
