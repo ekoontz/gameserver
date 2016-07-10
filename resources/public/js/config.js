@@ -1,3 +1,4 @@
+var google_api_key = "";
 var mapbox_api_key = "";
 
 var adjacencies = {};
