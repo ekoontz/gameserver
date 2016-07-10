@@ -1,5 +1,6 @@
 (ns gameserver.view.world
-  (:require [cemerick.friend :as friend]
+  (:require [babel.italiano :as italiano :refer [fo generate lexicon parse]]
+            [cemerick.friend :as friend]
             [clojure.data.json :as json]
             [korma.core :as k]
             [cheshire.core :refer [generate-string]]
@@ -268,7 +269,38 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
                                                                    FROM player_location
                                                                   WHERE user_id=?));" [osm-id player-id osm-id player-id]])
              {:status 302
-              :headers {"Location" "/world/players"}})))))
+              :headers {"Location" "/world/players"}}))))
+
+  ;; for testing only: for real gameplay, use POST.
+  (GET "/world/say" request
+       (let [expr (:expr (:params request))]
+         (log/info (str "user said:" (:expr (:params request))))
+         {:status 200
+          :headers {"Content-Type" "application/json;charset=utf-8"}
+          :body (generate-string {:expr expr
+                                  :analysis 42})}))
+  (POST "/world/say" request
+        (friend/authenticated
+         ;; 1. deterimine user id
+         ;; 2. check if legal move
+         ;; 3. update world state
+         ;; 4. respond to client about result of their action
+         (let [player-id (if-let [id (:id (get-user-from-ring-session
+                                           (get-in request [:cookies "ring-session" :value])))]
+                           (Integer. id))]
+           (if (nil? player-id)
+             (do (log/error (str "player-id is null; ring-session: "
+                                 (get-in request [:cookies "ring-session" :value])))
+                  {:status 302
+                   :headers {"Location" (str "/logout?session-expired")}})
+             (let [expr (:expr (:params request))]
+               (log/info (str "user said:" (:expr (:params request))))
+               {:status 200
+                :headers {"Content-Type" "application/json;charset=utf-8"}
+                :body (generate-string {:expr expr})}))))))
+
+
+
 
 
   
