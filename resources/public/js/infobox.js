@@ -12,11 +12,6 @@ function update_infobox(hood_osm) {
 	}
     }
     log(INFO,"update_infobox: owner:" + owner);
-    var adjacent_osm_set = adjacencies[hood_osm];
-    var adjacent_hoods = [];
-    for (var i = 0; i < adjacent_osm_set.length; i++) {
-	adjacent_hoods.push({name: osm2hood[adjacent_osm_set[i]].name});
-    }
     var tokens = [{name:"cane",level:0},
 		  {name:"ragazzo",level:1},
 		  {name:"trapassato",meta:"meta",level:2}];
@@ -26,7 +21,6 @@ function update_infobox(hood_osm) {
 	    name:name,
 	    css_class:css_class,
 	    owner:owner,
-	    adjacencies:adjacent_hoods,
 	    tokens:tokens,
 	}));
     });
