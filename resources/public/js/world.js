@@ -1,6 +1,6 @@
 var panorama;
-function setGoogleStreetViewPosition(current_lat,current_long) {
-    // random heading.
+function setGoogleStreetViewPosition(map,current_lat,current_long) {
+    // use the same heading as the background map.
     var heading = Math.floor(Math.random() * 360);
     var pitch = 0;
 
@@ -8,7 +8,7 @@ function setGoogleStreetViewPosition(current_lat,current_long) {
 	lat: current_lat,
 	lng: current_long});
     panorama.setPov({
-	heading: heading,
+	heading: map.getBearing(),
 	pitch: pitch
     });
 }
@@ -67,10 +67,11 @@ function load_world(current_player_id) {
 	// TODO: load_place_geometries() not loaded yet.
 	// load_place_geometries(map);
 	
-	// server-supplied info that *does* change during gameplay..
+	// server-supplied info that *does* change during gameplay: players, owners, open turf.
 	update_players(map,current_player_id,function() {
 	    map.flyTo({center: players[current_player_id].location.geometry.coordinates});
 	    setGoogleStreetViewPosition(
+		map,
 		players[current_player_id].location.geometry.coordinates[1],
 		players[current_player_id].location.geometry.coordinates[0]);
 	});
