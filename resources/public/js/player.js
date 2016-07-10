@@ -77,15 +77,19 @@ function update_players_from(map,content,current_player_id) {
 	    var box_id = "player"+player_record.id+"_box";
 	    $("#"+box_id).remove();
 	    var playerbox = Mustache.render(template,player_record);
-	    if (true && (player_record.id == current_player_id)) {
+	    if (player_record.id == current_player_id) {
 		$('#me').append(playerbox);
+		$("#me").click(
+		    function() {
+			map.flyTo({center: player_record.location.geometry.coordinates});
+		    });
 	    } else {		
 		$('#playerbox').append(playerbox);
+		$("#"+box_id).click(
+		    function() {
+			map.flyTo({center: player_record.location.geometry.coordinates});
+		    });
 	    }
-	    $("#"+box_id).click(
-		function() {
-                    map.flyTo({center: player_record.location.geometry.coordinates});
-		});
 	});
     });
 }
