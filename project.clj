@@ -5,15 +5,11 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[babel "1.6.2"]
                  [clj-http "2.2.0"]
-                 [dag_unify "1.2.4"]
                  [friend-oauth2 "0.1.3"]
                  [http-kit "2.1.16"]
-                 [log4j/log4j "1.2.16"]
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/core.cache "0.6.5"]
-                 [org.clojure/data.json "0.2.5"]
                  [org.clojure/tools.logging "0.2.6"]
-                 [org.clojure/tools.nrepl "0.2.7"]
                  [stencil "0.5.0"]]
 
   :plugins [[cider/cider-nrepl "0.11.0"]
