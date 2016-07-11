@@ -310,33 +310,23 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
                 :headers {"Content-Type" "application/json;charset=utf-8"}
                 :body (generate-string {:expr expr})}))))))
 
-(defn leaves [parse-tree & [path]]
+(defn leaves [parse-tree]
   "return terminal nodes (leaves) for this tree."
-  (let [head (u/get-in parse-tree (concat path [:head]) :none)
-        comp (u/get-in parse-tree (concat path [:comp]) :none)]
+  (let [head (u/get-in parse-tree [:head] :none)
+        comp (u/get-in parse-tree [:comp] :none)]
   (cond
     (and (= :none head)
          (= :none comp))
     [parse-tree]
 
     (= :none head)
-    (leaves comp (concat path :comp))
+    (leaves comp)
 
     (= :none comp)
-    (leaves comp (concat path :head))
+    (leaves head)
     
     true
     (concat
-     (leaves head (concat path [:head]))
-     (leaves comp (concat path [:comp]))))))
-
-
-
-     
-    
-
-
-
-
-  
+     (leaves head)
+     (leaves comp)))))
 
