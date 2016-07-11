@@ -1,7 +1,8 @@
 (ns gameserver.view.world
-  (:require [babel.italiano :refer [fo]]
+  (:require [babel.italiano :refer [parse]]
             [cemerick.friend :as friend]
             [clojure.data.json :as json]
+            [dag_unify.core :as u]
             [korma.core :as k]
             [cheshire.core :refer [generate-string]]
             [clojure.tools.logging :as log]
@@ -10,6 +11,8 @@
             [gameserver.view.auth.users :refer [get-user-from-ring-session]]
             [gameserver.view.common :refer [wrap-layout]]
             [stencil.core :as stencil]))
+
+(declare leaves)
 
 (defroutes world-routes
   (GET "/world" request
@@ -273,12 +276,20 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
 
   ;; for testing only: for real gameplay, use POST.
   (GET "/world/say" request
-       (let [expr (:expr (:params request))]
-         (log/info (str "user said:" (:expr (:params request))))
+       (let [expr (:expr (:params request))
+             analyses (parse expr)
+             parses (mapcat :parses analyses)
+             response {:vocab (set (mapcat (fn [parse]
+                                             (map fo (leaves parse)))
+                                           parses))
+                       :tenses (set (map (fn [parse]
+                                           (u/get-in parse [:synsem :sem :tense]))
+                                         parses))}]
+         (log/info (str "user said:" expr "; response: " response))
          {:status 200
           :headers {"Content-Type" "application/json;charset=utf-8"}
-          :body (generate-string {:expr expr
-                                  :analysis 42})}))
+          :body (generate-string response)}))
+  
   (POST "/world/say" request
         (friend/authenticated
          ;; 1. deterimine user id
@@ -299,6 +310,30 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
                 :headers {"Content-Type" "application/json;charset=utf-8"}
                 :body (generate-string {:expr expr})}))))))
 
+(defn leaves [parse-tree & [path]]
+  "return terminal nodes (leaves) for this tree."
+  (let [head (u/get-in parse-tree (concat path [:head]) :none)
+        comp (u/get-in parse-tree (concat path [:comp]) :none)]
+  (cond
+    (and (= :none head)
+         (= :none comp))
+    [parse-tree]
+
+    (= :none head)
+    (leaves comp (concat path :comp))
+
+    (= :none comp)
+    (leaves comp (concat path :head))
+    
+    true
+    (concat
+     (leaves head (concat path [:head]))
+     (leaves comp (concat path [:comp]))))))
+
+
+
+     
+    
 
 
 
