@@ -1,5 +1,5 @@
 (ns gameserver.view.world
-  (:require [babel.italiano :as italiano :refer [fo generate lexicon parse]]
+  (:require [babel.italiano :refer [fo]]
             [cemerick.friend :as friend]
             [clojure.data.json :as json]
             [korma.core :as k]
