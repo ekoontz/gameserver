@@ -4,11 +4,6 @@
     background:#ffffff;
     padding:3px;
     margin:3px;
-    left:35%;
-    top:65%;
-    height:10%;
-    z-index:1;
-    position:absolute;
     background:#ccc;
 }
 
@@ -17,8 +12,25 @@
 }
 
 #response {
+    background:white;
     width:100%;
+    margin-top:0.5em;
+    height:4em;
+}
+
+#response p {
+    padding:0.25em;
+    font-size:larger;
     border:0px dashed green;
+}
+
+#response span {
+    border-radius:10px;
+    border:1px solid #ccc;
+    padding-left:0.25em;
+    padding-right:0.25em;
+    padding-top:0.25em;
+    padding-bottom:0.25em;
 }
 
 .vocab {
