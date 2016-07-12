@@ -88,6 +88,7 @@ function load_world(current_player_id) {
 	    var osm = players[current_player_id].location.properties.osm;	    
 	    update_infobox(osm);
 	    update_ccd(osm,current_player_id);
+	    update_placebox(osm,current_player_id);
 	});
 
 
@@ -105,6 +106,7 @@ function load_world(current_player_id) {
 		var osm = players[current_player_id].location.properties.osm;	    
 		update_infobox(osm);
 		update_ccd(osm,current_player_id);
+		update_placebox(osm,current_player_id);
 	    });
 	},map_refresh_interval);
     });
@@ -214,9 +216,9 @@ function getNewBearing(from_centroid,to_centroid) {
     return bearing;
 }
 
-function update_open_turf(map,callback_fn) {  // callback_fn: what to do at the end of this.
-    // TODO: should also update infobox, since infobox might contain information
-    // about a place that's changed hands while the infobox about it is open.
+function update_open_turf(map,callback_fn) {  
+    // callback_fn: what to do at the end of this - e.g. update other parts of the UI that depend
+    // on update_open_turf() or other earlier actions that happened before update_open_turf().
     $.ajax({
 	cache:false,
 	dataType: "json",
