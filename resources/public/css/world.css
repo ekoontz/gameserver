@@ -29,33 +29,27 @@
     position:absolute;
 }
 
+#placebox {
+    z-index:1;
+    top:10%;
+    left:1%;
+    max-height:60%;
+    position: absolute;
+    width:60%;
+}
+
 #infobox {
     padding:0;
     margin:0;
-    left:1%;
-    width:30%;
-    z-index:1;
     border:0px dashed blue;
-    top:10%;
-    max-height:35%;
-    position:absolute;
 }
 
 #ccd {
     padding:0;
     margin:0;
-    left:1%;
-    width:30%;
-    z-index:1;
     border:0px dashed blue;
-    top:35%;
-    max-height:35%;
-    position:absolute;
 }
 
 #userinputdiv {
-    left:1%;
-    top:70%;
-    z-index:1;
-    position:absolute;
 }
+

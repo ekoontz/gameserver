@@ -58,9 +58,21 @@ function load_world(current_player_id) {
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
-	// server-supplied info that doesn't change during gameplay:
+
 	// TODO: map's onclick and onmouse are defined in here: pull out
 	// and add to last client action before starting game.
+
+	// find player's initial location: do this first so geo assets can be fetched in the
+	// background.
+	update_players(map,current_player_id,function() {
+	    map.setCenter(players[current_player_id].location.geometry.coordinates);
+	    setGoogleStreetViewPosition(
+		map,
+		players[current_player_id].location.geometry.coordinates[1],
+		players[current_player_id].location.geometry.coordinates[0]);
+	});
+
+	// server-supplied info that doesn't change during gameplay:
 	load_centroids(map,current_player_id);
 	load_adjacencies(map);
 
@@ -69,14 +81,7 @@ function load_world(current_player_id) {
 	// TODO: load_place_geometries() not loaded yet.
 	// load_place_geometries(map);
 	
-	// server-supplied info that *does* change during gameplay: players, owners, open turf.
-	update_players(map,current_player_id,function() {
-	    map.flyTo({center: players[current_player_id].location.geometry.coordinates});
-	    setGoogleStreetViewPosition(
-		map,
-		players[current_player_id].location.geometry.coordinates[1],
-		players[current_player_id].location.geometry.coordinates[0]);
-	});
+	// server-supplied info that *does* change during gameplay, besides players (which we already did): owners, open turf.
 	update_owners(map);
         update_open_turf(map,function() {
 	    var css_class = "open";
