@@ -303,12 +303,16 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
 (defn respond [expr]
   (let [analyses (parse expr)
         parses (mapcat :parses analyses)
-        response {:vocab (set (mapcat (fn [parse]
-                                        (map root-form (leaves parse)))
-                                      parses))
-                  :tenses (set (map (fn [parse]
-                                      (u/get-in parse [:synsem :sem :tense]))
-                                    parses))}]
+        response
+        (reduce conj
+                [(let [vocab (set (remove nil? (mapcat (fn [parse]
+                                                         (map root-form (leaves parse)))
+                                                       parses)))]
+                   (if (empty? vocab) {} {:vocab vocab}))
+                 (let [tenses (set (remove nil? (map (fn [parse]
+                                                       (u/get-in parse [:synsem :sem :tense]))
+                                                     parses)))]
+                   (if (empty? tenses) {} {:tenses tenses}))])]
     (log/info (str "user said:" expr "; response: " response))
     response))
 

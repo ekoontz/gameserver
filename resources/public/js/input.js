@@ -25,27 +25,26 @@ function respond_to_user_input(event) {
 		    log(WARN,"user input has changed: ignoring this response.");
 		    return;
 		}
-		log(INFO,"server responded; using contents to populate #response.");
-		var vocab = [];
-		if (content.vocab.length > 0) {
-		    vocab = jQuery.map(content.vocab, function(word) {return {"word": word}});
-		}
-		var tenses;
-		if (content.tenses.length > 0) {
-		    tenses = jQuery.map(content.tenses, function(tense) {return {"tense": tense}});
-		}
 
-		var message = [];
-		if ((content.tenses.length == 0) && (content.vocab.length == 0)) {
-		    message = [{value: " "}];
+		var response = {};
+
+		log(INFO,"server responded; using contents to populate #response.");
+		if ((typeof(content.tenses) == "undefined") &&
+		    (typeof(content.vocab) == "undefined")) {
+		    log(DEBUG,"server didn't understand what you said.");
+		    response.message = [{value: " "}];
+		} else {
+		    log(DEBUG,"server understood something of what you said.");
+		    if (typeof(content.vocab) != "undefined") {
+			response.vocab = jQuery.map(content.vocab, function(word) {return {"word": word}});
+		    }
+		    if (typeof(content.tenses) != "undefined") {
+			response.tenses = jQuery.map(content.tenses, function(tense) {return {"tense": tense}});
+		    }
 		}
 		
 		$.get('/mst/response.mustache', function(template) {
-		    $('#response').html(Mustache.render(template, {
-			vocab:vocab,
-			tenses:tenses,
-			message:message
-		    }));
+		    $('#response').html(Mustache.render(template, response));
 		});
 	    });
     }
