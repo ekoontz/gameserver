@@ -1,3 +1,9 @@
+function userinput_initialize() {
+    $("#userinput").keyup(respond_to_user_input);
+    $("#userinput").val("");
+    $("#userinput").focus();
+}
+
 function respond_to_user_input(event) {
     key_pressed = event.which;
     if (key_pressed != 13) {
