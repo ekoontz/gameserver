@@ -41,15 +41,15 @@
                               ;; TODO: consider using http://browserify.org/ to bundle all local js.
                               :local-js [{:src "mustache.min.js"}
                                          {:src "log4.js"}
-                                         {:src "config.js"} ;; these 3 must remain before others.
-                                         {:src "ccd.js"}
+                                         {:src "config.js"}
+                                         ;; these 3 above must remain before others below.
                                          {:src "geolib.js"}
+                                         {:src "ccd.js"}
                                          {:src "player.js"}
                                          {:src "infobox.js"}
                                          {:src "actions.js"}
                                          {:src "input.js"}
-                                         {:src "world.js"}
-                                         ]
+                                         {:src "world.js"}]
                               :local-css [{:src "ccd.css"}
                                           {:src "player.css"}
                                           {:src "infobox.css"}
