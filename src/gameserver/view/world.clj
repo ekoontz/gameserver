@@ -13,6 +13,8 @@
             [stencil.core :as stencil]))
 
 (declare leaves)
+(declare respond)
+(declare root-form)
 
 (defroutes world-routes
   (GET "/world" request
@@ -274,41 +276,43 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
              {:status 302
               :headers {"Location" "/world/players"}}))))
 
-  ;; for testing only: for real gameplay, use POST.
+  ;; use GET for incremental parsing after user presses space or (if doing speech recognition) pauses.
   (GET "/world/say" request
-       (let [expr (:expr (:params request))
-             analyses (parse expr)
-             parses (mapcat :parses analyses)
-             response {:vocab (set (mapcat (fn [parse]
-                                             (map fo (leaves parse)))
-                                           parses))
-                       :tenses (set (map (fn [parse]
-                                           (u/get-in parse [:synsem :sem :tense]))
-                                         parses))}]
-         (log/info (str "user said:" expr "; response: " response))
-         {:status 200
-          :headers {"Content-Type" "application/json;charset=utf-8"}
-          :body (generate-string response)}))
-  
+       (let [expr (:expr (:params request))]
+         (respond expr)))
+
+  ;; use POST for final-answer parsing (after pressing return).
   (POST "/world/say" request
         (friend/authenticated
-         ;; 1. deterimine user id
-         ;; 2. check if legal move
-         ;; 3. update world state
-         ;; 4. respond to client about result of their action
          (let [player-id (if-let [id (:id (get-user-from-ring-session
                                            (get-in request [:cookies "ring-session" :value])))]
-                           (Integer. id))]
-           (if (nil? player-id)
-             (do (log/error (str "player-id is null; ring-session: "
-                                 (get-in request [:cookies "ring-session" :value])))
-                  {:status 302
-                   :headers {"Location" (str "/logout?session-expired")}})
-             (let [expr (:expr (:params request))]
-               (log/info (str "user said:" (:expr (:params request))))
-               {:status 200
-                :headers {"Content-Type" "application/json;charset=utf-8"}
-                :body (generate-string {:expr expr})}))))))
+                           (Integer. id))
+               expr (:expr (:params request))]
+           (respond expr)))))
+
+(defn respond [expr]
+  (let [analyses (parse expr)
+        parses (mapcat :parses analyses)
+        response {:vocab (set (mapcat (fn [parse]
+                                        (map root-form (leaves parse)))
+                                      parses))
+                  :tenses (set (map (fn [parse]
+                                      (u/get-in parse [:synsem :sem :tense]))
+                                    parses))}]
+    (log/info (str "user said:" expr "; response: " response))
+    {:status 200
+     :headers {"Content-Type" "application/json;charset=utf-8"}
+     :body (generate-string response)}))
+
+(defn root-form [word]
+  (cond (not (= :none (u/get-in word [:italiano :infinitive] :none)))
+        (u/get-in word [:italiano :infinitive])
+
+        (string? (u/get-in word [:italiano :italiano]))
+        (u/get-in word [:italiano :italiano])
+
+        true
+        "??"))
 
 (defn leaves [parse-tree]
   "return terminal nodes (leaves) for this tree."
@@ -329,4 +333,3 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
     (concat
      (leaves head)
      (leaves comp)))))
-
