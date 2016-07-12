@@ -50,10 +50,6 @@ function load_world(current_player_id) {
 	zoom: current_zoom,
 	pitch:80
     });
-
-    if (fitBounds == true) {
-	map.fitBounds([[12.4012515,41.9012917], [12.5012515,42.0012917]]);
-    }
     
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
@@ -66,6 +62,10 @@ function load_world(current_player_id) {
 	// background.
 	update_players(map,current_player_id,function() {
 	    map.setCenter(players[current_player_id].location.geometry.coordinates);
+	    if (fitBounds == true) {
+		// TODO: should be relative to the player's current position.
+		map.fitBounds([[12.4012515,41.9012917], [12.5012515,42.0012917]]);
+	    }
 	    setGoogleStreetViewPosition(
 		map,
 		players[current_player_id].location.geometry.coordinates[1],
