@@ -1,0 +1,36 @@
+#userinputdiv {
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 4px;
+    background:#ffffff;
+    padding:3px;
+    margin:3px;
+    left:35%;
+    top:65%;
+    height:10%;
+    z-index:1;
+    position:absolute;
+    background:#ccc;
+}
+
+#userinputdiv input {
+    font-size:200%;
+}
+
+#response {
+    width:100%;
+    border:0px dashed green;
+}
+
+.vocab {
+    font-weight:bold;
+    float:left;
+    width:auto;
+    text-align:left;
+}
+
+.tenses {
+    font-weight:bold;
+    float:right;
+    text-align:right;
+    width:auto;
+}

@@ -51,6 +51,7 @@
                               :local-css [{:src "acd.css"}
                                           {:src "player.css"}
                                           {:src "infobox.css"}
+                                          {:src "input.css"}
                                           {:src "world.css"}]
                               :onload (str "load_world('" player-id "');")}))))))
 
