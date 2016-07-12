@@ -79,8 +79,21 @@ function load_world(current_player_id) {
 	});
 	update_owners(map);
         update_open_turf(map,function() {
-	    update_infobox(players[current_player_id].location.properties.osm);
-	});
+	    var css_class = "open";
+	    var osm = players[current_player_id].location.properties.osm;
+	    var owner = players[osm2owner[hood_osm]].name;
+	    var place_name = osm2hood[hood_osm].name;
+	    if (players[osm2owner[hood_osm]].css_class) {
+		css_class = players[osm2owner[hood_osm]].css_class;
+	    }
+	    var info = {
+		css_class: css_class,
+		owner: owner,
+		place_name: place_name
+	    };
+	    update_infobox(info);
+	    update_ccd(info);
+	}
 
 	userinput_initialize();
 	// ..these same things are updated regularly in this block.
