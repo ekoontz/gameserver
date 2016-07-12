@@ -11,24 +11,23 @@
     background:white;
     width:100%;
     margin:0;
-    padding:0.25em;
-    height:3em;
+    padding:0em;
+    min-height:2.5em;
 }
 
 #response p {
-    padding:0.25em;
-    margin:0.25em;
+    margin:0;
     font-size:larger;
     border:0px dashed green;
 }
 
 #response span {
-    border-radius:10px;
+    border-radius:20px;
     border:1px solid #ccc;
-    padding-left:0.25em;
-    padding-right:0.25em;
-    padding-top:0.25em;
-    padding-bottom:0.25em;
+    padding-left:0.125em;
+    padding-right:0.125em;
+    padding-top:0.125em;
+    padding-bottom:0.125em;
 }
 
 #response p.input-spinner {
