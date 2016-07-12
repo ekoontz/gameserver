@@ -13,7 +13,7 @@
 }
 
 #playerbox {
-    left:1%;
+    right:10%;
     z-index:1;
     bottom:5%;
     max-height:9%;
@@ -22,7 +22,7 @@
 
 #me {
     left:1%;
-    top:10%;
+    bottom:5%;
     z-index:1;
     max-height:9%;
     position:absolute;
@@ -31,7 +31,7 @@
 #placebox {
     z-index:1;
     left:1%;
-    top:20%;
+    top:8%;
     max-height:60%;
     position: absolute;
 }
