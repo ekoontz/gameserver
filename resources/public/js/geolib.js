@@ -63,3 +63,28 @@ function adjacent_osms(osm) {
     }
     return adjacent_hoods;
 }
+
+function osm2info(osm) {
+    var owner_name;
+    var owner_id;
+    if (osm2owner[osm]) {
+	owner_name = players[osm2owner[osm]].name;
+	owner_id = osm2owner[osm];
+    }
+
+    var css_class;
+    if (owner_id && players[owner_id].css_class) {
+	css_class = players[owner_id].css_class;
+    } else {
+	css_class = "open";
+    }
+    var place_name = osm2hood[osm].name;
+
+    var info = {
+	css_class: css_class,
+	owner: owner_name,
+	owner_id: owner_id,
+	place_name: place_name
+    };
+    return info;
+}
