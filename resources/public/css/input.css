@@ -14,12 +14,14 @@
 #response {
     background:white;
     width:100%;
-    margin-top:0.5em;
+    margin:0;
+    padding:0.25em;
     height:3em;
 }
 
 #response p {
     padding:0.25em;
+    margin:0.25em;
     font-size:larger;
     border:0px dashed green;
 }
