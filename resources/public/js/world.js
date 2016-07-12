@@ -81,23 +81,31 @@ function load_world(current_player_id) {
 	// TODO: load_place_geometries() not loaded yet.
 	// load_place_geometries(map);
 	
-	// server-supplied info that *does* change during gameplay, besides players (which we already did): owners, open turf.
+	// server-supplied info that *does* change during gameplay: owners and open turf (players
+	// also change during gameplay, but we took care of that above already).
 	update_owners(map);
         update_open_turf(map,function() {
-	    var css_class = "open";
 	    var osm = players[current_player_id].location.properties.osm;	    
 	    update_infobox(osm);
 	    update_ccd(osm,current_player_id);
 	});
 
+
+	// it's showtime!
+	$("#placebox").show();
 	userinput_initialize();
+	
 	// ..these same things are updated regularly in this block.
 	// TODO: server should compute changes from client state
 	// to server state and return only the necessary diff between them.
 	window.setInterval(function() {
 	    update_players(map,current_player_id);
 	    update_owners(map);
-	    update_open_turf(map);
+	    update_open_turf(map,function() {
+		var osm = players[current_player_id].location.properties.osm;	    
+		update_infobox(osm);
+		update_ccd(osm,current_player_id);
+	    });
 	},map_refresh_interval);
     });
 }

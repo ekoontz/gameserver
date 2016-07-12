@@ -6,7 +6,10 @@
   <div id="playerbox">
   </div>
 
-  <div id="placebox">
+  <div id="placebox" style="display:none">
+    <div id="consolidated">
+
+    </div>
 
     <div id="infobox">
     </div>
@@ -15,9 +18,15 @@
     </div>
 
     <div id="userinputdiv">
-      <input id="userinput" name="userinput" size="30"> </input>
-      <div id="response">
-      </div>
+
+     <!-- TODO: move internals to javascript; otherwise browser
+              rendering shows this first; looks a bit disorienting. -->
+	      
+       <input id="userinput" name="userinput" size="30"> </input>
+
+       <div id="response">
+       </div>
+
     </div>
 
   </div>
