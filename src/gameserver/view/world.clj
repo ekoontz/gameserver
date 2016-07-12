@@ -279,9 +279,12 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
               :headers {"Location" "/world/players"}}))))
 
   ;; use GET for incremental parsing after user presses space or (if doing speech recognition) pauses.
-  (GET "/world/say" request
-       (let [expr (:expr (:params request))]
-         (respond expr)))
+  (GET "/world/say/:expr" request
+       (let [expr (:expr (:route-params request))]
+         {:status 200
+          :headers {"Content-Type" "application/json;charset=utf-8"
+                    "Cache-Control" "public,max-age=600"} ;; 10 minute client cache to start
+          :body (generate-string (respond expr))}))
 
   ;; use POST for final-answer parsing (after pressing return).
   (POST "/world/say" request
@@ -290,7 +293,9 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
                                            (get-in request [:cookies "ring-session" :value])))]
                            (Integer. id))
                expr (:expr (:params request))]
-           (respond expr)))))
+           {:status 200
+            :headers {"Content-Type" "application/json;charset=utf-8"}
+            :body (generate-string (respond expr))}))))
 
 (defn respond [expr]
   (let [analyses (parse expr)
@@ -302,9 +307,7 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
                                       (u/get-in parse [:synsem :sem :tense]))
                                     parses))}]
     (log/info (str "user said:" expr "; response: " response))
-    {:status 200
-     :headers {"Content-Type" "application/json;charset=utf-8"}
-     :body (generate-string response)}))
+    response))
 
 (defn root-form [word]
   (cond (not (= :none (u/get-in word [:italiano :infinitive] :none)))

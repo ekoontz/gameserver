@@ -8,13 +8,12 @@ function respond_to_user_input(event) {
     key_pressed = event.which;
     if (key_pressed != 13) {
 	// send to language server:
+	var user_input = $("#userinput").val().trim();
 	$.ajax({
-	    cache: false,
+	    cache: true,
 	    type: "GET",
-	    data: {expr: $("#userinput").val()},
-            dataType: "json",
-            url: "/world/say"}).done(function(content) {
-		log(INFO,"server responded with content: " + content);
+            url: "/world/say/"+user_input}).done(function(content) {
+		log(INFO,"server responded; using response.");
 		var vocab = [];
 		if (content.vocab.length > 0) {
 		    vocab = jQuery.map(content.vocab, function(word) {return {"word": word}});
