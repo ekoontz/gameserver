@@ -35,6 +35,18 @@
     padding-bottom:0.25em;
 }
 
+#response p.input-spinner {
+    width:100%;
+    text-align:center;
+}
+
+#response p.input-spinner span {
+    border:0;
+    padding:0;
+    margin:0;
+    font-size: large;
+}
+
 .vocab {
     font-weight:bold;
     float:left;

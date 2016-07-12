@@ -1,10 +1,17 @@
-<p class="vocab">
-{{#vocab}}
+{{#message}}
+  <p class='input-spinner'><span class="fa fa-question-circle">{{value}}</span></p>
+{{/message}}
+{{^message}}
+  <p class="vocab">
+  {{#vocab}}
     <span>{{word}}</span>
-{{/vocab}}
-</p>
-<p class="tenses">
-{{#tenses}}
+  {{/vocab}}
+  </p>
+
+  <p class="tenses">
+  {{#tenses}}
     <span>{{tense}}</span>
-{{/tenses}}
-</p>
+  {{/tenses}}
+  </p>
+{{/message}}
+
