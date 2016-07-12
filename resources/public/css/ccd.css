@@ -1,10 +1,10 @@
-/* world.css should be used for positioning of #adc: use this entry 
+/* world.css should be used for positioning of #ccd: use this entry 
 for position-independent styling. */
-#adc {
+#ccd {
 }
 
 /* TODO: factor out duplicated stuff in infobox.css (#infobox > div) and playerbox.css. */
-#acd > div {
+#ccd > div {
     margin:0.25em;
     position:relative;
     margin-right:0.5em;
@@ -15,7 +15,7 @@ for position-independent styling. */
 }
 
 /* TODO: factor out duplicated stuff in infobox.css (#infobox > h4) and playerbox.css. */
-#acd > h4 {
+#ccd > h4 {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     text-align:center;
@@ -25,7 +25,7 @@ for position-independent styling. */
 }
 
 /* TODO: factor out duplicated stuff in infobox.css (#infobox h4) and playerbox.css. */
-#acd h4 {
+#ccd h4 {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     text-align:center;
@@ -34,14 +34,14 @@ for position-independent styling. */
     opacity:0.9;
 }
 
-#acd table {
+#ccd table {
     width:90%;
 }
 
-#acd th {
+#ccd th {
     text-align:right;
 }
-#acd td {
+#ccd td {
     color:black;
     padding:0.25em;
     font-size:large;
