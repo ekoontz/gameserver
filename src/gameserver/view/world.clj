@@ -48,7 +48,8 @@
                                          {:src "infobox.js"}
                                          {:src "actions.js"}
                                          {:src "input.js"}
-                                         {:src "world.js"}]
+                                         {:src "world.js"}
+                                         ]
                               :local-css [{:src "ccd.css"}
                                           {:src "player.css"}
                                           {:src "infobox.css"}
