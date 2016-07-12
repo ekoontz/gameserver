@@ -13,7 +13,8 @@ var players = {};
 var player_id;
 var Roma = [12.5012515,41.9012917];
 var updateBearing = false;
-
+var zoom_level = 14;
+    
 var icons = [
     "airport-15",
     "aquarium-15",

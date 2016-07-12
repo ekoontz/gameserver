@@ -30,7 +30,7 @@ function load_world(current_player_id) {
     // going to the center of rome first.
     var current_long = Roma[0];
     var current_lat = Roma[1];
-    var current_zoom = 15;
+    var current_zoom = zoom_level;
 
     var s = document.createElement("script");
     s.type = "text/javascript";
