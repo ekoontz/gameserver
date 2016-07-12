@@ -4,6 +4,9 @@ function onclick(e,map,current_player_id) {
     if (features.length > 0) {
 	for (var i = 0; i < features.length; i++) {
 	    if (features[i].properties.admin_level == '10') {
+		// clear inputbox
+		userinput_initialize();
+
 		var new_hood = features[i].properties.neighborhood;
 		var selected_osm = features[i].properties.osm_id;
 		// This asks the server via POST to update the player's location to _selected_osm_.
