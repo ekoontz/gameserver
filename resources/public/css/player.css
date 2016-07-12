@@ -15,11 +15,11 @@ div.player_info table {
     margin-bottom:0.25em;
     display:block;
     background:#ffffff;
-    width:90%;
+    width:auto;
 }
 
 div.player_info td {
-    width:70%;
+    width:auto;
     text-align:right;
 }
 
