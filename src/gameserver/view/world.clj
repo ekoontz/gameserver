@@ -48,10 +48,12 @@
                                          {:src "ccd.js"}
                                          {:src "player.js"}
                                          {:src "infobox.js"}
+                                         {:src "placebox.js"}
                                          {:src "actions.js"}
                                          {:src "input.js"}
                                          {:src "world.js"}]
                               :local-css [{:src "ccd.css"}
+                                          {:src "placebox.css"}
                                           {:src "player.css"}
                                           {:src "infobox.css"}
                                           {:src "input.css"}
