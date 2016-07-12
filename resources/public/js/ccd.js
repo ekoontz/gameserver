@@ -1,8 +1,6 @@
-function update_ccd(name,css_class,owner) {    
+function update_ccd(info) {
     $.get('/mst/ccd.mustache', function(template) {
-	$('#ccd').html(Mustache.render(template, {
-    	    css_class:css_class
-	}));
+	$('#ccd').html(Mustache.render(template, info));
     });
 }
-    
+ 
