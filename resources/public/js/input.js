@@ -1,17 +1,21 @@
+// TODO: move ready_for_you to config.js and localize per-language.
+var ready_for_you = "<p class='input-spinner'>Che ne dice? <span class='fa fa-hand-o-up'> </span></p>";
+
 function userinput_initialize() {
     $("#userinput").keyup(respond_to_user_input);
     $("#userinput").val("");
     $("#userinput").focus();
-    $('#response').html("<p class='input-spinner'>Please type something..<span class='fa fa-hand-o-up'> </span></p>");
+    $('#response').html(ready_for_you);
 }
 
 function respond_to_user_input(event) {
     key_pressed = event.which;
     if (key_pressed != 13) {
-	// send intermediate to language server:
+	// send intermediate user input (i.e. input that the user hasn't necessarily finished)
+	// to language server:
 	var user_input = $("#userinput").val().trim();
 	if (user_input == "") {
-            $('#response').html("<p class='input-spinner'>Please type something..<span class='fa fa-hand-o-up'> </span></p>");
+            $('#response').html(ready_for_you);
 	    return;
 	}
 
