@@ -5,6 +5,7 @@ var adjacencies = {};
 var centroids = {};
 var fitBounds = false;
 var hoods = {};
+var default_icon_size = 2;
 var logging_level = INFO;
 var map_refresh_interval = 10000;
 var osm2hood = {};

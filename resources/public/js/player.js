@@ -1,4 +1,4 @@
-function update_player_marker(map,player) {
+function update_player_marker(map,player,current_player_id) {
     // 1. show neighborhood of player:
     $("#player"+player+"-position").html(players[player].location.properties.neighborhood);
     // 2. show name of player:
@@ -8,13 +8,18 @@ function update_player_marker(map,player) {
     // cf. playerbox.mustache
     icon = icons[player % icons.length];
 
+    var icon_size = default_icon_size;
+    if (player == current_player_id) {
+	icon_size++;
+    }
+
     upsert_layer(map,players[player].location,
  		 {id: "player_marker"+player,
 		  type: "symbol",
 		  layout: {
 		      "icon-image": icon,
-		      "icon-offset":[0,-10],
-		      "icon-size": 2
+		      "icon-offset": [0,-10],
+		      "icon-size": icon_size
 		  },
 		  source: 'player_marker'+player});
 }
@@ -69,7 +74,7 @@ function update_players_from(map,content,current_player_id) {
 	    places_count: content.features[i].properties.places_count
 	}; 
 	players[player_id] = player_record;
-	update_player_marker(map,player_id);
+	update_player_marker(map,player_id,current_player_id);
 	update_player_turf(map,player_id,css_class);
     }
     $.get('/mst/playerbox.mustache', function(template) {
