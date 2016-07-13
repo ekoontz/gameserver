@@ -46,7 +46,9 @@ div.three h3,h4 {
 }
 
 #placebox th {
+    width:50%;
     font-size:200%;
+    text-align:center;
 }
 
 div.three span {
