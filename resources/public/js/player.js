@@ -25,8 +25,8 @@ function update_player_marker(map,player,current_player_id) {
 }
 
 function update_player_turf(map,player,css_class) {
-    // TODO: should also update infobox, since infobox might contain information
-    // about a place that's changed hands while the infobox about it is open.
+    // TODO: might need to also update placebox, since placebox might contain information
+    // about a place that's changed hands while the placebox about it is open.
     $.ajax({
 	cache:false,
 	dataType: "json",
