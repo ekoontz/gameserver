@@ -79,27 +79,17 @@ function osm2info(osm) {
 	css_class = "open";
     }
     var place_name = osm2hood[osm].name;
-    var tenses = osm2hood[osm].tenses;
-    if (!(typeof(tenses) == "undefined")) {
-	remaining_tenses = tenses.length;
-    } else {
-	remaining_tenses = 0;
-    }
-    var vocab = osm2hood[osm].vocab;
-    if (!(typeof(vocab) == "undefined")) {
-	remaining_vocab = vocab.length;
-    } else {
-	remaining_vocab = 0;
-    }
     var info = {
 	css_class: css_class,
 	owner: owner_name,
 	owner_id: owner_id,
 	place_name: place_name,
-	vocab: osm2hood[osm].vocab,
-	tenses: tenses,
-	remaining_tenses: remaining_tenses,
-	remaining_vocab: remaining_vocab
+	vocab_solved: osm2hood[osm].vocab_solved,
+	vocab_unsolved: osm2hood[osm].vocab_unsolved,
+	vocab_solvers: osm2hood[osm].vocab_solvers,
+	tenses_solved: osm2hood[osm].tenses_solved,
+	tense_unsolved: osm2hood[osm].tenses_unsolved,
+	tense_solvers: osm2hood[osm].tenses_solvers
     };
     return info;
 }

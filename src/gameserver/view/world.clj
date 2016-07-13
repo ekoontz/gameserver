@@ -153,6 +153,8 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                                      :features geojson})})))
 
   ;; given an :osm_id, return its polygon, owner, vocab and tenses.
+  ;; TODO: make it an option not to return the polygon: it's expensive and doesn't change,
+  ;; so a client only needs that information once.
   (GET "/world/hoods/:osm" request
        (friend/authenticated
         (if-let [osm (Integer. (:osm (:route-params request)))]
@@ -162,12 +164,36 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
            ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
            vc_user.id AS player,vc_user.email AS email,
            admin_level, 
-           ARRAY(SELECT item 
+           ARRAY(SELECT item
                    FROM place_vocab
-                  WHERE place_vocab.osm_id = rome_polygon.osm_id) AS vocab,
-           ARRAY(SELECT item 
+                  WHERE place_vocab.osm_id = rome_polygon.osm_id
+                    AND place_vocab.solved_by IS NOT NULL
+               ORDER BY item) AS vocab_solved,
+           ARRAY(SELECT solved_by
+                   FROM place_vocab
+                  WHERE place_vocab.osm_id = rome_polygon.osm_id 
+                    AND place_vocab.solved_by IS NOT NULL
+                ORDER BY item) AS vocab_solvers,
+           ARRAY(SELECT item
                    FROM place_tense
-                  WHERE place_tense.osm_id = rome_polygon.osm_id) AS tenses
+                  WHERE place_tense.osm_id = rome_polygon.osm_id
+                    AND place_tense.solved_by IS NOT NULL
+               ORDER BY item) AS tenses_solved,
+           ARRAY(SELECT solved_by
+                   FROM place_tense
+                  WHERE place_tense.osm_id = rome_polygon.osm_id
+                    AND place_tense.solved_by IS NOT NULL
+               ORDER BY item) AS tense_solvers,
+           ARRAY(SELECT item
+                   FROM place_vocab
+                  WHERE place_vocab.osm_id = rome_polygon.osm_id
+                    AND place_vocab.solved_by IS NULL
+               ORDER BY item) AS vocab_unsolved,
+           ARRAY(SELECT item
+                   FROM place_tense
+                  WHERE place_tense.osm_id = rome_polygon.osm_id
+                    AND place_tense.solved_by IS NULL
+               ORDER BY item) AS tenses_unsolved
       FROM rome_polygon
  LEFT JOIN owned_locations
         ON (owned_locations.osm_id = rome_polygon.osm_id)
@@ -182,8 +208,12 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                                 :geometry (json/read-str (:polygon hood))
                                 :properties {:neighborhood (:name hood)
                                              :osm_id (:osm_id hood)
-                                             :vocab (map str (.getArray (:vocab hood)))
-                                             :tenses (map str (.getArray (:tenses hood)))
+                                             :tenses_solved (map str (.getArray (:tenses_solved hood)))
+                                             :tense_solvers (map str (.getArray (:tense_solvers hood)))
+                                             :tenses_unsolved (map str (.getArray (:tenses_unsolved hood)))
+                                             :vocab_solved (map str (.getArray (:vocab_solved hood)))
+                                             :vocab_solvers (map str (.getArray (:vocab_solvers hood)))
+                                             :vocab_unsolved (map str (.getArray (:vocab_unsolved hood)))
                                              :admin_level (:admin_level hood)}})
                              data)]
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))

@@ -170,6 +170,7 @@ function load_centroids(map,current_player_id) {
 		},
 		source: 'hood_markers'
 	    });
+	    // TODO: reconcile this with actions.js; both are updating osm2hood, but in different ways.
 	    // populate client-side 'centroids' and 'osm2hood' maps.
 	    centroids = {};
 	    content = content.features;
