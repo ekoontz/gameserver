@@ -34,6 +34,7 @@
     top:9%;
     position: absolute;
     max-width:60%;
+    max-height:30%;
 }
 
 #streetviewcontainer {
@@ -48,7 +49,7 @@
 #userinputdiv {
     z-index:1;
     left:1%;
-    top:60%;
+    top:50%;
     position: absolute;
 }
 
