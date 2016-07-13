@@ -81,6 +81,12 @@ function update_players_from(map,content,current_player_id) {
 	$.each(players, function(key,player_record) {
 	    var box_id = "player"+player_record.id+"_box";
 	    $("#"+box_id).remove();
+	    if (player_record.id == current_player_id) {
+		// let current player's icon be a bit larger:
+		player_record.icon_width = 30;
+	    } else {
+		player_record.icon_width = 20;
+	    }
 	    var playerbox = Mustache.render(template,player_record);
 	    if (player_record.id == current_player_id) {
 		$('#me').append(playerbox);
