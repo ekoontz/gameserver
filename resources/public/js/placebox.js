@@ -9,7 +9,7 @@ function update_placebox(osm,current_player_id) {
     }
 
     info.remaining_vocab = 21;
-    info.remaining_grammar = 42;
+    info.remaining_tenses = 42;
 
     var random_style = ["","player0","player1","player2","player3"];
     

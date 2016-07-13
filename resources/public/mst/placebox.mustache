@@ -1,26 +1,18 @@
-<h4 class="{{css_class}}">{{place_name}}</h4>
-<div class="three grammar">
-  <h4>Vocab</h4>
+<h4>{{top_message}}</h4>
+<div class="items" style="float:left">
   <p>
   {{#vocab}}
     <span class="{{class}}">{{name}}</span>
   {{/vocab}}
   </p>
 </div>
-<div class="three">
-  <h3>{{top_message}}</h3>
-  <table>
-    <tr>
-      <th class="vocab">{{remaining_vocab}}</th>
-      <th class="grammar">{{remaining_grammar}}</th>
-    </tr>
-  </table>
-</div>
-<div class="three vocab">
-  <h4>Tenses</h4>
+<div class="counter" style="float:left;">{{remaining_vocab}}</div>
+<div class="items" style="float:right">
   <p>
   {{#tenses}}
     <span class="{{class}}">{{name}}</span>
   {{/tenses}}
   </p>
 </div>
+<div class="counter" style="float:right;">{{remaining_tenses}}</div>
+<h4 class="{{css_class}}">{{place_name}}</h4>

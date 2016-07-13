@@ -31,9 +31,18 @@
 #placebox {
     z-index:2;
     left:1%;
-    top:8%;
-    max-height:60%;
+    top:9%;
     position: absolute;
+    max-width:60%;
+}
+
+#streetviewcontainer {
+    right:5%;
+    top:10%;
+    width:30%;
+    height:30%;
+    z-index:1;
+    position:absolute;
 }
 
 #userinputdiv {
