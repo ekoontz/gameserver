@@ -118,7 +118,7 @@ function update_placeinfo(osm_id, post_get) {
 	    osm2hood[osm_id].vocab_unsolved = content.properties.vocab_unsolved;
 	    osm2hood[osm_id].vocab_solvers = content.properties.vocab_solvers;
 	    osm2hood[osm_id].tenses_solved = content.properties.tenses_solved;
-	    osm2hood[osm_id].tenses_solvers = content.properties.tenses_solvers;
+	    osm2hood[osm_id].tense_solvers = content.properties.tense_solvers;
 	    osm2hood[osm_id].tenses_unsolved = content.properties.tenses_unsolved;
 	    post_get(content);
 	}
