@@ -11,13 +11,17 @@ function update_placebox(osm,current_player_id) {
     info.remaining_vocab = 21;
     info.remaining_grammar = 42;
 
-    info.vocab = [{name: "mangiare",
-		   class: "player2"},
-		  {name: "parlare"}];
+    var random_style = ["","player0","player1","player2","player3"];
+    
+    info.vocab = jQuery.map(info.vocab,function(item) {
+	return {name: item,
+		class: random_style[Math.floor(Math.random() * random_style.length)]}
+    });
 
-    info.tenses = [{name: "imperfetto"},
-		   {name: "passato prossimo",
-		    class: "player0"}];
+    info.tenses = jQuery.map(info.tenses,function(item) {
+	return {name: item,
+		class: random_style[Math.floor(Math.random() * random_style.length)]};
+    });
     
     $.get('/mst/placebox.mustache', function(template) {
 	// TODO: replace with #consolidated with #placebox when ready.
