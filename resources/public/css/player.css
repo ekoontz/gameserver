@@ -15,6 +15,7 @@ div.player_info table {
     margin-bottom:0.25em;
     display:block;
     background:#ffffff;
+    color:black;
     width:auto;
 }
 
@@ -32,25 +33,25 @@ div.player_info h4 {
     opacity:0.9;
 }
 
-h4.open {
+.open {
     background: #ccc;
 }
 
-h4.player0 {
+.player0 {
     background: #008fff;
     color:#ffef59;
 }
-h4.player1 {
+.player1 {
     background: #ff0000;
     color:#ffef59;
 }
 
-h4.player2 {
+.player2 {
     background: #88ff00;
     color:#3338ff;
 }
 
-h4.player3 {
+.player3 {
     background: #778800;
     color:#3338ff;
 }
