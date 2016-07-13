@@ -2,23 +2,25 @@
 <div class="three grammar">
   <h4>Vocab</h4>
   <p>
-    <span class="player2">mangiare</span>
-    <span>parlare</span>
+  {{#vocab}}
+    <span class="{{class}}">{{name}}</span>
+  {{/vocab}}
   </p>
 </div>
 <div class="three">
   <h3>{{top_message}}</h3>
   <table>
     <tr>
-      <th class="vocab">1</th>
-      <th class="grammar">1</th>
+      <th class="vocab">{{remaining_vocab}}</th>
+      <th class="grammar">{{remaining_grammar}}</th>
     </tr>
   </table>
 </div>
 <div class="three vocab">
   <h4>Tenses</h4>
   <p>
-    <span>imperfetto</span>
-    <span class="player0">passato prossimo</span>
+  {{#tenses}}
+    <span class="{{class}}">{{name}}</span>
+  {{/tenses}}
   </p>
 </div>
