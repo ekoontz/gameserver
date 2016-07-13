@@ -152,7 +152,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
              :body (generate-string {:type "FeatureCollection"
                                      :features geojson})})))
 
-  ;; given an :osm_id, return its polygon
+  ;; given an :osm_id, return its polygon, owner, vocab and tenses.
   (GET "/world/hoods/:osm" request
        (friend/authenticated
         (if-let [osm (Integer. (:osm (:route-params request)))]
@@ -161,13 +161,19 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
     SELECT rome_polygon.name,rome_polygon.osm_id,
            ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
            vc_user.id AS player,vc_user.email AS email,
-           admin_level
+           admin_level, 
+           ARRAY(SELECT item 
+                   FROM place_vocab
+                  WHERE place_vocab.osm_id = rome_polygon.osm_id) AS vocab,
+           ARRAY(SELECT item 
+                   FROM place_tense
+                  WHERE place_tense.osm_id = rome_polygon.osm_id) AS tenses
       FROM rome_polygon
  LEFT JOIN owned_locations
         ON (owned_locations.osm_id = rome_polygon.osm_id)
  LEFT JOIN vc_user
         ON (owned_locations.user_id = vc_user.id)
-     WHERE (admin_level = '10') 
+     WHERE (admin_level = '10')
        AND rome_polygon.osm_id = ?
 "
                                   [osm]] :results)
@@ -176,6 +182,8 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                                 :geometry (json/read-str (:polygon hood))
                                 :properties {:neighborhood (:name hood)
                                              :osm_id (:osm_id hood)
+                                             :vocab (map str (.getArray (:vocab hood)))
+                                             :tenses (map str (.getArray (:tenses hood)))
                                              :admin_level (:admin_level hood)}})
                              data)]
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
