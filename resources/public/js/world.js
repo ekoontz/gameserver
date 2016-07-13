@@ -117,13 +117,15 @@ function load_adjacencies(map) {
 	    // populate client-side 'adjacencies' db
 	    adjacencies = {};
 	    var count = 0;
-	    for (var i = 0; i < content.length; i++) {
-		var osm_id = content[i].osm_id;
-		var adj = content[i].adj;
-		adjacencies[osm_id] = adj;
-		count++;
-	    }
-	    log(INFO,"loaded " + count + " adjacencies.");
+	    var relations = 0;
+	    jQuery.map(content,function(place) {
+		var osm_id = place.osm_id;
+		var next_to = place.adj;
+		adjacencies[osm_id] = next_to;
+		count = count + 1;
+		relations = relations + next_to.length;
+	    });
+	    log(INFO,"loaded " + count  + " places with a total of " + relations + " adjacency relationships.");
 	}});
 }
 
