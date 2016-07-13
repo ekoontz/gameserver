@@ -86,12 +86,14 @@ function update_players_from(map,content,current_player_id) {
 		$('#me').append(playerbox);
 		$("#me").click(
 		    function() {
+			map.setZoom(zoom_level);
 			map.flyTo({center: player_record.location.geometry.coordinates});
 		    });
 	    } else {		
 		$('#playerbox').append(playerbox);
 		$("#"+box_id).click(
 		    function() {
+			map.setZoom(zoom_level);
 			map.flyTo({center: player_record.location.geometry.coordinates});
 		    });
 	    }
