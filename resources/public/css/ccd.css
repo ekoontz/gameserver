@@ -1,6 +1,7 @@
 /* world.css should be used for positioning of #ccd: use this entry 
 for position-independent styling. */
 #ccd {
+    display:none;
 }
 
 /* TODO: factor out duplicated stuff in infobox.css (#infobox > div) and playerbox.css. */
