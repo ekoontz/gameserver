@@ -104,21 +104,31 @@ function onmousemove(e,map) {
     }
 }
 
+function update_placeinfo(osm_id, post_get) {
+    // retrieve GeoJSON data for place whose osm id is _osm_id.
+    $.ajax({
+	cache:true,
+	dataType: "json",
+	url: "/world/hoods/" + osm_id,
+	success: function(content) {
+	    // .. and save it so we don't need to do this server call again.
+	    osm2hood[osm_id].polygon = content;
+	    osm2hood[osm_id].vocab = content.properties.vocab;
+	    osm2hood[osm_id].tenses = content.properties.tenses;
+	    post_get(content);
+	}
+    });
+}
+
 function highlight_place(map,osm_id,layer_style) {
     log(DEBUG,"highlighting_place: " + osm_id);
     if (typeof(osm2hood[osm_id].polygon) == "undefined") {
-	// We haven't gotten this polygon from the server yet, so get it now...
-	$.ajax({
-	    cache:true,
-	    dataType: "json",
-	    url: "/world/hoods/" + osm_id,
-	    success: function(content) {
-		// .. and save it so we don't need to do this server call again.
-		osm2hood[osm_id].polygon = content;
-		highlight_polygon(map,osm2hood[osm_id].polygon,layer_style);
-	    }
+	// We haven't gotten this polygon from the server yet, so get it now.
+	update_placeinfo(osm_id,function(content) {
+	    highlight_polygon(map,osm2hood[osm_id].polygon,layer_style);
 	});
     } else {
 	highlight_polygon(map,osm2hood[osm_id].polygon,layer_style);
     }
 }
+
