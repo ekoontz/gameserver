@@ -61,12 +61,12 @@
        (friend/authenticated
         (let [logging (log/info (str "/world/adjacency"))
               rows (k/exec-raw ["
-SELECT n1.osm_id AS n1,
-       ARRAY(SELECT n2.osm_id
-               FROM rome_polygon AS n2
-              WHERE n2.admin_level = '10'
-                AND ST_Touches(n1.way,n2.way)
-           ORDER BY n2.name) AS adj
+  SELECT n1.osm_id AS n1,
+         ARRAY(SELECT n2.osm_id
+                 FROM rome_polygon AS n2
+                WHERE n2.admin_level = '10'
+                  AND ST_Touches(n1.way,n2.way)
+             ORDER BY n2.name) AS adj
     FROM rome_polygon AS n1
    WHERE n1.admin_level='10'
 ORDER BY n1.name;
