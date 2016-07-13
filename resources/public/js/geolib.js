@@ -79,12 +79,13 @@ function osm2info(osm) {
 	css_class = "open";
     }
     var place_name = osm2hood[osm].name;
-
     var info = {
 	css_class: css_class,
 	owner: owner_name,
 	owner_id: owner_id,
-	place_name: place_name
+	place_name: place_name,
+	vocab: osm2hood[osm].vocab,
+	tenses: osm2hood[osm].tenses
     };
     return info;
 }
