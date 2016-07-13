@@ -28,13 +28,14 @@
 
 #placebox.div div.items {
     width:40%;
-    padding:0.25em;
+    padding:0.5em;
 }
 
 #placebox p {
     float:left;
     width:auto;
     border:0px dashed blue;
+    padding:0.25em;
 }
 
 div#placebox span {
