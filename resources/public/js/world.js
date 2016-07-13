@@ -54,7 +54,6 @@ function load_world(current_player_id) {
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
-
 	// TODO: map's onclick and onmouse are defined in here: pull out
 	// and add to last client action before starting game.
 
@@ -86,15 +85,15 @@ function load_world(current_player_id) {
 	update_owners(map);
         update_open_turf(map,function() {
 	    var osm = players[current_player_id].location.properties.osm;	    
-	    update_placebox(osm,current_player_id);
+	    update_placeinfo(osm,function() {
+		update_placebox(osm,current_player_id);
+		// it's showtime!
+		userinput_initialize();
+		$("#placebox").show();
+	    });
 	});
-
-
-	// it's showtime!
-	$("#placebox").show();
-	userinput_initialize();
 	
-	// ..these same things are updated regularly in this block.
+	// The same things are updated regularly in this block.
 	// TODO: server should compute changes from client state
 	// to server state and return only the necessary diff between them.
 	window.setInterval(function() {

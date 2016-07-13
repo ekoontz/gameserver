@@ -1,4 +1,5 @@
 #placebox {
+    max-width:65%;
     margin-right:0.5em;
     float:left;
     box-shadow: 0 1px 5px rgba(0,0,0,0.65);
@@ -8,43 +9,45 @@
 
 /* TODO: factor out duplicated stuff in playerbox.css. */
 #placebox > h4 {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+    width:100%;
+    float:left;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     text-align:center;
     padding:0.25em;
     margin:0;
     opacity:0.9;
 }
 
-div.three {
+#placebox div {
+    padding:0;
     float:left;
-    width:33%;
+    width:auto;
+    border:0px dashed green;
 }
 
-div.three h3,h4 {
-    text-align:center;
+#placebox.div div.items {
+    width:40%;
+    padding:0.25em;
 }
 
-.grammar {
-    font-weight:bold;
-    float:right;
-    text-align:right;
+#placebox p {
+    float:left;
+    width:auto;
+    border:0px dashed blue;
 }
 
-#placebox table {
-    width:100%;
-}
-
-#placebox th {
-    width:50%;
-    font-size:200%;
-    text-align:center;
-}
-
-div.three span {
-    border-radius:10px;
-    border:1px solid #ccc;
+div#placebox span {
+    border-radius:9px;
+    border:2px solid #ccc;
     padding:0.25em;
     margin:0;
     white-space:nowrap;
 }
+
+div#placebox div.counter {
+    text-align:center;
+    width:2em;
+    font-size:200%;
+}
+
