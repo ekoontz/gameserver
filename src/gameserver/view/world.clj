@@ -45,17 +45,13 @@
                                          {:src "config.js"}
                                          ;; these 3 above must remain before others below.
                                          {:src "geolib.js"}
-                                         {:src "ccd.js"}
                                          {:src "player.js"}
-                                         {:src "infobox.js"}
                                          {:src "placebox.js"}
                                          {:src "actions.js"}
                                          {:src "input.js"}
                                          {:src "world.js"}]
-                              :local-css [{:src "ccd.css"}
-                                          {:src "placebox.css"}
+                              :local-css [{:src "placebox.css"}
                                           {:src "player.css"}
-                                          {:src "infobox.css"}
                                           {:src "input.css"}
                                           {:src "streetview.css"}
                                           {:src "world.css"}]

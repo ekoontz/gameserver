@@ -32,8 +32,7 @@ function onclick(e,map,current_player_id) {
 		log(DEBUG,"user clicked on place:" + new_hood + " with osm_id=" +
 		    features[i].properties.osm_id);
 		var osm_of_clicked_on_place = features[i].properties.osm_id;
-		update_infobox(osm_of_clicked_on_place);
-		update_ccd(osm_of_clicked_on_place,current_player_id);
+		update_placebox(osm_of_clicked_on_place,current_player_id);
 		
 		if (old_hood != new_hood) {
 		    log(INFO,"selected hood:" + new_hood + " with pos:" + pos);

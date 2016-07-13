@@ -1,9 +1,13 @@
 #placebox {
-    background: pink;
+    background: white;
+}
+
+#consolidated {
+    background: white;
 }
 
 /* TODO: factor out duplicated stuff in infobox.css (#infobox > h4) and playerbox.css. */
-#placebox h4 {
+#placebox > h4 {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     text-align:center;
@@ -12,4 +16,77 @@
     opacity:0.9;
 }
 
+#consolidated > h4 {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    text-align:center;
+    padding:0.25em;
+    margin:0;
+    opacity:0.9;
+}
 
+div.three {
+    background:white;
+    float:left;
+    width:33%;
+}
+
+.grammar {
+    font-weight:bold;
+    float:right;
+    text-align:right;
+}
+
+.vocab {
+    font-weight:bold;
+    float:left;
+    text-align:left;
+}
+
+.grammar span {
+    border-radius:10px;
+    background:#eee;
+    border:1px solid #ccc;
+}
+
+.vocab span {
+    border-radius:10px;
+    background:#eee;
+    border:1px solid #ccc;
+    padding:0;
+    border-radius:10px;
+    border:1px solid #ccc;
+ }
+
+.grammar p {
+    float:right;
+    text-align:right;
+}
+
+.vocab p {
+    float:left;
+    text-align:left;
+}
+
+#placebox table {
+    width:100%;
+}
+
+#placebox th {
+    width:25%;
+    color:black;
+    padding:0.25em;
+    background:white;
+}
+
+#placebox th.vocab {
+    text-align:left;
+}
+
+#placebox th.grammar {
+    text-align:right;
+}
+
+#placebox span.remaining {
+    background:white;
+}
