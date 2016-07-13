@@ -82,7 +82,7 @@ function update_players_from(map,content,current_player_id) {
 	    var box_id = "player"+player_record.id+"_box";
 	    $("#"+box_id).remove();
 	    if (player_record.id == current_player_id) {
-		// let current player's icon be a bit larger:
+		// let current player's icon be a bit larger than the other players' icons:
 		player_record.icon_width = 30;
 	    } else {
 		player_record.icon_width = 20;
