@@ -88,8 +88,8 @@ function osm2info(osm) {
 	vocab_unsolved: osm2hood[osm].vocab_unsolved,
 	vocab_solvers: osm2hood[osm].vocab_solvers,
 	tenses_solved: osm2hood[osm].tenses_solved,
-	tense_unsolved: osm2hood[osm].tenses_unsolved,
-	tense_solvers: osm2hood[osm].tenses_solvers
+	tenses_unsolved: osm2hood[osm].tenses_unsolved,
+	tense_solvers: osm2hood[osm].tense_solvers
     };
     return info;
 }
