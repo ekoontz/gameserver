@@ -278,7 +278,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
 INNER JOIN player_location ON (player_location.user_id = vc_user.id)
 INNER JOIN rome_polygon 
         ON (player_location.osm_id = rome_polygon.osm_id)
-INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY player_id) AS owned
+INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY player_id) AS owned
         ON (owned.player_id = vc_user.id)
   ORDER BY vc_user.id
 "
