@@ -93,7 +93,7 @@ function load_world(current_player_id) {
 	    });
 	});
 	
-	// The same things are updated regularly in this block.
+	// The same things as above are updated regularly in this block.
 	// TODO: server should compute changes from client state
 	// to server state and return only the necessary diff between them.
 	window.setInterval(function() {
