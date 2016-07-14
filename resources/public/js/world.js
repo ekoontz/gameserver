@@ -82,7 +82,7 @@ function load_world(current_player_id) {
 	
 	// server-supplied info that *does* change during gameplay: owners and open turf (players
 	// also change during gameplay, but we took care of that above already).
-	update_owners(map);
+	update_owners();
         update_open_turf(map,function() {
 	    var osm = players[current_player_id].location.properties.osm;	    
 	    update_placeinfo(osm,function() {
@@ -98,7 +98,7 @@ function load_world(current_player_id) {
 	// to server state and return only the necessary diff between them.
 	window.setInterval(function() {
 	    update_players(map,current_player_id);
-	    update_owners(map);
+	    update_owners();
 	    update_open_turf(map,function() {
 		var osm = players[current_player_id].location.properties.osm;	    
 		update_placeinfo(osm,function() {
@@ -130,7 +130,7 @@ function load_adjacencies(map) {
 	}});
 }
 
-function update_owners(map) {
+function update_owners() {
     $.ajax({
 	dataType: "json",
 	url: "/world/owners",
