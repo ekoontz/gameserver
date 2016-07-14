@@ -8,11 +8,9 @@ function userinput_initialize() {
     $('#response').html(ready_for_you);
 }
 
-// try to dedup events.
-var timestamp_of_last_post = undefined;
-
 function respond_to_user_input(event) {
     key_pressed = event.which;
+    event.stopImmediatePropagation(); // prevent duplicate events
     if (key_pressed != 13) {
 	// send intermediate user input (i.e. input that the user hasn't necessarily finished)
 	// to language server:
@@ -58,13 +56,7 @@ function respond_to_user_input(event) {
     }
 
     if (key_pressed == 13) {
-	if (timestamp_of_last_post == event.timeStamp) {
-	    log(WARN,"ignoring this POST: since its timestamp is the same as the last such event, it must be a duplicate");
-	    return false;
-	}
 	var user_input = $("#userinput").val();
-	timestamp_of_last_post = event.timeStamp;
-	
 	log(INFO,"respond_to_user_input(): user hit return; doing a post with event=" + event);
 	// user pressed return: send final results to language server:
 	$.ajax({
