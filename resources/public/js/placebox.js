@@ -16,14 +16,14 @@ function update_placebox(osm,current_player_id) {
     };
     for (var i = 0; i < info.vocab_unsolved.length; i++) {
 	info.vocab.push({name: info.vocab_unsolved[i],
-			 class: "open"});
+			 class: "unsolved"});
     };
 
     info.tenses = [];
     // first unsolved, then solved, since tenses are on the right of the layout
     for (var i = 0; i < info.tenses_unsolved.length; i++) {
 	info.tenses.push({name: info.tenses_unsolved[i],
-			  class: "open"});
+			  class: "unsolved"});
     };
     for (var i = 0; i < info.tenses_solved.length; i++) {
 	info.tenses.push({name: info.tenses_solved[i],
