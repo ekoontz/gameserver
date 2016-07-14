@@ -96,7 +96,8 @@ function osm2info(osm) {
 
 function update_placeinfo(osm_id, do_after_get) {
     // retrieve GeoJSON data for place whose osm id is _osm_id; after loading, call do_after_get().
-    // TODO: we don't need to constantly refresh the place's polygon: this should be done only once
+    // do_polygon is set to true by default, but set to false if the polygon is already defined,
+    // because we don't need to constantly refresh the place's polygon: it should be done only once.
     var do_polygon = true;
     if ((!(typeof(osm2hood[osm_id]) == "undefined"))
 	&&
@@ -116,6 +117,11 @@ function update_placeinfo(osm_id, do_after_get) {
 	    osm2hood[osm_id].tenses_solved = content.properties.tenses_solved;
 	    osm2hood[osm_id].tense_solvers = content.properties.tense_solvers;
 	    osm2hood[osm_id].tenses_unsolved = content.properties.tenses_unsolved;
+	    if (!(typeof(content.properties.owner) == "undefined")
+		&&
+		!((content.properties.owner) == null)) {
+		osm2owner[osm_id] = content.properties.owner;
+	    }
 	    do_after_get(content);
 	}
     });
