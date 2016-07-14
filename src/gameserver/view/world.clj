@@ -325,7 +325,7 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
              {:status 302
               :headers {"Location" "/world/players"}}))))
 
-  ;; use GET for incremental parsing after user presses space or (if doing speech recognition) pauses.
+  ;; use GET for incremental parsing after user presses space (or if doing speech recognition, pauses).
   (GET "/world/say/:expr" request
        (let [expr (:expr (:route-params request))]
          {:status 200
@@ -354,7 +354,24 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
                                                        parses)))]
                    (if (empty? vocab) {} {:vocab vocab}))
                  (let [tenses (set (remove nil? (map (fn [parse]
-                                                       (u/get-in parse [:synsem :sem :tense]))
+                                                       (cond
+                                                         (and 
+                                                          (= (u/get-in parse [:synsem :sem :tense])
+                                                             :past)
+                                                          (= (u/get-in parse [:synsem :sem :aspect])
+                                                             :perfect))
+                                                         "p. prossimo"
+
+                                                         (= (u/get-in parse [:synsem :sem :tense])
+                                                            :present)
+                                                         "present"
+
+                                                         (= (u/get-in parse [:synsem :sem :tense])
+                                                            :future)
+                                                         "futuro"
+
+                                                         true
+                                                         nil))
                                                      parses)))]
                    (if (empty? tenses) {} {:tenses tenses}))])]
     (log/info (str "user said:" expr "; response: " response))
