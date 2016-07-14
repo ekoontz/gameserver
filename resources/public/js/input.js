@@ -69,9 +69,7 @@ function respond_to_user_input(event) {
 		var osm = players[player_id].location.properties.osm;	    
 		update_placeinfo(osm,function() {
 		    update_placebox(osm,player_id);
-		    $("#userinput").val("");
-		    $("#userinput").focus();
-		    $("#response").html("");
+		    userinput_initialize();
 		});
 	    });
     }
