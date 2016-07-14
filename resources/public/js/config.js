@@ -7,14 +7,14 @@ var fitBounds = false;
 var hoods = {};
 var default_icon_size = 2;
 var logging_level = INFO;
-var map_refresh_interval = 10000;
+var map_refresh_interval = 5000;
 var osm2hood = {};
 var osm2owner = {};
 var players = {};
 var player_id;
 var Roma = [12.5012515,41.9012917];
 var updateBearing = false;
-var zoom_level = 14;
+var zoom_level = 12;
     
 var icons = [
     "airport-15",
