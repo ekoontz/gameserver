@@ -152,17 +152,23 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
              :body (generate-string {:type "FeatureCollection"
                                      :features geojson})})))
 
-  ;; given an :osm_id, return its polygon, owner, vocab and tenses.
-  ;; TODO: make it an option not to return the polygon: it's expensive and doesn't change,
-  ;; so a client only needs that information once.
+  ;; given an :osm_id, return its polygon (if polygon=true), owner, vocab and tenses.
+  ;; polygon is optional and defaults to fals because it increases the size
+  ;; of the response so much (makes response about 10x larger), and a client only
+  ;; needs that information once assuming osms don't change.
   (GET "/world/hoods/:osm" request
        (friend/authenticated
         (if-let [osm (Integer. (:osm (:route-params request)))]
-          (let [logging (log/info (str "/world/hoods/" osm))
-                data (k/exec-raw ["
+          (let [polygon (if (= "true" (:polygon (:params request)))
+                          "ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,"
+                          ""
+                          )
+                logging (log/info (str "/world/hoods/" osm))
+                data (k/exec-raw [(str "
     SELECT rome_polygon.name,rome_polygon.osm_id,
-           ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
-           vc_user.id AS player,vc_user.email AS email,
+           vc_user.id AS player,vc_user.email AS email,"
+                                  polygon
+                                  "
            admin_level, 
            ARRAY(SELECT item
                    FROM place_vocab
@@ -201,20 +207,22 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
         ON (owned_locations.user_id = vc_user.id)
      WHERE (admin_level = '10')
        AND rome_polygon.osm_id = ?
-"
+")
                                   [osm]] :results)
                 geojson (map (fn [hood]
-                               {:type "Feature"
-                                :geometry (json/read-str (:polygon hood))
-                                :properties {:neighborhood (:name hood)
-                                             :osm_id (:osm_id hood)
-                                             :tenses_solved (map str (.getArray (:tenses_solved hood)))
-                                             :tense_solvers (map str (.getArray (:tense_solvers hood)))
-                                             :tenses_unsolved (map str (.getArray (:tenses_unsolved hood)))
-                                             :vocab_solved (map str (.getArray (:vocab_solved hood)))
-                                             :vocab_solvers (map str (.getArray (:vocab_solvers hood)))
-                                             :vocab_unsolved (map str (.getArray (:vocab_unsolved hood)))
-                                             :admin_level (:admin_level hood)}})
+                               (merge
+                                (if (= polygon "") {}
+                                    {:geometry (json/read-str (:polygon hood))})
+                                {:type "Feature"
+                                 :properties {:neighborhood (:name hood)
+                                              :osm_id (:osm_id hood)
+                                              :tenses_solved (map str (.getArray (:tenses_solved hood)))
+                                              :tense_solvers (map str (.getArray (:tense_solvers hood)))
+                                              :tenses_unsolved (map str (.getArray (:tenses_unsolved hood)))
+                                              :vocab_solved (map str (.getArray (:vocab_solved hood)))
+                                              :vocab_solvers (map str (.getArray (:vocab_solvers hood)))
+                                              :vocab_unsolved (map str (.getArray (:vocab_unsolved hood)))
+                                              :admin_level (:admin_level hood)}}))
                              data)]
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
             {:headers {"Content-Type" "application/json;charset=utf-8"}
