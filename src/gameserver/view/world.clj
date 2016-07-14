@@ -174,6 +174,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                                   polygon
                                   "
            admin_level, 
+           owned_locations.user_id AS owner,
            ARRAY(SELECT item
                    FROM place_vocab
                   WHERE place_vocab.osm_id = rome_polygon.osm_id
@@ -220,6 +221,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                                 {:type "Feature"
                                  :properties {:neighborhood (:name hood)
                                               :osm_id (:osm_id hood)
+                                              :owner (:owner hood)
                                               :tenses_solved (map str (.getArray (:tenses_solved hood)))
                                               :tense_solvers (map str (.getArray (:tense_solvers hood)))
                                               :tenses_unsolved (map str (.getArray (:tenses_unsolved hood)))
