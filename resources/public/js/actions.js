@@ -71,7 +71,6 @@ function onclick(e,map,current_player_id) {
 // TODO: highlighting is expensive; consider turning off.
 // also highlighting should turn off when typing in input box to avoid distracting.
 function onmousemove(e,map) {
-    // display the selected hood in the player-selected box.
     var features = map.queryRenderedFeatures(e.point);
     if (features.length > 0) {
 	for (var i = 0; i < features.length; i++) {
