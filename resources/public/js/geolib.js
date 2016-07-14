@@ -93,3 +93,24 @@ function osm2info(osm) {
     };
     return info;
 }
+
+function update_placeinfo(osm_id, do_after_get) {
+    // retrieve GeoJSON data for place whose osm id is _osm_id; after loading, call do_after_get().
+    // TODO: we don't need to constantly refresh the place's polygon: this should be done only once.
+    $.ajax({
+	cache:true,
+	dataType: "json",
+	url: "/world/hoods/" + osm_id,
+	success: function(content) {
+	    // .. and save it so we don't need to do this server call again.
+	    osm2hood[osm_id].polygon = content;
+	    osm2hood[osm_id].vocab_solved = content.properties.vocab_solved;
+	    osm2hood[osm_id].vocab_unsolved = content.properties.vocab_unsolved;
+	    osm2hood[osm_id].vocab_solvers = content.properties.vocab_solvers;
+	    osm2hood[osm_id].tenses_solved = content.properties.tenses_solved;
+	    osm2hood[osm_id].tense_solvers = content.properties.tense_solvers;
+	    osm2hood[osm_id].tenses_unsolved = content.properties.tenses_unsolved;
+	    do_after_get(content);
+	}
+    });
+}
