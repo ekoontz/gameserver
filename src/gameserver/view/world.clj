@@ -333,7 +333,7 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
   (GET "/world/say/:expr" request
        (let [expr (:expr (:route-params request))
              response (respond expr)]
-         (log/info (str expr ": tenses:" (:tenses response) "; vocab:" (:vocab response)))
+         (log/info (str "GET /world/say/" expr ": tenses:" (:tenses response) "; vocab:" (:vocab response)))
          {:status 200
           :headers {"Content-Type" "application/json;charset=utf-8"
                     "Cache-Control" "public,max-age=600"} ;; 10 minute client cache to start
@@ -347,12 +347,12 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
                            (Integer. id))
                expr (:expr (:params request))
                response (respond expr)]
+           (log/info (str "POST /world/say " expr ": tenses:" (:tenses response) "; vocab:" (:vocab response)))
            ;; add place_tense: item= and solved_by= for all tenses found:
-           (do
-             (update-db-on-response player-id response)
-             {:status 200
-              :headers {"Content-Type" "application/json;charset=utf-8"}
-              :body (generate-string response)})))))
+           (update-db-on-response player-id response)
+           {:status 200
+            :headers {"Content-Type" "application/json;charset=utf-8"}
+            :body (generate-string response)}))))
 
 
 (defn player2osm [player-id]
