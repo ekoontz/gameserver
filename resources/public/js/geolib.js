@@ -96,11 +96,17 @@ function osm2info(osm) {
 
 function update_placeinfo(osm_id, do_after_get) {
     // retrieve GeoJSON data for place whose osm id is _osm_id; after loading, call do_after_get().
-    // TODO: we don't need to constantly refresh the place's polygon: this should be done only once.
+    // TODO: we don't need to constantly refresh the place's polygon: this should be done only once
+    var do_polygon = true;
+    if ((!(typeof(osm2hood[osm_id]) == "undefined"))
+	&&
+	(!(typeof(osm2hood[osm_id].polygon) == "undefined"))) {
+	do_polygon = false;
+    }
     $.ajax({
 	cache:true,
 	dataType: "json",
-	url: "/world/hoods/" + osm_id,
+	url: "/world/hoods/" + osm_id + "?polygon=" + do_polygon,
 	success: function(content) {
 	    // .. and save it so we don't need to do this server call again.
 	    osm2hood[osm_id].polygon = content;
