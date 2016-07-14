@@ -4,9 +4,12 @@
             [clojure.data.json :as json]
             [dag_unify.core :as u]
             [korma.core :as k]
+            [korma.db :refer [defdb postgres]]
             [cheshire.core :refer [generate-string]]
+            [clojure.string :as string]
             [clojure.tools.logging :as log]
             [compojure.core :refer [defroutes GET POST]]
+            [gameserver.service.db :refer [korma-db]]
             [gameserver.util.session :refer [current-user]]
             [gameserver.view.auth.users :refer [get-user-from-ring-session]]
             [gameserver.view.common :refer [wrap-layout]]
@@ -15,6 +18,7 @@
 (declare leaves)
 (declare respond)
 (declare root-form)
+(declare update-db-on-response)
 
 (defroutes world-routes
   (GET "/world" request
@@ -327,22 +331,64 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations  GROUP BY 
 
   ;; use GET for incremental parsing after user presses space (or if doing speech recognition, pauses).
   (GET "/world/say/:expr" request
-       (let [expr (:expr (:route-params request))]
+       (let [expr (:expr (:route-params request))
+             response (respond expr)]
+         (log/info (str "GET /world/say/" expr ": tenses:" (:tenses response) "; vocab:" (:vocab response)))
          {:status 200
           :headers {"Content-Type" "application/json;charset=utf-8"
                     "Cache-Control" "public,max-age=600"} ;; 10 minute client cache to start
-          :body (generate-string (respond expr))}))
-
+          :body (generate-string response)}))
+       
   ;; use POST for final-answer parsing (after pressing return).
   (POST "/world/say" request
         (friend/authenticated
          (let [player-id (if-let [id (:id (get-user-from-ring-session
                                            (get-in request [:cookies "ring-session" :value])))]
                            (Integer. id))
-               expr (:expr (:params request))]
+               expr (:expr (:params request))
+               response (respond expr)]
+           (log/info (str "POST /world/say " expr ": tenses:" (:tenses response) "; vocab:" (:vocab response)))
+           ;; add place_tense: item= and solved_by= for all tenses found:
+           (update-db-on-response player-id response)
            {:status 200
             :headers {"Content-Type" "application/json;charset=utf-8"}
-            :body (generate-string (respond expr))}))))
+            :body (generate-string response)}))))
+
+
+(defn player2osm [player-id]
+  (->
+   (k/exec-raw
+    ["SELECT osm_id AS osm
+        FROM player_location 
+       WHERE user_id=?"
+     [player-id]] :results)
+   first
+   :osm))
+  
+(defn update-db-on-response [player-id response]
+  "update database based on response and player-id."
+  (log/info (str "response: " response))
+  ;; add place_tense: item= and solved_by= for all tenses found.)
+  (let [osm (player2osm player-id)]
+    (log/info (str "OSM: " osm))
+    {:tenses-inserted
+     (count (map (fn [tense]
+                   (let [tense-results
+                         (k/exec-raw ["INSERT INTO place_tense
+                                        (solved_by,item,osm_id)
+                                           SELECT ?,?,?"
+                                      [player-id tense osm]])]
+                    (log/info (str "results: " (string/join ";" tense-results)))))
+                 (:tenses response)))
+     :vocab-inserted
+     (count (map (fn [vocab]
+                   (let [vocab-results
+                         (k/exec-raw ["INSERT INTO place_vocab
+                                        (solved_by,item,osm_id)
+                                           SELECT ?,?,?"
+                                      [player-id vocab osm]])]
+                    (log/info (str "results: " (string/join ";" vocab-results)))))
+                 (:vocab response)))}))
 
 (defn respond [expr]
   (let [analyses (parse expr)
