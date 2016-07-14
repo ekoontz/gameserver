@@ -10,13 +10,14 @@ function userinput_initialize() {
 
 function respond_to_user_input(event) {
     key_pressed = event.which;
+    event.stopImmediatePropagation(); // prevent duplicate events
     if (key_pressed != 13) {
 	// send intermediate user input (i.e. input that the user hasn't necessarily finished)
 	// to language server:
 	var user_input = $("#userinput").val().trim();
 	if (user_input == "") {
             $('#response').html(ready_for_you);
-	    return;
+	    return false;
 	}
 
         $('#response').html("<p class='input-spinner'><span class='fa fa-spinner fa-spin'> </span></p>");
@@ -26,8 +27,9 @@ function respond_to_user_input(event) {
             url: "/world/say/"+user_input}).done(function(content) {
 		var user_input_now = $("#userinput").val().trim();
 		if (user_input_now != user_input) {
+		    // spare the server the effort of parsing old input.
 		    log(WARN,"user input has changed: ignoring this response.");
-		    return;
+		    return false;
 		}
 
 		var response = {};
@@ -54,18 +56,25 @@ function respond_to_user_input(event) {
     }
 
     if (key_pressed == 13) {
+	var user_input = $("#userinput").val();
+	log(INFO,"respond_to_user_input(): user hit return; doing a post with event=" + event);
 	// user pressed return: send final results to language server:
 	$.ajax({
 	    cache: false,
 	    type: "POST",
-	    data: {expr: $("#userinput").val()},
+	    data: {expr: user_input},
             dataType: "json",
             url: "/world/say"}).done(function(content) {
 		log(INFO,"server responded with content: " + content);
-		$("#userinput").val("");
-		$("#userinput").focus();
-		$("#response").html("");
+		var osm = players[player_id].location.properties.osm;	    
+		update_placeinfo(osm,function() {
+		    update_placebox(osm,player_id);
+		    $("#userinput").val("");
+		    $("#userinput").focus();
+		    $("#response").html("");
+		});
 	    });
     }
+    return false;
 }
 
