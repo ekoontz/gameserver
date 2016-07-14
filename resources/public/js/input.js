@@ -65,6 +65,11 @@ function respond_to_user_input(event) {
 		$("#userinput").val("");
 		$("#userinput").focus();
 		$("#response").html("");
+
+		var osm = players[current_player_id].location.properties.osm;	    
+		update_placeinfo(osm,function() {
+		    update_placebox(osm,current_player_id);
+		});
 	    });
     }
 }
