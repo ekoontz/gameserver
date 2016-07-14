@@ -101,7 +101,9 @@ function load_world(current_player_id) {
 	    update_owners(map);
 	    update_open_turf(map,function() {
 		var osm = players[current_player_id].location.properties.osm;	    
-		update_placebox(osm,current_player_id);
+		update_placeinfo(osm,function() {
+		    update_placebox(osm,current_player_id);
+		});
 	    });
 	},map_refresh_interval);
     });
