@@ -372,15 +372,21 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY p
                              [osm player-id]] :results)]
     (not (empty? results))))
 
+(defn is-contested? [osm]
+  (let [results (k/exec-raw ["SELECT 1 FROM contested_locations WHERE osm_id=?"
+                             [osm]] :results)]
+    (not (empty? results))))
+
 (defn update-db-on-response [player-id response]
   "update database based on response and player-id."
   ;; TODO: use sql "RETURNING" to return useful results from UPDATEs and INSERTs.
   (log/info (str "response: " response))
   (let [osm (player2osm player-id)
-        is-enemy? (is-enemy? player-id osm)]
+        is-enemy? (is-enemy? player-id osm)
+        is-contested? (is-contested? osm)]
     (log/info (str "update-db-on-reponse: player_id=" player-id ";osm=" osm "; response=" response "; is-enemy?=" is-enemy?))
     (cond
-      is-enemy?
+      (or is-enemy? is-contested?)
       ;; TODO: wrap all UPDATEs in a transaction.
       (let [vocab-updated
             (count
@@ -388,10 +394,13 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY p
                     (let [vocab-results
                           (k/exec-raw ["UPDATE place_vocab
                                            SET solved_by=? 
-                                         WHERE osm_id=? 
-                                           AND solved_by != ?
-                                           AND item=?"
-                                       [player-id osm player-id vocab]])]
+                                         WHERE id = (SELECT id 
+                                                       FROM place_vocab 
+                                                      WHERE osm_id=? 
+                                                        AND item=?
+                                                        AND solved_by != ?
+                                                      LIMIT 1)"
+                                       [player-id osm vocab player-id]])]
                       (log/info (str "update-on-enemy results:" vocab-results))))
                   (:vocab response)))
             tense-updated
@@ -400,10 +409,13 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY p
                     (let [tense-results
                           (k/exec-raw ["UPDATE place_tense
                                            SET solved_by=? 
-                                         WHERE osm_id=? 
-                                           AND solved_by != ?
-                                           AND item=?"
-                                       [player-id osm player-id tense]])]
+                                         WHERE id = (SELECT id
+                                                       FROM place_tense
+                                                      WHERE osm_id=? 
+                                                        AND item=?
+                                                        AND solved_by != ?
+                                                      LIMIT 1)"
+                                       [player-id osm tense player-id]])]
                       (log/info (str "update-on-enemy results:" tense-results))))
                   (:tenses response)))]
         {:vocab-updated vocab-updated
