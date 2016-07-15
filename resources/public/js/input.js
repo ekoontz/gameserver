@@ -67,12 +67,13 @@ function respond_to_user_input(event,map) {
 	    data: {expr: user_input},
             dataType: "json",
             url: "/world/say"}).done(function(content) {
-		log(INFO,"server responded with content: " + content);
-		var osm = players[player_id].location.properties.osm;	    
-		update_placeinfo(osm,function() {
-		    update_placebox(osm,player_id);
-		    userinput_initialize();
-		});
+		log(INFO,"server responded to POST(" + user_input + ")");
+		    var osm = players[player_id].location.properties.osm;	    
+		    update_placeinfo(osm,function() {
+			update_placebox(osm,player_id);
+			update_player_turf(map,player_id,players[player_id].css_class);
+			userinput_initialize();
+		    });
 	    });
     }
     return false;
