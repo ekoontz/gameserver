@@ -9,12 +9,37 @@ function update_placebox(osm,current_player_id) {
     }
 
     info.vocab = [];
+    var counts_per_item_and_player = {};
+
+    // TODO: maybe just move this to server-side SQL statements; would be simpler and easier to understand.
     // first solved, then unsolved, since vocab is on the left of the layout
     if (!(typeof(info.vocab_solved) == "undefined")) {
+	// compute counts of vocab items per item+player.
 	for (var i = 0; i < info.vocab_solved.length; i++) {
-	    info.vocab.push({name: info.vocab_solved[i],
-			     class: players[info.vocab_solvers[i]].css_class});
-	};
+	    var item = info.vocab_solved[i];
+	    var player = info.vocab_solvers[i];
+	    if (typeof(counts_per_item_and_player[item]) == "undefined") {
+		counts_per_item_and_player[item] = {};
+		counts_per_item_and_player[item][player] = 1;
+	    } else {
+		if (typeof(counts_per_item_and_player[item][player]) == "undefined") {
+		    counts_per_item_and_player[item][player] = 1;
+		} else {
+		    counts_per_item_and_player[item][player]++;
+		}
+	    }
+	}
+	
+	for (var i = 0; i < info.vocab_solved.length; i++) {
+	    var item = info.vocab_solved[i];
+	    var player = info.vocab_solvers[i];
+	    if (counts_per_item_and_player[item][player] != 0) {
+		info.vocab.push({name: info.vocab_solved[i],
+				 instances: counts_per_item_and_player[item][player],
+				 class: players[info.vocab_solvers[i]].css_class});
+		counts_per_item_and_player[item][player] = 0; // flag that we are done with this item/player pair.
+	    }
+	}
     }
     if (!(typeof(info.vocab_unsolved) == "undefined")) {
 	for (var i = 0; i < info.vocab_unsolved.length; i++) {
@@ -24,17 +49,42 @@ function update_placebox(osm,current_player_id) {
     }
 
     info.tenses = [];
-    // first unsolved, then solved, since tenses are on the right of the layout
+    var counts_per_item_and_player = {};
+
+    // first unsolved, then solved, since tenses are on the right of the layout.
     if (!(typeof(info.tenses_unsolved) == "undefined")) {
 	for (var i = 0; i < info.tenses_unsolved.length; i++) {
 	    info.tenses.push({name: info.tenses_unsolved[i],
 			      class: "unsolved"});
 	};
     }
+    
     if (!(typeof(info.tenses_solved) == "undefined")) {
+	// compute counts of vocab items per item+player.
 	for (var i = 0; i < info.tenses_solved.length; i++) {
-	    info.tenses.push({name: info.tenses_solved[i],
-			      class: players[info.tense_solvers[i]].css_class});
+	    var item = info.tenses_solved[i];
+	    var player = info.tense_solvers[i];
+	    if (typeof(counts_per_item_and_player[item]) == "undefined") {
+		counts_per_item_and_player[item] = {};
+		counts_per_item_and_player[item][player] = 1;
+	    } else {
+		if (typeof(counts_per_item_and_player[item][player]) == "undefined") {
+		    counts_per_item_and_player[item][player] = 1;
+		} else {
+		    counts_per_item_and_player[item][player]++;
+		}
+	    }
+	}
+
+	for (var i = 0; i < info.tenses_solved.length; i++) {
+	    var item = info.tenses_solved[i];
+	    var player = info.tense_solvers[i];
+	    if (counts_per_item_and_player[item][player] != 0) {
+		info.tenses.push({name: info.tenses_solved[i],
+				  instances: counts_per_item_and_player[item][player],
+				  class: players[info.tense_solvers[i]].css_class});
+		counts_per_item_and_player[item][player] = 0; // flag that we are done with this item/player pair.
+	    }
 	};
     }
 
