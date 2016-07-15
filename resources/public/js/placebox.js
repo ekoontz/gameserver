@@ -34,8 +34,12 @@ function update_placebox(osm,current_player_id) {
 	    var item = info.vocab_solved[i];
 	    var player = info.vocab_solvers[i];
 	    if (counts_per_item_and_player[item][player] != 0) {
+		var instances = counts_per_item_and_player[item][player];
+		if (instances == 1) {
+		    instances = ""; // hide the badge if there's only 1: same as no badge at all.
+		}
 		info.vocab.push({name: info.vocab_solved[i],
-				 instances: counts_per_item_and_player[item][player],
+				 instances: instances,
 				 class: players[info.vocab_solvers[i]].css_class});
 		counts_per_item_and_player[item][player] = 0; // flag that we are done with this item/player pair.
 	    }
@@ -79,9 +83,13 @@ function update_placebox(osm,current_player_id) {
 	for (var i = 0; i < info.tenses_solved.length; i++) {
 	    var item = info.tenses_solved[i];
 	    var player = info.tense_solvers[i];
+	    var instances = counts_per_item_and_player[item][player];
+	    if (instances == 1) {
+		instances = ""; // hide the badge if there's only 1: same as no badge at all.
+	    }
 	    if (counts_per_item_and_player[item][player] != 0) {
 		info.tenses.push({name: info.tenses_solved[i],
-				  instances: counts_per_item_and_player[item][player],
+				  instances: instances,
 				  class: players[info.tense_solvers[i]].css_class});
 		counts_per_item_and_player[item][player] = 0; // flag that we are done with this item/player pair.
 	    }
