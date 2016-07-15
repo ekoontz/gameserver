@@ -88,7 +88,7 @@ function load_world(current_player_id) {
 	    update_placeinfo(osm,function() {
 		update_placebox(osm,current_player_id);
 		// it's showtime!
-		userinput_initialize();
+		userinput_initialize(map);
 		$("#placebox").show();
 	    });
 	});

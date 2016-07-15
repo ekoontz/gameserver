@@ -1,14 +1,16 @@
 // TODO: move ready_for_you to config.js and localize per-language.
 var ready_for_you = "<p class='input-spinner'>Che ne dice? <span class='fa fa-hand-o-up'> </span></p>";
 
-function userinput_initialize() {
-    $("#userinput").keyup(respond_to_user_input);
+function userinput_initialize(map) {
+    $("#userinput").keyup(function(event) {
+	respond_to_user_input(event,map);
+    });
     $("#userinput").val("");
     $("#userinput").focus();
     $('#response').html(ready_for_you);
 }
 
-function respond_to_user_input(event) {
+function respond_to_user_input(event,map) {
     key_pressed = event.which;
     event.stopImmediatePropagation(); // prevent duplicate events
     if (key_pressed != 13) {
