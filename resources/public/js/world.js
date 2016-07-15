@@ -98,7 +98,13 @@ function load_world(current_player_id) {
 	// to server state and return only the necessary diff between them.
 	window.setInterval(function() {
 	    update_players(map,current_player_id);
+	},map_refresh_interval);
+
+	window.setInterval(function() {
 	    update_owners();
+	},map_refresh_interval);
+
+	window.setInterval(function() {
 	    update_open_turf(map,function() {
 		var osm = players[current_player_id].location.properties.osm;	    
 		update_placeinfo(osm,function() {
@@ -106,6 +112,7 @@ function load_world(current_player_id) {
 		});
 	    });
 	},map_refresh_interval);
+
     });
 }
 
