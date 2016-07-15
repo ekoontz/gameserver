@@ -25,6 +25,7 @@ function update_player_marker(map,player,current_player_id) {
 }
 
 function update_player_turf(map,player,css_class) {
+    // TODO: don't require css_class as a param: simply use players[player].css_class to obtain this.
     // TODO: might need to also update placebox, since placebox might contain information
     // about a place that's changed hands while the placebox about it is open.
     $.ajax({
