@@ -366,31 +366,68 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY p
      [player-id]] :results)
    first
    :osm))
-  
+
+(defn is-enemy? [player-id osm]
+  (let [results (k/exec-raw ["SELECT 1 FROM owned_locations WHERE osm_id=? AND user_id != ?"
+                             [osm player-id]] :results)]
+    (not (empty? results))))
+
 (defn update-db-on-response [player-id response]
   "update database based on response and player-id."
+  ;; TODO: use sql "RETURNING" to return useful results from UPDATEs and INSERTs.
   (log/info (str "response: " response))
-  ;; add place_tense: item= and solved_by= for all tenses found.)
-  (let [osm (player2osm player-id)]
-    (log/info (str "OSM: " osm))
-    {:tenses-inserted
-     (count (map (fn [tense]
-                   (let [tense-results
-                         (k/exec-raw ["INSERT INTO place_tense
+  (let [osm (player2osm player-id)
+        is-enemy? (is-enemy? player-id osm)]
+    (log/info (str "update-db-on-reponse: player_id=" player-id ";osm=" osm "; response=" response "; is-enemy?=" is-enemy?))
+    (cond
+      is-enemy?
+      ;; TODO: wrap all UPDATEs in a transaction.
+      (let [vocab-updated
+            (count
+             (map (fn [vocab]
+                    (let [vocab-results
+                          (k/exec-raw ["UPDATE place_vocab
+                                           SET solved_by=? 
+                                         WHERE osm_id=? 
+                                           AND solved_by != ?
+                                           AND item=?"
+                                       [player-id osm player-id vocab]])]
+                      (log/info (str "update-on-enemy results:" vocab-results))))
+                  (:vocab response)))
+            tense-updated
+            (count
+             (map (fn [tense]
+                    (let [tense-results
+                          (k/exec-raw ["UPDATE place_tense
+                                           SET solved_by=? 
+                                         WHERE osm_id=? 
+                                           AND solved_by != ?
+                                           AND item=?"
+                                       [player-id osm player-id tense]])]
+                      (log/info (str "update-on-enemy results:" tense-results))))
+                  (:tenses response)))]
+        {:vocab-updated vocab-updated
+         :tense-updated tense-updated})
+
+      true ;; TODO: wrap both INSERTs in a transaction.
+      {:tenses-inserted
+       (count (map (fn [tense]
+                     (let [tense-results
+                           (k/exec-raw ["INSERT INTO place_tense
                                         (solved_by,item,osm_id)
                                            SELECT ?,?,?"
-                                      [player-id tense osm]])]
-                    (log/info (str "results: " (string/join ";" tense-results)))))
-                 (:tenses response)))
-     :vocab-inserted
-     (count (map (fn [vocab]
-                   (let [vocab-results
-                         (k/exec-raw ["INSERT INTO place_vocab
+                                        [player-id tense osm]])]
+                       (log/info (str "results: " (string/join ";" tense-results)))))
+                   (:tenses response)))
+       :vocab-inserted
+       (count (map (fn [vocab]
+                     (let [vocab-results
+                           (k/exec-raw ["INSERT INTO place_vocab
                                         (solved_by,item,osm_id)
                                            SELECT ?,?,?"
                                       [player-id vocab osm]])]
-                    (log/info (str "results: " (string/join ";" vocab-results)))))
-                 (:vocab response)))}))
+                       (log/info (str "results: " (string/join ";" vocab-results)))))
+                   (:vocab response)))})))
 
 (defn respond [expr]
   (let [analyses (parse expr)
