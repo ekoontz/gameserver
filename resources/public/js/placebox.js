@@ -38,9 +38,15 @@ function update_placebox(osm,current_player_id) {
 		if (instances == 1) {
 		    instances = ""; // hide the badge if there's only 1: same as no badge at all.
 		}
+		var css_class = players[info.vocab_solvers[i]].css_class;
+		// don't show item if it's already solved by this player.
+		if (false && player_id == info.vocab_solvers[i]) {
+		    css_class = "display-none";
+		    instances = "";
+		}
 		info.vocab.push({name: info.vocab_solved[i],
 				 instances: instances,
-				 class: players[info.vocab_solvers[i]].css_class});
+				 class: css_class});
 		counts_per_item_and_player[item][player] = 0; // flag that we are done with this item/player pair.
 	    }
 	}
@@ -87,10 +93,16 @@ function update_placebox(osm,current_player_id) {
 	    if (instances == 1) {
 		instances = ""; // hide the badge if there's only 1: same as no badge at all.
 	    }
+	    var css_class = players[info.vocab_solvers[i]].css_class;
+	    // don't show item if it's already solved by this player.
+	    if (false && player_id == info.vocab_solvers[i]) {
+		css_class = "display-none";
+		instances = "";
+	    }
 	    if (counts_per_item_and_player[item][player] != 0) {
 		info.tenses.push({name: info.tenses_solved[i],
 				  instances: instances,
-				  class: players[info.tense_solvers[i]].css_class});
+				  class: css_class});
 		counts_per_item_and_player[item][player] = 0; // flag that we are done with this item/player pair.
 	    }
 	};
