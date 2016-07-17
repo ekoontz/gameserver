@@ -157,6 +157,27 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
              :body (generate-string {:type "FeatureCollection"
                                      :features geojson})})))
 
+  ;; given a place's OSM id, return the expressions for it, if the user is allowed to see them
+  ;; (is the owner).
+  (GET "/world/expr/:osm" request
+       (friend/authenticated
+        (let [osm-id (Integer. (:osm (:params request)))
+              player-id (if-let [id (:id (get-user-from-ring-session
+                                          (get-in request [:cookies "ring-session" :value])))]
+                          (Integer. id))
+              logging (log/info (str "/world/expr/" osm-id))
+              data (k/exec-raw ["SELECT expr.expr,created_on,expr.created_by
+                                   FROM place_expression AS expr
+                             INNER JOIN owned_locations
+                                     ON (owned_locations.osm_id = expr.osm_id)
+                                    AND (owned_locations.user_id = ?)
+                                  WHERE expr.osm_id=?
+                               ORDER BY created_on DESC
+"
+                                [player-id osm-id]] :results)]
+          {:headers {"Content-Type" "application/json;charset=utf-8"}
+           :body (generate-string {:expressions data})})))
+
   ;; given an :osm_id, return its polygon (if polygon=true), owner, vocab and tenses.
   ;; polygon is optional and defaults to fals because it increases the size
   ;; of the response so much (makes response about 10x larger), and a client only
@@ -281,7 +302,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
 INNER JOIN player_location ON (player_location.user_id = vc_user.id)
 INNER JOIN rome_polygon 
         ON (player_location.osm_id = rome_polygon.osm_id)
-INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY player_id) AS owned
+ LEFT JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY player_id) AS owned
         ON (owned.player_id = vc_user.id)
   ORDER BY vc_user.id
 "
@@ -382,18 +403,23 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY p
   "update database based on response and player-id."
   ;; TODO: use sql "RETURNING" to return useful results from UPDATEs and INSERTs.
   (log/info (str "response: " response))
-  (let [osm (player2osm player-id)
-        is-enemy? (is-enemy? player-id osm)
+  (let [osm           (player2osm player-id)
+        is-enemy?     (is-enemy? player-id osm)
         is-contested? (is-contested? osm)]
     (log/info (str "update-db-on-reponse: player_id=" player-id ";osm=" osm "; response=" response "; is-enemy?=" is-enemy?))
     (cond
-      (nil? (:expr response)) (log/warn (str "(:expr response) was unexpectedly null."))
+      (nil? (:expr response))   (log/warn (str "(:expr response) was unexpectedly null."))
       (empty? (:expr response)) (log/warn (str "(:expr response) was unexpectedly empty."))
       true
+      ;; insert the new sentence if it doesn't already exist (WHERE NOT EXISTS) for this place's osm.
       (do
         (log/info (str "inserting: '" (:expr response) "' into the 'place_expression' table."))
-        (k/exec-raw ["INSERT INTO place_expression (osm_id,expr,user_id) SELECT ?,?,?"
-                     [osm (:expr response) player-id]])))
+        (k/exec-raw ["INSERT INTO place_expression (osm_id,expr,created_by) 
+                           SELECT ?,?,? 
+                            WHERE NOT EXISTS (SELECT 1 
+                                                FROM place_expression 
+                                               WHERE expr=? AND osm_id = ?) LIMIT 1"
+                     [osm (:expr response) player-id (:expr response) osm]])))
     (cond
       (or is-enemy? is-contested?)
       ;; TODO: wrap all UPDATEs in a transaction.
@@ -446,7 +472,7 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY p
                            (k/exec-raw ["INSERT INTO place_vocab
                                         (solved_by,item,osm_id)
                                            SELECT ?,?,?"
-                                      [player-id vocab osm]])]
+                                        [player-id vocab osm]])]
                        (log/info (str "results: " (string/join ";" vocab-results)))))
                    (:vocab response)))})))
 

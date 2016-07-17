@@ -1,18 +1,33 @@
+function get_expressions(osm) {
+    $.ajax({
+	cache:false,
+	url: "/world/expr/" + osm,
+	success: function(content) {
+	    $.get('/mst/expressions.mustache', function(template) {
+		$('#expressions').html(Mustache.render(template, content));
+	    });
+	}
+    });
+}
+
 function update_placebox(osm,current_player_id) {
     var info = osm2info(osm);
     info.top_message = "Capture " + info.place_name + "!";
-    info.cue = "Think of sentences with the words and grammar shown below.";
-
-    // TODO: ajaxify.
-    info.sentences = [{"text": "here is a sentence."},
-		      {"text": "this is an even better sentence."}];
-
     if (current_player_id == info.owner_id) {
 	info.top_message = "Defend " + info.place_name + "!";
-	info.cue = "Add more sentences to make it harder to capture.";
-    }
-    if (!info.owner_id) {
-	info.top_message = "Claim " + info.place_name + "!";
+	info.cue = "Adding more sentences makes it harder to capture.";
+    } else {
+	if (!info.owner_id) {
+	    info.top_message = "Claim " + info.place_name + "!";
+	    if (!(typeof(info.vocab_solved) == "undefined") &&
+		(info.vocab_solved.length > 0)) {
+		info.cue = "Create sentences using the words and grammar shown below.";
+	    } else {
+		info.cue = "Create sentences for this place.";
+	    }
+	} else {
+	    info.cue = "Create sentences using the words and grammar shown below.";
+	}
     }
 
     info.vocab = [];
@@ -127,8 +142,10 @@ function update_placebox(osm,current_player_id) {
     }
     
     $.get('/mst/placebox.mustache', function(template) {
-	// TODO: replace with #consolidated with #placebox when ready.
 	$('#placebox').html(Mustache.render(template, info));
+	if (current_player_id == info.owner_id) {
+	    get_expressions(osm);
+	}
     });
 }
  
