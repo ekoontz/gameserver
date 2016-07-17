@@ -1,3 +1,5 @@
+var flip_mode = "items"; // can be "items" or "sentences".
+
 function update_placebox(osm,current_player_id) {
     var info = osm2info(osm);
     info.top_message = "Capture " + info.place_name + "!";
@@ -125,5 +127,23 @@ function update_placebox(osm,current_player_id) {
 	// TODO: replace with #consolidated with #placebox when ready.
 	$('#placebox').html(Mustache.render(template, info));
     });
+
+    // ideas for doing flip animation:
+    /*
+    $('#placebox').on('click',function(e) {
+	info.sentences = [
+	    {text: "io parlo."},
+	    {text: "tu mangi."}
+	];
+	$('#placebox').addClass('animated flip');
+	$('#placebox').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+			   function() {
+			       $.get('/mst/placebox_friendly.mustache', function(template) {
+				   $('#placebox').html(Mustache.render(template, info));
+			       })
+			   });
+    });*/
 }
+
+	 
  
