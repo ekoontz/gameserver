@@ -1,11 +1,16 @@
 <h4>{{top_message}}</h4>
 <p><i>{{cue}}</i></p>
+
+{{#sentences}}
+  <p>{{text}}</p>
+{{/sentences}}
+
 <div class="items" style="float:left">
   <p>
   {{#vocab}}
     <span class="{{class}}">{{name}}</span>
     <span class="badge">{{instances}}</span>
-{{/vocab}}
+  {{/vocab}}
   </p>
 </div>
 <div class="items" style="float:right">

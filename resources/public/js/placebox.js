@@ -2,6 +2,11 @@ function update_placebox(osm,current_player_id) {
     var info = osm2info(osm);
     info.top_message = "Capture " + info.place_name + "!";
     info.cue = "Think of sentences with the words and grammar shown below.";
+
+    // TODO: ajaxify.
+    info.sentences = [{"text": "here is a sentence."},
+		      {"text": "this is an even better sentence."}];
+
     if (current_player_id == info.owner_id) {
 	info.top_message = "Defend " + info.place_name + "!";
 	info.cue = "Add more sentences to make it harder to capture.";
