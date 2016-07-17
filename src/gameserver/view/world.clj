@@ -410,6 +410,10 @@ INNER JOIN rome_polygon
     (cond
       (nil? (:expr response))   (log/warn (str "(:expr response) was unexpectedly null."))
       (empty? (:expr response)) (log/warn (str "(:expr response) was unexpectedly empty."))
+      (or (empty? (:vocab response))
+          (empty? (:tenses response)))
+      (log/warn (str "response: '" (:expr response) "' could not be parsed: ignoring."))
+
       true
       ;; insert the new sentence if it doesn't already exist (WHERE NOT EXISTS) for this place's osm.
       (do
@@ -481,7 +485,7 @@ INNER JOIN rome_polygon
         parses (mapcat :parses analyses)
         response
         (reduce conj
-                {:expr expr}
+                {:expr (string/lower-case (string/trim expr))}
                 [(let [vocab (set (remove nil? (mapcat (fn [parse]
                                                          (map root-form (leaves parse)))
                                                        parses)))]
