@@ -15,18 +15,18 @@ function update_placebox(osm,current_player_id) {
     info.top_message = "Capture " + info.place_name + "!";
     if (current_player_id == info.owner_id) {
 	info.top_message = "Defend " + info.place_name + "!";
-	info.cue = "Adding more sentences makes it harder to capture.";
+	info.cue = "Add more sentences to make it harder for other players to capture.";
     } else {
 	if (!info.owner_id) {
 	    info.top_message = "Claim " + info.place_name + "!";
 	    if (!(typeof(info.vocab_solved) == "undefined") &&
 		(info.vocab_solved.length > 0)) {
-		info.cue = "Create sentences using the words and grammar shown below.";
+		info.cue = "Create sentences using these words and grammar.";
 	    } else {
 		info.cue = "Create sentences for this place.";
 	    }
 	} else {
-	    info.cue = "Create sentences using the words and grammar shown below.";
+	    info.cue = "Create sentences using these words and grammar.";
 	}
     }
 
@@ -143,6 +143,7 @@ function update_placebox(osm,current_player_id) {
     
     $.get('/mst/placebox.mustache', function(template) {
 	$('#placebox').html(Mustache.render(template, info));
+	$('#placebox').addClass('animated fadeIn');
 	if (current_player_id == info.owner_id) {
 	    get_expressions(osm);
 	}
