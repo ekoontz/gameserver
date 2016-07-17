@@ -93,7 +93,7 @@ function update_placebox(osm,current_player_id) {
 	    if (instances == 1) {
 		instances = ""; // hide the badge if there's only 1: same as no badge at all.
 	    }
-	    var css_class = players[info.vocab_solvers[i]].css_class;
+	    var css_class = players[info.tense_solvers[i]].css_class;
 	    // don't show item if it's already solved by this player.
 	    if (false && player_id == info.vocab_solvers[i]) {
 		css_class = "display-none";
