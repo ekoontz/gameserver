@@ -387,6 +387,14 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY p
         is-contested? (is-contested? osm)]
     (log/info (str "update-db-on-reponse: player_id=" player-id ";osm=" osm "; response=" response "; is-enemy?=" is-enemy?))
     (cond
+      (nil? (:expr response)) (log/warn (str "(:expr response) was unexpectedly null."))
+      (empty? (:expr response)) (log/warn (str "(:expr response) was unexpectedly empty."))
+      true
+      (do
+        (log/info (str "inserting: '" (:expr response) "' into the 'place_expression' table."))
+        (k/exec-raw ["INSERT INTO place_expression (osm_id,expr,user_id) SELECT ?,?,?"
+                     [osm (:expr response) player-id]])))
+    (cond
       (or is-enemy? is-contested?)
       ;; TODO: wrap all UPDATEs in a transaction.
       (let [vocab-updated
@@ -447,6 +455,7 @@ INNER JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY p
         parses (mapcat :parses analyses)
         response
         (reduce conj
+                {:expr expr}
                 [(let [vocab (set (remove nil? (mapcat (fn [parse]
                                                          (map root-form (leaves parse)))
                                                        parses)))]
