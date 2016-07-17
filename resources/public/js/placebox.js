@@ -40,7 +40,7 @@ function update_placebox(osm,current_player_id) {
 		}
 		var css_class = players[info.vocab_solvers[i]].css_class;
 		// don't show item if it's already solved by this player.
-		if (false && player_id == info.vocab_solvers[i]) {
+		if (player_id == info.vocab_solvers[i]) {
 		    css_class = "display-none";
 		    instances = "";
 		}
@@ -95,7 +95,7 @@ function update_placebox(osm,current_player_id) {
 	    }
 	    var css_class = players[info.tense_solvers[i]].css_class;
 	    // don't show item if it's already solved by this player.
-	    if (false && player_id == info.vocab_solvers[i]) {
+	    if (player_id == info.tense_solvers[i]) {
 		css_class = "display-none";
 		instances = "";
 	    }
