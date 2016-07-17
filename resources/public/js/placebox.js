@@ -1,11 +1,13 @@
 function update_placebox(osm,current_player_id) {
     var info = osm2info(osm);
-    info.top_message = "Capture it!";
+    info.top_message = "Capture " + info.place_name + "!";
+    info.cue = "Think of sentences with the words and grammar shown below.";
     if (current_player_id == info.owner_id) {
-	info.top_message = "Defend it!";
+	info.top_message = "Defend " + info.place_name + "!";
+	info.cue = "Add more sentences to make it harder to capture.";
     }
     if (!info.owner_id) {
-	info.top_message = "Claim it!";
+	info.top_message = "Claim " + info.place_name + "!";
     }
 
     info.vocab = [];
