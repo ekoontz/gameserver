@@ -15,7 +15,7 @@ function update_placebox(osm,current_player_id) {
     info.top_message = "Capture " + info.place_name + "!";
     if (current_player_id == info.owner_id) {
 	info.top_message = "Defend " + info.place_name + "!";
-	info.cue = "Add more sentences to make it harder for other players to capture.";
+	info.cue = "Add more sentences to make it harder for other players to capture this place.";
     } else {
 	if (!info.owner_id) {
 	    info.top_message = "Claim " + info.place_name + "!";
