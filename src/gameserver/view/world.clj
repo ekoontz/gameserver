@@ -429,7 +429,15 @@ INNER JOIN rome_polygon
     (cond
       (or is-enemy? is-contested?)
       ;; TODO: wrap all UPDATEs in a transaction.
-      (let [vocab-updated
+      (let [points
+            (k/exec-raw ["INSERT INTO place_points (osm_id,player_id,points)
+                               SELECT ?,?,?"
+                         [osm player-id
+                          (* (count (:expr response))
+                             (+ (count (:vocab response))
+                             (+ (count (:tenses response)))))]])
+
+            vocab-updated
             (count
              (map (fn [vocab]
                     (let [vocab-results
@@ -463,7 +471,15 @@ INNER JOIN rome_polygon
          :tense-updated tense-updated})
 
       true ;; TODO: wrap both INSERTs in a transaction.
-      {:tenses-inserted
+      {:points
+       (do
+         (k/exec-raw ["INSERT INTO place_points (osm_id,player_id,points)
+                          SELECT ?,?,?"
+                      [osm player-id
+                       (* (count (:expr response))
+                          (+ (count (:vocab response))
+                             (+ (count (:tenses response)))))]]))
+       :tenses-inserted
        (count (map (fn [tense]
                      (let [tense-results
                            (k/exec-raw ["INSERT INTO place_tense
