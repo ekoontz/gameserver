@@ -70,10 +70,13 @@ function update_players_from(map,content,current_player_id) {
 	    location: content.features[i],
 	    css_class: css_class,
 	    icon: icons[player_id % icons.length],
-	    points: 1, // TODO
+	    points: content.features[i].properties.points,
 	    // how many places each player controls.
 	    places_count: content.features[i].properties.places_count
-	}; 
+	};
+	if (player_record["places_count"] == null) {
+	    player_record["places_count"] = 0;
+	}
 	players[player_id] = player_record;
 	update_player_marker(map,player_id,current_player_id);
 	update_player_turf(map,player_id,css_class);
