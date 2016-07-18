@@ -263,18 +263,18 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                 logging (log/info (str "/world/player/" player))
                 data (k/exec-raw ["
 
-    SELECT rome_polygon.name,rome_polygon.osm_id,
-           ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
-           admin_level,
-           vc_user.id AS player,vc_user.email AS email
-      FROM rome_polygon
+     SELECT rome_polygon.name,rome_polygon.osm_id,
+            ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
+            admin_level,
+            vc_user.id AS player,vc_user.email AS email
+       FROM rome_polygon
  INNER JOIN owned_locations
-        ON (owned_locations.osm_id = rome_polygon.osm_id)
+         ON (owned_locations.osm_id = rome_polygon.osm_id)
  INNER JOIN vc_user
-        ON (owned_locations.user_id = vc_user.id)
-     WHERE (admin_level = '10')
-       AND vc_user.id = ?
-  ORDER BY rome_polygon.name ASC;
+         ON (owned_locations.user_id = vc_user.id)
+      WHERE (admin_level = '10')
+        AND vc_user.id = ?
+   ORDER BY rome_polygon.name ASC;
 "
                                   [player]] :results)
                 geojson (map (fn [hood]
@@ -293,17 +293,18 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
        (friend/authenticated
         (let [logging (log/info "/world/players")
               data (k/exec-raw ["
-
     SELECT vc_user.given_name AS player_name,vc_user.id AS user_id,
            rome_polygon.name AS location_name,rome_polygon.osm_id AS neighborhood_osm,
            ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid,
-           owned.count AS places_count
+           owned.count AS places_count,COALESCE(points_per_player.points,'0') AS points
       FROM vc_user
 INNER JOIN player_location ON (player_location.user_id = vc_user.id)
 INNER JOIN rome_polygon 
         ON (player_location.osm_id = rome_polygon.osm_id)
  LEFT JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY player_id) AS owned
         ON (owned.player_id = vc_user.id)
+ LEFT JOIN (SELECT player_id,SUM(points) AS points FROM place_points GROUP BY player_id) AS points_per_player
+        ON (points_per_player.player_id = vc_user.id)
   ORDER BY vc_user.id
 "
                                 []] :results)
@@ -315,6 +316,7 @@ INNER JOIN rome_polygon
                                :properties {:player (:player_name player)
                                             :osm (:neighborhood_osm player)
                                             :neighborhood (:location_name player)
+                                            :points (:points player)
                                             :places_count (:places_count player)
                                             :player_id (:user_id player)}})
                             data)}]
