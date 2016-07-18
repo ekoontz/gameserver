@@ -3,7 +3,7 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[babel "1.6.2"]
+  :dependencies [[babel "1.6.4"]
                  [clj-http "2.2.0"]
                  [friend-oauth2 "0.1.3"]
                  [http-kit "2.1.16"]
