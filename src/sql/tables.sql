@@ -32,4 +32,10 @@ Table "public.player_location"
  osm_id  | bigint |
  user_id | bigint |
 
-verbcoach=>
+verbcoach=> \d place_points
+  Table "public.place_points"
+  Column   |  Type  | Modifiers
+-----------+--------+-----------
+ player_id | bigint |
+ osm_id    | bigint |
+ points    | bigint |
