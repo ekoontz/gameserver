@@ -84,13 +84,16 @@ function load_world(current_player_id) {
 	// also change during gameplay, but we took care of that above already).
 	update_owners();
         update_open_turf(map,function() {
-	    var osm = players[current_player_id].location.properties.osm;	    
-	    update_placeinfo(osm,function() {
-		update_placebox(osm,current_player_id);
-		// it's showtime!
-		userinput_initialize(map);
-		$("#placebox").show();
-	    });
+	    var osm;
+	    if (typeof(players[player_id]) != "undefined") {
+		osm = players[player_id].location.properties.osm;
+		update_placeinfo(osm,function() {
+		    update_placebox(osm,player_id);
+		    // it's showtime!
+		    userinput_initialize(map);
+		    $("#placebox").show();
+		});
+	    }
 	});
 	
 	// The same things as above are updated regularly in this block.
