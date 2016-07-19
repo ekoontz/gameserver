@@ -38,12 +38,16 @@ p.cue {
 
 #expressions p {
     width:auto;
-    float:left;
+    float:right;
     border-radius:9px;
     border:2px solid #ccc;
     padding:0.25em;
     margin:0.25em;
     white-space:nowrap;
+}
+
+#expressions p.current {
+    float:left;
 }
 
 #placebox div {
@@ -67,6 +71,7 @@ div#placebox span {
     white-space:nowrap;
 }
 
+/* warning: badge is defined in bootstrap. */
 span.badge {
     font-size: 80%;
     left: -0.8em;
