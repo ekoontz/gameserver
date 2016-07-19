@@ -291,7 +291,21 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
 
   (GET "/world/players" request
        (friend/authenticated
-        (let [logging (log/info "/world/players")
+        (let [player-id (if-let [id (:id (get-user-from-ring-session
+                                          (get-in request [:cookies "ring-session" :value])))]
+                          (Integer. id))
+              
+              logging (log/info "/world/players")
+              
+              create-if-needed
+              (k/exec-raw ["INSERT INTO player_location (osm_id,user_id) 
+                                 SELECT ?,?
+                       WHERE NOT EXISTS (SELECT 1 
+                                           FROM player_location
+                                          WHERE user_id=?) LIMIT 1"
+                           [-5452709 player-id player-id]])
+              ;; TODO: ^^ choose a random location rather than fixed to Colonna.
+
               data (k/exec-raw ["
     SELECT vc_user.given_name AS player_name,vc_user.id AS user_id,
            rome_polygon.name AS location_name,rome_polygon.osm_id AS neighborhood_osm,
