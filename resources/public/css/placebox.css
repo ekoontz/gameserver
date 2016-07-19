@@ -68,14 +68,14 @@ div#placebox span {
 }
 
 span.badge {
-    position: relative;
-    top: -0.9em;
-    left: -0.6em;
     font-size: 80%;
-    border-radius: 50%;
+    left: -0.6em;
+    position: relative;
     text-align: center;
-    color: #fff;
-    background: rgba(0,0,0,0.5);
+    top: -0.9em;
+    color:blue;
+    background:#ddd;
+    border-radius:9px;
 }
 
 .display-none {
