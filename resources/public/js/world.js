@@ -197,10 +197,13 @@ function load_centroids(map,current_player_id) {
 		    centroid: centroid
 		};
 	    }
+
+	    // onclick() is defined in actions.js
 	    map.on('click',function(e) {
 		onclick(e,map,current_player_id);
 	    }, false);
 
+	    // onmousemove() is defined in actions.js
 	    map.on('mousemove',function(e) {
 		onmousemove(e,map);
 	    }, false);
