@@ -20,11 +20,14 @@
 }
 
 #expressions {
+    max-height:5em;
     margin:0.25em;
     border:0px dashed green;
-    width:100%;
+    width:98%;
     float:left;
     padding:0.25em;
+    overflow:hidden;
+    overflow-y:auto;
 }
 
 p.cue {
