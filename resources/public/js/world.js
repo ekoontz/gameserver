@@ -54,9 +54,6 @@ function load_world(current_player_id) {
     map.addControl(new mapboxgl.Navigation({position: 'bottom-right'}));
     
     map.on('load',function() {
-	// TODO: map's onclick and onmouse are defined in here: pull out
-	// and add to last client action before starting game.
-
 	// find player's initial location: do this first so geo assets can be fetched in the
 	// background.
 	update_players(map,current_player_id,function() {
