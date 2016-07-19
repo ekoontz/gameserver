@@ -6,7 +6,11 @@ function get_expressions(osm) {
 	    $.get('/mst/expressions.mustache', function(template) {
 		var expressions = [];
 		$.each(content.expressions,function(key,expression) {
-		    expression.class = players[expression.created_by].css_class;
+		    if (expression.created_by == player_id) {
+			expression.class = "current " + players[expression.created_by].css_class;
+		    } else {
+			expression.class = players[expression.created_by].css_class;
+		    }
 		    expressions.push(expression);
 		});
 		$('#expressions').html(Mustache.render(template, {"expressions": expressions}));
