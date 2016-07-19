@@ -4,7 +4,12 @@ function get_expressions(osm) {
 	url: "/world/expr/" + osm,
 	success: function(content) {
 	    $.get('/mst/expressions.mustache', function(template) {
-		$('#expressions').html(Mustache.render(template, content));
+		var expressions = [];
+		$.each(content.expressions,function(key,expression) {
+		    expression.class = players[expression.created_by].css_class;
+		    expressions.push(expression);
+		});
+		$('#expressions').html(Mustache.render(template, {"expressions": expressions}));
 	    });
 	}
     });
@@ -143,7 +148,6 @@ function update_placebox(osm,current_player_id) {
     
     $.get('/mst/placebox.mustache', function(template) {
 	$('#placebox').html(Mustache.render(template, info));
-	$('#placebox').addClass('animated fadeIn');
 	if (current_player_id == info.owner_id) {
 	    get_expressions(osm);
 	}
