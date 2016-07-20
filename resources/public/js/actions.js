@@ -54,7 +54,9 @@ function onclick(e,map,current_player_id) {
 		    map.flyTo({center: newCentroid,
 			       bearing: newBearing});
 
-		    setGoogleStreetViewPosition(map,newCentroid[1],newCentroid[0]);
+		    if (googleStreetView == true) {
+			setGoogleStreetViewPosition(map,newCentroid[1],newCentroid[0]);
+		    }
 		    
 		    // break out of for() loop for efficiency, since
 		    // we don't need to look at other features in the array - we

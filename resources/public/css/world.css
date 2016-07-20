@@ -38,7 +38,7 @@
 }
 
 #streetviewcontainer {
-    display:none; /* c.f. config.js:googleStreetViewPosition */
+    display:block; /* c.f. config.js:googleStreetView */
     right:5%;
     top:10%;
     width:30%;
@@ -57,9 +57,8 @@
 #vocab {
     z-index:2;
     right:1%;
-    top:30%;
+    top:10%;
     position: absolute;
-    height:35%;
     width:20%;
 }
 

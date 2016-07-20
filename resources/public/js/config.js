@@ -17,7 +17,7 @@ var Roma = [12.5012515,41.9012917];
 var zoom_level = 12;
 
 // feature switches
-var googleStreetViewPosition = false;
+var googleStreetView = true;
 var updateBearing = false;
 
 var icons = [

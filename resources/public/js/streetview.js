@@ -23,11 +23,11 @@ function initPano() {
 	});
 }
 
-function initStreetView() {
-    if (googleStreetViewPosition == true) {
-	var s = document.createElement("script");
-	s.type = "text/javascript";
-	s.src = "https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&callback=initPano";
-	$("head").append(s);
-    }
+function initStreetView(point) {
+    var s = document.createElement("script");
+    s.type = "text/javascript";
+    s.src = "https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&callback=initPano";
+    $("head").append(s);
+    setGoogleStreetViewPosition(map,point[1],point[0]);
+
 }
