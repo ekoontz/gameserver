@@ -1,6 +1,6 @@
 (ns gameserver.app
   (:require [clojure.core.cache :as cache]
-            [compojure.core :refer [defroutes routes]]
+            [compojure.core :refer [context defroutes routes]]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [stencil.loader :as stencil]
@@ -38,7 +38,8 @@
               home-routes
               profile-routes
               settings-routes
-              world-routes
+              (context "/world" []
+                       world-routes)
               (route/resources "/")
               (route/not-found "<h1>Page not found.</h1>"))
       (authenticate)
