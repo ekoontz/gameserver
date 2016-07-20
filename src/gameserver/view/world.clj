@@ -21,7 +21,7 @@
 (declare update-db-on-response)
 
 (defroutes world-routes
-  (GET "/world" request
+  (GET "/" request
          (friend/authenticated
           (let [player-id (:id (get-user-from-ring-session
                                 (get-in request [:cookies "ring-session" :value])))]
@@ -63,9 +63,9 @@
                                           {:src "world.css"}]
                               :onload (str "load_world('" player-id "');")}))))))
 
-  (GET "/world/adjacency" request
+  (GET "/adjacency" request
        (friend/authenticated
-        (let [logging (log/info (str "/world/adjacency"))
+        (let [logging (log/info (str "/adjacency"))
               rows (k/exec-raw ["
   SELECT n1.osm_id AS n1,
          ARRAY(SELECT n2.osm_id
@@ -85,9 +85,9 @@ ORDER BY n1.name;
           {:headers {"Content-Type" "application/json;charset=utf-8"}
            :body (generate-string body)})))
 
-  (GET "/world/owners" request
+  (GET "/owners" request
        (friend/authenticated
-        (let [logging (log/info (str "/world/owners"))
+        (let [logging (log/info (str "/owners"))
               rows (k/exec-raw ["
 SELECT osm_id,user_id AS owner_id FROM owned_locations
 "
@@ -95,9 +95,9 @@ SELECT osm_id,user_id AS owner_id FROM owned_locations
           {:headers {"Content-Type" "application/json;charset=utf-8"}
            :body (generate-string rows)})))
   
-  (GET "/world/hoods" request
+  (GET "/hoods" request
        (friend/authenticated
-          (let [logging (log/info (str "/world/hoods"))
+          (let [logging (log/info (str "/hoods"))
                 data (k/exec-raw ["
 SELECT rome_polygon.name,rome_polygon.osm_id,
            ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid,
@@ -128,9 +128,9 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                                      :features geojson})})))
 
   ;; neighborhoods which are not owned by any player.
-  (GET "/world/hoods/open" request
+  (GET "/hoods/open" request
        (friend/authenticated
-          (let [logging (log/info (str "/world/hoods/open"))
+          (let [logging (log/info (str "/hoods/open"))
                 data (k/exec-raw ["
     SELECT rome_polygon.name,rome_polygon.osm_id,
            ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
@@ -160,13 +160,13 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
 
   ;; given a place's OSM id, return the expressions for it, if the user is allowed to see them
   ;; (is the owner).
-  (GET "/world/expr/:osm" request
+  (GET "/expr/:osm" request
        (friend/authenticated
         (let [osm-id (Integer. (:osm (:params request)))
               player-id (if-let [id (:id (get-user-from-ring-session
                                           (get-in request [:cookies "ring-session" :value])))]
                           (Integer. id))
-              logging (log/info (str "/world/expr/" osm-id))
+              logging (log/info (str "/expr/" osm-id))
               data (k/exec-raw ["SELECT expr.expr,created_on,expr.created_by
                                    FROM place_expression AS expr
                              INNER JOIN owned_locations
@@ -183,14 +183,14 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
   ;; polygon is optional and defaults to fals because it increases the size
   ;; of the response so much (makes response about 10x larger), and a client only
   ;; needs that information once assuming osms don't change.
-  (GET "/world/hoods/:osm" request
+  (GET "/hoods/:osm" request
        (friend/authenticated
         (if-let [osm (Integer. (:osm (:route-params request)))]
           (let [polygon (if (= "true" (:polygon (:params request)))
                           "ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,"
                           ""
                           )
-                logging (log/info (str "/world/hoods/" osm))
+                logging (log/info (str "/hoods/" osm))
                 data (k/exec-raw [(str "
     SELECT rome_polygon.name,rome_polygon.osm_id,
            vc_user.id AS player,vc_user.email AS email,"
@@ -257,11 +257,11 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string (first geojson))}))))
 
-  (GET "/world/player/:player" request
+  (GET "/player/:player" request
        (friend/authenticated
         (if-let [player (:player (:route-params request))]
           (let [player (Integer. player)
-                logging (log/info (str "/world/player/" player))
+                logging (log/info (str "/player/" player))
                 data (k/exec-raw ["
 
      SELECT rome_polygon.name,rome_polygon.osm_id,
@@ -290,13 +290,13 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
              :body (generate-string {:type "FeatureCollection"
                                      :features geojson})}))))
 
-  (GET "/world/players" request
+  (GET "/players" request
        (friend/authenticated
         (let [player-id (if-let [id (:id (get-user-from-ring-session
                                           (get-in request [:cookies "ring-session" :value])))]
                           (Integer. id))
               
-              logging (log/info "/world/players")
+              logging (log/info "/players")
               
               create-if-needed
               (k/exec-raw ["INSERT INTO player_location (osm_id,user_id) 
@@ -338,7 +338,7 @@ INNER JOIN rome_polygon
           {:headers {"Content-Type" "application/json;charset=utf-8"}
            :body (generate-string geojson)})))
 
-  (POST "/world/move" request
+  (POST "/move" request
         (friend/authenticated
          ;; 1. deterimine user id
          ;; 2. check if legal move
@@ -353,7 +353,7 @@ INNER JOIN rome_polygon
                   {:status 302
                    :headers {"Location" (str "/logout?session-expired")}}))
            (let [osm-id (Integer. (:osm (:params request)))]
-             (log/info (str "POST /world/move with osm: " osm-id " and user_id:" player-id))
+             (log/info (str "POST /move with osm: " osm-id " and user_id:" player-id))
              (k/exec-raw ["UPDATE player_location 
                               SET osm_id=? 
                             WHERE user_id=? 
@@ -368,27 +368,27 @@ INNER JOIN rome_polygon
                                                                    FROM player_location
                                                                   WHERE user_id=?));" [osm-id player-id osm-id player-id]])
              {:status 302
-              :headers {"Location" "/world/players"}}))))
+              :headers {"Location" "/players"}}))))
 
   ;; use GET for incremental parsing after user presses space (or if doing speech recognition, pauses).
-  (GET "/world/say/:expr" request
+  (GET "/say/:expr" request
        (let [expr (:expr (:route-params request))
              response (respond expr)]
-         (log/info (str "GET /world/say/" expr ": tenses:" (:tenses response) "; vocab:" (:vocab response)))
+         (log/info (str "GET /say/" expr ": tenses:" (:tenses response) "; vocab:" (:vocab response)))
          {:status 200
           :headers {"Content-Type" "application/json;charset=utf-8"
                     "Cache-Control" "public,max-age=600"} ;; 10 minute client cache to start
           :body (generate-string response)}))
        
   ;; use POST for final-answer parsing (after pressing return).
-  (POST "/world/say" request
+  (POST "/say" request
         (friend/authenticated
          (let [player-id (if-let [id (:id (get-user-from-ring-session
                                            (get-in request [:cookies "ring-session" :value])))]
                            (Integer. id))
                expr (:expr (:params request))
                response (respond expr)]
-           (log/info (str "POST /world/say " expr ": tenses:" (:tenses response) "; vocab:" (:vocab response)))
+           (log/info (str "POST /say " expr ": tenses:" (:tenses response) "; vocab:" (:vocab response)))
            ;; add place_tense: item= and solved_by= for all tenses found:
            (update-db-on-response player-id response)
            {:status 200
