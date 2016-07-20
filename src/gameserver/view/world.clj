@@ -53,6 +53,7 @@
                                          {:src "placebox.js"}
                                          {:src "actions.js"}
                                          {:src "input.js"}
+                                         {:src "streetview.js"}
                                          {:src "world.js"}]
                               :local-css [{:src "animate.min.css"}
                                           {:src "placebox.css"}
