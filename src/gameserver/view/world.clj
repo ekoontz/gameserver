@@ -59,6 +59,7 @@
                                           {:src "player.css"}
                                           {:src "input.css"}
                                           {:src "streetview.css"}
+                                          {:src "vocab.css"}
                                           {:src "world.css"}]
                               :onload (str "load_world('" player-id "');")}))))))
 
