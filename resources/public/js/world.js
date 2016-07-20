@@ -7,11 +7,8 @@ function load_world(current_player_id) {
     var current_lat = Roma[1];
     var current_zoom = zoom_level;
 
-    if (googleStreetViewPosition == true) {
-	var s = document.createElement("script");
-	s.type = "text/javascript";
-	s.src = "https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&callback=initPano";
-	$("head").append(s);
+    if (googleStreetView == true) {
+	initStreetView(Roma);
     }
         
     mapboxgl.accessToken = mapbox_api_key;
@@ -40,7 +37,8 @@ function load_world(current_player_id) {
 		map.fitBounds([[12.4012515,41.9012917], [12.5012515,42.0012917]]);
 	    }
 
-	    if (googleStreetViewPosition == true) {
+	    if (googleStreetView == true) {
+		initStreetView();
 		setGoogleStreetViewPosition(
 		    map,
 		    players[current_player_id].location.geometry.coordinates[1],
