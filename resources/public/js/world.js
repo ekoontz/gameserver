@@ -1,28 +1,3 @@
-var panorama;
-function setGoogleStreetViewPosition(map,current_lat,current_long) {
-    // use the same heading as the background map.
-    var heading = Math.floor(Math.random() * 360);
-    var pitch = 0;
-
-    panorama.setPosition({
-	lat: current_lat,
-	lng: current_long});
-    panorama.setPov({
-	heading: map.getBearing(),
-	pitch: pitch
-    });
-}
-
-function initPano() {
-    panorama = new google.maps.StreetViewPanorama(
-	document.getElementById('streetview'), {
-	    linksControl: false,
-	    enableCloseButton:false,
-	    fullscreenControl: false,
-	    clickToGo: true
-	});
-}
-
 function load_world(current_player_id) {
     log(INFO,"loading world for player: " + current_player_id);
     player_id = current_player_id;
