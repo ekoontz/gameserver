@@ -32,10 +32,12 @@ function load_world(current_player_id) {
     var current_lat = Roma[1];
     var current_zoom = zoom_level;
 
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src = "https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&callback=initPano";
-    $("head").append(s);
+    if (googleStreetViewPosition == true) {
+	var s = document.createElement("script");
+	s.type = "text/javascript";
+	s.src = "https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&callback=initPano";
+	$("head").append(s);
+    }
         
     mapboxgl.accessToken = mapbox_api_key;
     var map = new mapboxgl.Map({
@@ -62,10 +64,13 @@ function load_world(current_player_id) {
 		// TODO: should be relative to the player's current position.
 		map.fitBounds([[12.4012515,41.9012917], [12.5012515,42.0012917]]);
 	    }
-	    setGoogleStreetViewPosition(
-		map,
-		players[current_player_id].location.geometry.coordinates[1],
-		players[current_player_id].location.geometry.coordinates[0]);
+
+	    if (googleStreetViewPosition == true) {
+		setGoogleStreetViewPosition(
+		    map,
+		    players[current_player_id].location.geometry.coordinates[1],
+		    players[current_player_id].location.geometry.coordinates[0])
+	    }
 	});
 
 	// server-supplied info that doesn't change during gameplay:
