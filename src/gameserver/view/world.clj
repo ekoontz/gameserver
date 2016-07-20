@@ -1,5 +1,6 @@
 (ns gameserver.view.world
   (:require [babel.italiano :refer [parse]]
+            [babel.parse :refer [leaves]]
             [cemerick.friend :as friend]
             [clojure.data.json :as json]
             [dag_unify.core :as u]
@@ -15,7 +16,6 @@
             [gameserver.view.common :refer [wrap-layout]]
             [stencil.core :as stencil]))
 
-(declare leaves)
 (declare respond)
 (declare root-form)
 (declare update-db-on-response)
@@ -555,23 +555,3 @@ INNER JOIN rome_polygon
 
         true
         "??"))
-
-(defn leaves [parse-tree]
-  "return terminal nodes (leaves) for this tree."
-  (let [head (u/get-in parse-tree [:head] :none)
-        comp (u/get-in parse-tree [:comp] :none)]
-  (cond
-    (and (= :none head)
-         (= :none comp))
-    [parse-tree]
-
-    (= :none head)
-    (leaves comp)
-
-    (= :none comp)
-    (leaves head)
-    
-    true
-    (concat
-     (leaves head)
-     (leaves comp)))))
