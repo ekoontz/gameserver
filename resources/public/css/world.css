@@ -38,6 +38,7 @@
 }
 
 #streetviewcontainer {
+    display:none; /* c.f. config.js:googleStreetViewPosition */
     right:5%;
     top:10%;
     width:30%;
