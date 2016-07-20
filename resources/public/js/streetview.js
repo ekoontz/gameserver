@@ -13,7 +13,7 @@ function setGoogleStreetViewPosition(map,current_lat,current_long) {
     });
 }
 
-function initPano() {
+function initStreetView() {
     panorama = new google.maps.StreetViewPanorama(
 	document.getElementById('streetview'), {
 	    linksControl: false,
@@ -21,13 +21,4 @@ function initPano() {
 	    fullscreenControl: false,
 	    clickToGo: true
 	});
-}
-
-function initStreetView(point) {
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src = "https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&callback=initPano";
-    $("head").append(s);
-    setGoogleStreetViewPosition(map,point[1],point[0]);
-
 }

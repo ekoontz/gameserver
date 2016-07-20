@@ -8,7 +8,10 @@ function load_world(current_player_id) {
     var current_zoom = zoom_level;
 
     if (googleStreetView == true) {
-	initStreetView(Roma);
+        var s = document.createElement("script");
+	s.type = "text/javascript";
+	s.src = "https://maps.googleapis.com/maps/api/js?key=" + google_api_key + "&callback=initStreetView";
+	$("head").append(s);
     }
         
     mapboxgl.accessToken = mapbox_api_key;
@@ -38,7 +41,6 @@ function load_world(current_player_id) {
 	    }
 
 	    if (googleStreetView == true) {
-		initStreetView();
 		setGoogleStreetViewPosition(
 		    map,
 		    players[current_player_id].location.geometry.coordinates[1],
