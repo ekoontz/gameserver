@@ -45,6 +45,8 @@ function load_world(current_player_id) {
 		    map,
 		    players[current_player_id].location.geometry.coordinates[1],
 		    players[current_player_id].location.geometry.coordinates[0])
+	    } else {
+		$('#streetviewcontainer').hide();
 	    }
 	});
 
