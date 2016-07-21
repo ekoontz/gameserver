@@ -549,11 +549,6 @@ INNER JOIN rome_polygon
     response))
 
 (defn root-form [word]
-  (cond (not (= :none (u/get-in word [:italiano :infinitive] :none)))
-        (u/get-in word [:italiano :infinitive])
+  (or (u/get-in word [:italiano :root])
+      (u/get-in word [:italiano])))
 
-        (string? (u/get-in word [:italiano :italiano]))
-        (u/get-in word [:italiano :italiano])
-
-        true
-        "??"))
