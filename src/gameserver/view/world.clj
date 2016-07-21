@@ -97,6 +97,27 @@ SELECT osm_id,user_id AS owner_id FROM owned_locations
           {:headers {"Content-Type" "application/json;charset=utf-8"}
            :body (generate-string rows)})))
   
+  ;; given a place's OSM id, return the expressions for it, if the user is allowed to see them
+  ;; (is the owner).
+  (GET "/expr/:osm" request
+       (friend/authenticated
+        (let [osm-id (Integer. (:osm (:params request)))
+              player-id (if-let [id (:id (get-user-from-ring-session
+                                          (get-in request [:cookies "ring-session" :value])))]
+                          (Integer. id))
+              logging (log/info (str "/expr/" osm-id))
+              data (k/exec-raw ["SELECT expr.expr,created_on,expr.created_by
+                                   FROM place_expression AS expr
+                             INNER JOIN owned_locations
+                                     ON (owned_locations.osm_id = expr.osm_id)
+                                    AND (owned_locations.user_id = ?)
+                                  WHERE expr.osm_id=?
+                               ORDER BY created_on DESC
+"
+                                [player-id osm-id]] :results)]
+          {:headers {"Content-Type" "application/json;charset=utf-8"}
+           :body (generate-string {:expressions data})})))
+
   (GET "/hoods" request
        (friend/authenticated
           (let [logging (log/info (str "/hoods"))
@@ -159,28 +180,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string {:type "FeatureCollection"
                                      :features geojson})})))
-
-  ;; given a place's OSM id, return the expressions for it, if the user is allowed to see them
-  ;; (is the owner).
-  (GET "/expr/:osm" request
-       (friend/authenticated
-        (let [osm-id (Integer. (:osm (:params request)))
-              player-id (if-let [id (:id (get-user-from-ring-session
-                                          (get-in request [:cookies "ring-session" :value])))]
-                          (Integer. id))
-              logging (log/info (str "/expr/" osm-id))
-              data (k/exec-raw ["SELECT expr.expr,created_on,expr.created_by
-                                   FROM place_expression AS expr
-                             INNER JOIN owned_locations
-                                     ON (owned_locations.osm_id = expr.osm_id)
-                                    AND (owned_locations.user_id = ?)
-                                  WHERE expr.osm_id=?
-                               ORDER BY created_on DESC
-"
-                                [player-id osm-id]] :results)]
-          {:headers {"Content-Type" "application/json;charset=utf-8"}
-           :body (generate-string {:expressions data})})))
-
+  
   ;; given an :osm_id, return its polygon (if polygon=true), owner, vocab and tenses.
   ;; polygon is optional and defaults to fals because it increases the size
   ;; of the response so much (makes response about 10x larger), and a client only
@@ -259,6 +259,38 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string (first geojson))}))))
 
+  (POST "/move" request
+        (friend/authenticated
+         ;; 1. deterimine user id
+         ;; 2. check if legal move
+         ;; 3. update world state
+         ;; 4. respond to client about result of their action
+         (let [player-id (if-let [id (:id (get-user-from-ring-session
+                                           (get-in request [:cookies "ring-session" :value])))]
+                           (Integer. id))]
+           (if (nil? player-id)
+             (do (log/error (str "player-id is null; ring-session: "
+                                 (get-in request [:cookies "ring-session" :value])))
+                  {:status 302
+                   :headers {"Location" (str "/logout?session-expired")}}))
+           (let [osm-id (Integer. (:osm (:params request)))]
+             (log/info (str "POST /move with osm: " osm-id " and user_id:" player-id))
+             (k/exec-raw ["UPDATE player_location 
+                              SET osm_id=? 
+                            WHERE user_id=? 
+                              AND ? IN (SELECT adjacent.osm_id
+                                               FROM rome_polygon p1
+                                         INNER JOIN rome_polygon adjacent
+                                                 ON (p1 != adjacent)
+                                                AND p1.admin_level='10'
+                                                AND adjacent.admin_level = '10'
+                                                AND ST_Touches(p1.way,adjacent.way)
+                                                AND p1.osm_id = (SELECT osm_id
+                                                                   FROM player_location
+                                                                  WHERE user_id=?));" [osm-id player-id osm-id player-id]])
+             {:status 302
+              :headers {"Location" "/players"}}))))
+
   (GET "/player/:player" request
        (friend/authenticated
         (if-let [player (:player (:route-params request))]
@@ -290,8 +322,7 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
             (log/debug (str "geojson:" (clojure.string/join ";" geojson)))
             {:headers {"Content-Type" "application/json;charset=utf-8"}
              :body (generate-string {:type "FeatureCollection"
-                                     :features geojson})}))))
-
+                                     :features geojson})}))))  
   (GET "/players" request
        (friend/authenticated
         (let [player-id (if-let [id (:id (get-user-from-ring-session
@@ -339,38 +370,6 @@ INNER JOIN rome_polygon
                             data)}]
           {:headers {"Content-Type" "application/json;charset=utf-8"}
            :body (generate-string geojson)})))
-
-  (POST "/move" request
-        (friend/authenticated
-         ;; 1. deterimine user id
-         ;; 2. check if legal move
-         ;; 3. update world state
-         ;; 4. respond to client about result of their action
-         (let [player-id (if-let [id (:id (get-user-from-ring-session
-                                           (get-in request [:cookies "ring-session" :value])))]
-                           (Integer. id))]
-           (if (nil? player-id)
-             (do (log/error (str "player-id is null; ring-session: "
-                                 (get-in request [:cookies "ring-session" :value])))
-                  {:status 302
-                   :headers {"Location" (str "/logout?session-expired")}}))
-           (let [osm-id (Integer. (:osm (:params request)))]
-             (log/info (str "POST /move with osm: " osm-id " and user_id:" player-id))
-             (k/exec-raw ["UPDATE player_location 
-                              SET osm_id=? 
-                            WHERE user_id=? 
-                              AND ? IN (SELECT adjacent.osm_id
-                                               FROM rome_polygon p1
-                                         INNER JOIN rome_polygon adjacent
-                                                 ON (p1 != adjacent)
-                                                AND p1.admin_level='10'
-                                                AND adjacent.admin_level = '10'
-                                                AND ST_Touches(p1.way,adjacent.way)
-                                                AND p1.osm_id = (SELECT osm_id
-                                                                   FROM player_location
-                                                                  WHERE user_id=?));" [osm-id player-id osm-id player-id]])
-             {:status 302
-              :headers {"Location" "/players"}}))))
 
   ;; use GET for incremental parsing after user presses space (or if doing speech recognition, pauses).
   (GET "/say/:expr" request
