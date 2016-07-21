@@ -9,6 +9,7 @@ body {
 }
 
 .auth-form {
+    display:block;
     background-color: #F5F5F5;
     width: 450px; 
     margin: 50px auto; 
