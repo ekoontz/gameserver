@@ -54,6 +54,7 @@
                                          {:src "actions.js"}
                                          {:src "input.js"}
                                          {:src "streetview.js"}
+                                         {:src "vocab.js"}
                                          {:src "world.js"}]
                               :local-css [{:src "animate.min.css"}
                                           {:src "placebox.css"}

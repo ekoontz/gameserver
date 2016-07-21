@@ -53,7 +53,8 @@ function load_world(current_player_id) {
 	// server-supplied info that doesn't change during gameplay:
 	load_centroids(map,current_player_id);
 	load_adjacencies(map);
-
+	load_vocab();
+	
 	// things that need to be loaded once, but can be done
 	// post-game startup (in the background while user is playing).
 	// TODO: load_place_geometries() not loaded yet.
