@@ -394,8 +394,19 @@ INNER JOIN rome_polygon
            (update-db-on-response player-id response)
            {:status 200
             :headers {"Content-Type" "application/json;charset=utf-8"}
-            :body (generate-string response)}))))
+            :body (generate-string response)})))
 
+  (GET "/vocab" request
+       (friend/authenticated
+        (let [data (k/exec-raw ["
+SELECT * FROM place_vocab
+"
+                                []] :results)]
+          {:status 200
+           :headers {"Content-Type" "application/json;charset=utf-8"
+                     "Cache-Control" "public,max-age=600"} ;; 10 minute client cache to start
+           :body (generate-string data)})))
+  )
 
 (defn player2osm [player-id]
   (->
