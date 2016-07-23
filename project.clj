@@ -1,4 +1,4 @@
-(defproject gameserver "0.1.0-SNAPSHOT"
+(defproject gameserver "0.1.0"
   :description "Gameserver: a webservice for gaming"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
