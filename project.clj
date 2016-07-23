@@ -1,6 +1,6 @@
-(defproject gameserver "0.1.0"
+(defproject gameserver "0.2.0-SNAPSHOT"
   :description "Gameserver: a webservice for gaming"
-  :url "http://example.com/FIXME"
+  :url "http://github.com/ekoontz/gameserver"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[babel "1.7.2"]
