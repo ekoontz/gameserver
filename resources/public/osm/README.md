@@ -17,6 +17,18 @@ https://mapzen.com/data/metro-extracts/ and search for Rome
 
 (Download the "OSM XML"-formatted version).
 
+# Prepare database
+
+psql verbcoach (not -U verbcoach: do as postgres root user)
+
+    CREATE EXTENSION postgis;
+    -- Enable Topology
+    CREATE EXTENSION postgis_topology;
+    -- Enable PostGIS Advanced 3D 
+    -- and other geoprocessing algorithms
+    -- sfcgal not available with all distributions
+    CREATE EXTENSION postgis_sfcgal;
+
 # Import into postgres:
 
     osm2pgsql -p rome -s -U verbcoach -d verbcoach -H localhost ~/Downloads/rome_italy.osm
