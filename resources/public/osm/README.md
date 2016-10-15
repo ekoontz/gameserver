@@ -33,6 +33,18 @@ psql verbcoach (not -U verbcoach: do as postgres root user)
 
     osm2pgsql -p rome -s -U verbcoach -d verbcoach -H localhost ~/Downloads/rome_italy.osm
 
+another example:
+
+    osm2pgsql -d florence -H localhost -p florence  ~/Downloads/florence_italy.osm
+
+## Flags
+
+ -p prefix for created tables
+ -s "(--slim) Store temporary data in the database. This greatly
+                        reduces the RAM usage but is much slower. This
+                        switch is required if you want to update with
+                        --append later."
+
 # Do a query:
 
     SELECT name,ST_AsGeoJson(way) FROM rome_polygon WHERE name='Sallustiano';
