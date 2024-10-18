@@ -13,8 +13,7 @@
                  [org.clojure/tools.logging "0.2.6"]
                  [stencil "0.5.0"]]
 
-  :plugins [[cider/cider-nrepl "0.11.0"]
-            [lein-environ "1.0.0"]
+  :plugins [[lein-environ "1.0.0"]
             [lein-ring "0.9.7"]
             [s3-wagon-private "1.2.0"]]
 
