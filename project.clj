@@ -5,9 +5,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[babel "1.8.2"]
                  [cheshire "5.6.3"]
-                 [clj-http "2.2.0"]
+                 [clj-http "3.4.1"]
+                 [clojusc/friend-oauth2 "0.1.3"] 
                  [friend-oauth2 "0.1.3"]
-                 [http-kit "2.1.16"]
+                 [http-kit "2.4.0-alpha1"]
                  [org.clojure/clojure "1.11.3"]
                  [org.clojure/core.cache "0.6.5"]
                  [org.clojure/tools.logging "0.2.6"]
