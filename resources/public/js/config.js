@@ -12,7 +12,6 @@ var osm2hood = {};
 var osm2owner = {};
 var players = {};
 var player_id;
-var Roma = [12.5012515,41.9012917];
 
 var zoom_level = 12;
 
