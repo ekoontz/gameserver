@@ -27,7 +27,7 @@
     (swap! database assoc (:username user) user)))
 
 (defdb korma-db
-  (let [default "postgres://postgres@localhost:5432/gameserver"
+  (let [default "postgres://amsterdam@localhost:5432/amsterdam"
         database-url (cond
                       (env :database-url)
                       (env :database-url)
