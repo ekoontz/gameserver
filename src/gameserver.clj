@@ -3,9 +3,8 @@
 
 (defn system
   "Gives the default parameters for the system to run."
-  []
-  {:host "localhost"
-   :port 8080
+  {:host "amsterdam.hiro-tan.org"
+   :port 3000
    :server nil})
 
 (defn start
