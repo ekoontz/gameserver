@@ -1,4 +1,12 @@
 -- TODO: add foreign keys (e.g. user_id is primary key of vc_user)
+-- TODO: s/vc_user/gameserver_user/
+-- TODO: use schemas (namespaces) properly so we can have the table name just be 'user'.
+
+CREATE SEQUENCE user_id_seq;
+CREATE TABLE vc_user (id BIGINT NOT NULL DEFAULT nextval('user_id_seq'), created timestamp without time zone default now(), updated timestamp without time zone, email text, family_name text, given_name text, picture text);
+
+CREATE TABLE session (access_token text, created  timestamp without time zone default now(), ring_session uuid, user_id integer, encrypted_session text);
+
 
 -- gameserver=> \d place_expression
 --             Table "public.place_expression"

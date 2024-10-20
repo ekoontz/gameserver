@@ -1,6 +1,6 @@
 # Search for the city
 
-    http://www.openstreetmap.org/search?query=Rome
+    http://www.openstreetmap.org/search?query=Amsterdam
 
 # In search results, find correct result and click:
 
@@ -31,11 +31,9 @@ psql verbcoach (not -U verbcoach: do as postgres root user)
 
 # Import into postgres:
 
-    osm2pgsql -p rome -s -U verbcoach -d verbcoach -H localhost ~/Downloads/rome_italy.osm
-
-another example:
-
-    osm2pgsql -d florence -H localhost -p florence  ~/Downloads/florence_italy.osm
+```
+/opt/homebrew/Cellar/osm2pgsql/2.0.0/bin/osm2pgsql -U amsterdam -p amsterdam -d amsterdam ~/Downloads/amsterdam_netherlands.osm.pbf
+```
 
 ## Flags
 
@@ -45,6 +43,23 @@ another example:
                         switch is required if you want to update with
                         --append later."
 
-# Do a query:
+### Do a query:
 
-    SELECT name,ST_AsGeoJson(way) FROM rome_polygon WHERE name='Sallustiano';
+```
+SELECT name,ST_AsGeoJson(way) FROM amsterdam_polygon WHERE name = 'Vondelpark';
+```
+
+### Statistics
+
+```
+amsterdam=> SELECT admin_level, count(admin_level) FROM amsterdam_line GROUP by admin_level;
+ admin_level | count
+-------------+-------
+ 10          |   496
+ 4           |   108
+ 8           |   328
+             |     0
+(4 rows)
+```
+
+
