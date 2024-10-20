@@ -37,11 +37,11 @@
                              (stencil/render-file
                               "gameserver/view/templates/world"
                               {})
-                             {:remote-js [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.js"}
+                             {:remote-js [{:src "https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"}
                                           ;; TODO: use integrity= and crossorigin=
                                           ;; per https://code.jquery.com
                                           {:src "https://code.jquery.com/jquery-1.12.4.min.js"}]
-                              :remote-css [{:src "https://api.mapbox.com/mapbox-gl-js/v0.20.1/mapbox-gl.css"}
+                              :remote-css [{:src "https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css"}
                                            {:src "http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"}]
                               ;; TODO: consider using http://browserify.org/ to bundle all local js.
                               :local-js [{:src "mustache.min.js"}
