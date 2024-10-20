@@ -3,6 +3,7 @@
 
 (defn system
   "Gives the default parameters for the system to run."
+  []
   {:host "amsterdam.hiro-tan.org"
    :port 3000
    :server nil})
@@ -36,3 +37,4 @@
         (set-config :host host)
         (set-config :port (Integer/parseInt port))
         start)))
+
