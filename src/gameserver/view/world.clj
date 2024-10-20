@@ -71,11 +71,11 @@
               rows (k/exec-raw ["
   SELECT n1.osm_id AS n1,
          ARRAY(SELECT n2.osm_id
-                 FROM rome_polygon AS n2
+                 FROM amsterdam_polygon AS n2
                 WHERE n2.admin_level = '10'
                   AND ST_Touches(n1.way,n2.way)
              ORDER BY n2.name) AS adj
-    FROM rome_polygon AS n1
+    FROM amsterdam_polygon AS n1
    WHERE n1.admin_level='10'
 ORDER BY n1.name;
 "
@@ -122,16 +122,16 @@ SELECT osm_id,user_id AS owner_id FROM owned_locations
        (friend/authenticated
           (let [logging (log/info (str "/hoods"))
                 data (k/exec-raw ["
-SELECT rome_polygon.name,rome_polygon.osm_id,
-           ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid,
+SELECT amsterdam_polygon.name,amsterdam_polygon.osm_id,
+           ST_AsGeoJSON(ST_Transform(ST_Centroid(amsterdam_polygon.way),4326)) AS centroid,
            vc_user.id AS player,vc_user.email AS email
-      FROM rome_polygon
+      FROM amsterdam_polygon
  LEFT JOIN owned_locations
-        ON (owned_locations.osm_id = rome_polygon.osm_id)
+        ON (owned_locations.osm_id = amsterdam_polygon.osm_id)
  LEFT JOIN vc_user
         ON (owned_locations.user_id = vc_user.id)
      WHERE (admin_level = '10') 
-  ORDER BY rome_polygon.name ASC
+  ORDER BY amsterdam_polygon.name ASC
 "
                                   []] :results)
 
@@ -155,18 +155,18 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
        (friend/authenticated
           (let [logging (log/info (str "/hoods/open"))
                 data (k/exec-raw ["
-    SELECT rome_polygon.name,rome_polygon.osm_id,
-           ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
+    SELECT amsterdam_polygon.name,amsterdam_polygon.osm_id,
+           ST_AsGeoJSON(ST_Transform(amsterdam_polygon.way,4326)) AS polygon,
            vc_user.id AS player,vc_user.email AS email,
            admin_level
-      FROM rome_polygon
+      FROM amsterdam_polygon
  LEFT JOIN owned_locations
-        ON (owned_locations.osm_id = rome_polygon.osm_id)
+        ON (owned_locations.osm_id = amsterdam_polygon.osm_id)
  LEFT JOIN vc_user
         ON (owned_locations.user_id = vc_user.id)
      WHERE (admin_level = '10') 
        AND owned_locations.osm_id IS NULL 
-  ORDER BY rome_polygon.name ASC;
+  ORDER BY amsterdam_polygon.name ASC;
 "
                                   []] :results)
                 geojson (map (fn [hood]
@@ -189,12 +189,12 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
        (friend/authenticated
         (if-let [osm (Integer. (:osm (:route-params request)))]
           (let [polygon (if (= "true" (:polygon (:params request)))
-                          "ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,"
+                          "ST_AsGeoJSON(ST_Transform(amsterdam_polygon.way,4326)) AS polygon,"
                           ""
                           )
                 logging (log/info (str "/hoods/" osm))
                 data (k/exec-raw [(str "
-    SELECT rome_polygon.name,rome_polygon.osm_id,
+    SELECT amsterdam_polygon.name,amsterdam_polygon.osm_id,
            vc_user.id AS player,vc_user.email AS email,"
                                   polygon
                                   "
@@ -202,41 +202,41 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
            owned_locations.user_id AS owner,
            ARRAY(SELECT item
                    FROM place_vocab
-                  WHERE place_vocab.osm_id = rome_polygon.osm_id
+                  WHERE place_vocab.osm_id = amsterdam_polygon.osm_id
                     AND place_vocab.solved_by IS NOT NULL
                ORDER BY item) AS vocab_solved,
            ARRAY(SELECT solved_by
                    FROM place_vocab
-                  WHERE place_vocab.osm_id = rome_polygon.osm_id 
+                  WHERE place_vocab.osm_id = amsterdam_polygon.osm_id 
                     AND place_vocab.solved_by IS NOT NULL
                 ORDER BY item) AS vocab_solvers,
            ARRAY(SELECT item
                    FROM place_tense
-                  WHERE place_tense.osm_id = rome_polygon.osm_id
+                  WHERE place_tense.osm_id = amsterdam_polygon.osm_id
                     AND place_tense.solved_by IS NOT NULL
                ORDER BY item) AS tenses_solved,
            ARRAY(SELECT solved_by
                    FROM place_tense
-                  WHERE place_tense.osm_id = rome_polygon.osm_id
+                  WHERE place_tense.osm_id = amsterdam_polygon.osm_id
                     AND place_tense.solved_by IS NOT NULL
                ORDER BY item) AS tense_solvers,
            ARRAY(SELECT item
                    FROM place_vocab
-                  WHERE place_vocab.osm_id = rome_polygon.osm_id
+                  WHERE place_vocab.osm_id = amsterdam_polygon.osm_id
                     AND place_vocab.solved_by IS NULL
                ORDER BY item) AS vocab_unsolved,
            ARRAY(SELECT item
                    FROM place_tense
-                  WHERE place_tense.osm_id = rome_polygon.osm_id
+                  WHERE place_tense.osm_id = amsterdam_polygon.osm_id
                     AND place_tense.solved_by IS NULL
                ORDER BY item) AS tenses_unsolved
-      FROM rome_polygon
+      FROM amsterdam_polygon
  LEFT JOIN owned_locations
-        ON (owned_locations.osm_id = rome_polygon.osm_id)
+        ON (owned_locations.osm_id = amsterdam_polygon.osm_id)
  LEFT JOIN vc_user
         ON (owned_locations.user_id = vc_user.id)
      WHERE (admin_level = '10')
-       AND rome_polygon.osm_id = ?
+       AND amsterdam_polygon.osm_id = ?
 ")
                                   [osm]] :results)
                 geojson (map (fn [hood]
@@ -279,8 +279,8 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                               SET osm_id=? 
                             WHERE user_id=? 
                               AND ? IN (SELECT adjacent.osm_id
-                                               FROM rome_polygon p1
-                                         INNER JOIN rome_polygon adjacent
+                                               FROM amsterdam_polygon p1
+                                         INNER JOIN amsterdam_polygon adjacent
                                                  ON (p1 != adjacent)
                                                 AND p1.admin_level='10'
                                                 AND adjacent.admin_level = '10'
@@ -298,18 +298,18 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
                 logging (log/info (str "/player/" player))
                 data (k/exec-raw ["
 
-     SELECT rome_polygon.name,rome_polygon.osm_id,
-            ST_AsGeoJSON(ST_Transform(rome_polygon.way,4326)) AS polygon,
+     SELECT amsterdam_polygon.name,amsterdam_polygon.osm_id,
+            ST_AsGeoJSON(ST_Transform(amsterdam_polygon.way,4326)) AS polygon,
             admin_level,
             vc_user.id AS player,vc_user.email AS email
-       FROM rome_polygon
+       FROM amsterdam_polygon
  INNER JOIN owned_locations
-         ON (owned_locations.osm_id = rome_polygon.osm_id)
+         ON (owned_locations.osm_id = amsterdam_polygon.osm_id)
  INNER JOIN vc_user
          ON (owned_locations.user_id = vc_user.id)
       WHERE (admin_level = '10')
         AND vc_user.id = ?
-   ORDER BY rome_polygon.name ASC;
+   ORDER BY amsterdam_polygon.name ASC;
 "
                                   [player]] :results)
                 geojson (map (fn [hood]
@@ -342,13 +342,13 @@ SELECT rome_polygon.name,rome_polygon.osm_id,
 
               data (k/exec-raw ["
     SELECT vc_user.given_name AS player_name,vc_user.id AS user_id,
-           rome_polygon.name AS location_name,rome_polygon.osm_id AS neighborhood_osm,
-           ST_AsGeoJSON(ST_Transform(ST_Centroid(rome_polygon.way),4326)) AS centroid,
+           amsterdam_polygon.name AS location_name,amsterdam_polygon.osm_id AS neighborhood_osm,
+           ST_AsGeoJSON(ST_Transform(ST_Centroid(amsterdam_polygon.way),4326)) AS centroid,
            owned.count AS places_count,COALESCE(points_per_player.points,'0') AS points
       FROM vc_user
 INNER JOIN player_location ON (player_location.user_id = vc_user.id)
-INNER JOIN rome_polygon 
-        ON (player_location.osm_id = rome_polygon.osm_id)
+INNER JOIN amsterdam_polygon 
+        ON (player_location.osm_id = amsterdam_polygon.osm_id)
  LEFT JOIN (SELECT user_id AS player_id,count(*) FROM owned_locations GROUP BY player_id) AS owned
         ON (owned.player_id = vc_user.id)
  LEFT JOIN (SELECT player_id,SUM(points) AS points FROM place_points GROUP BY player_id) AS points_per_player
