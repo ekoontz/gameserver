@@ -46,6 +46,10 @@
                               ;; TODO: consider using http://browserify.org/ to bundle all local js.
                               :local-js [{:src "mustache.min.js"}
                                          {:src "log4.js"}
+                                         ;; TODO: move this out of javascript and into a server-side
+                                         ;; HTTP proxy service that runs inside the server
+                                         ;; and uses these credentials
+                                         {:src "credentials.js"}
                                          {:src "config.js"}
                                          ;; these 3 above must remain before others below.
                                          {:src "geolib.js"}
