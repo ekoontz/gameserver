@@ -37,19 +37,22 @@ function load_world(current_player_id) {
 	// find player's initial location: do this first so geo assets can be fetched in the
 	// background.
 	update_players(map,current_player_id,function() {
-	    map.setCenter(players[current_player_id].location.geometry.coordinates);
-	    if (fitBounds == true) {
-		// TODO: should be relative to the player's current position.
-		map.fitBounds([[12.4012515,41.9012917], [12.5012515,42.0012917]]);
-	    }
+	    log(INFO,"update_players passed function with current_player_id: " + current_player_id);
+	    if (players[current_player_id]) {
+		map.setCenter(players[current_player_id].location.geometry.coordinates);
+		if (fitBounds == true) {
+		    // TODO: should be relative to the player's current position.
+		    map.fitBounds([[12.4012515,41.9012917], [12.5012515,42.0012917]]);
+		}
 
-	    if (googleStreetView == true) {
-		setGoogleStreetViewPosition(
-		    map,
-		    players[current_player_id].location.geometry.coordinates[1],
-		    players[current_player_id].location.geometry.coordinates[0])
-	    } else {
-		$('#streetviewcontainer').hide();
+		if (googleStreetView == true) {
+		    setGoogleStreetViewPosition(
+			map,
+			players[current_player_id].location.geometry.coordinates[1],
+			players[current_player_id].location.geometry.coordinates[0])
+		} else {
+		    $('#streetviewcontainer').hide();
+		}
 	    }
 	});
 
@@ -92,10 +95,12 @@ function load_world(current_player_id) {
 
 	window.setInterval(function() {
 	    update_open_turf(map,function() {
-		var osm = players[current_player_id].location.properties.osm;	    
-		update_placeinfo(osm,function() {
-		    update_placebox(osm,current_player_id);
-		});
+		if (players[current_player_id]) {
+		    var osm = players[current_player_id].location.properties.osm;	    
+		    update_placeinfo(osm,function() {
+			update_placebox(osm,current_player_id);
+		    });
+		}
 	    });
 	},map_refresh_interval);
 
