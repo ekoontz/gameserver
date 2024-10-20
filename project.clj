@@ -6,7 +6,7 @@
   :dependencies [[babel "1.8.2"]
                  [cheshire "5.6.3"]
                  [clj-http "3.4.1"]
-                 [clojusc/friend-oauth2 "0.1.3"] 
+                 [clojusc/friend-oauth2 "0.2.0"] 
                  [friend-oauth2 "0.1.3"]
                  [http-kit "2.4.0-alpha1"]
                  [org.clojure/clojure "1.11.3"]
