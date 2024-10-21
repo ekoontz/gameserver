@@ -15,3 +15,5 @@ pom.xml
 .lein-env
 resources/public/js/credentials.js
 private_keys
+*.gz
+*.pbf
